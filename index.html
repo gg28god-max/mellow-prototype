@@ -9,18 +9,19 @@
   <meta name="description" content="Prototype interactif de Mellow, une application qui trouve tes abonnements et les annule pour toi. Version de test utilisateur.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles_v2.css">
 </head>
 <body>
   <main id="device" class="device" aria-label="Prototype Mellow">
-    <div id="taskbar" class="taskbar" hidden></div>
     <section id="screen" class="screen" aria-live="polite"></section>
-    <div id="notif-layer"></div>
-    <div id="sheet-layer"></div>
-    <div id="harness-layer"></div>
+    <div id="tab-layer" class="layer"></div>
+    <div id="notif-layer" class="layer"></div>
+    <div id="sheet-layer" class="layer"></div>
+    <div id="taskbar" class="layer"></div>
+    <div id="harness-layer" class="layer"></div>
   </main>
   <noscript>Ce prototype a besoin de JavaScript.</noscript>
-  <script src="app.js"></script>
+  <script src="app_v2.js"></script>
 </body>
 </html>
