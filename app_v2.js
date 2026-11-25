@@ -12,6 +12,17 @@
   const SPOTIFY = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#fff"/><circle cx="24" cy="24" r="16" fill="#1DB954"/><g fill="none" stroke="#000" stroke-linecap="round"><path d="M15 19.5c6-2 13-1.5 18.5 1.5" stroke-width="3"/><path d="M16 25c5-1.5 10.5-1 15 1.5" stroke-width="2.5"/><path d="M17 30c4-1 8-.7 11.5 1" stroke-width="2"/></g></svg>';
   const PLAID = '<svg viewBox="0 0 72 72" aria-hidden="true"><rect width="72" height="72" fill="#fff"/><g fill="#111" transform="rotate(45 36 36)">' +
     [0, 1, 2].map((i) => [0, 1, 2].map((j) => `<rect x="${21 + i * 11}" y="${21 + j * 11}" width="8" height="8" rx="1.5"/>`).join("")).join("") + "</g></svg>";
+  const ico = (inner, c) => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+  const slash = (c) => `<path d="M4 4L20 20" stroke="#0f0f10" stroke-width="5"/><path d="M4 4L20 20" stroke="${c}"/>`;
+  const MINT = "#7fe8c8", CORAL = "#f2607a";
+  const ICO = {
+    pay: ico('<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/>', MINT),
+    user: ico('<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>', MINT),
+    money: ico('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>' + slash(CORAL), CORAL),
+    key: ico('<circle cx="8" cy="15" r="4"/><path d="M11 12L20 3M17 6l3 3M14 9l2 2"/>' + slash(CORAL), CORAL),
+    data: ico('<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>' + slash(CORAL), CORAL),
+  };
+  const feat = (y, icon, tone, title, sub) => `<li class="row feat" data-t style="top:${y}px"><span class="disc ${tone}" aria-hidden="true">${icon}</span><span class="t">${title}</span><span class="s">${sub}</span></li>`;
   const CHECK = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 25l8 8 16-17" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // ---------- Data ----------
@@ -63,7 +74,7 @@
   const btn = (y, label, attrs) => `<button class="btn" ${B(y, 56)} ${attrs}>${label}</button>`;
   const link = (y, label, attrs, cls = "") => `<button class="link ${cls}" ${B(y, 28)} ${attrs}>${label}</button>`;
   const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${val}</div></div>`;
-  const plaid = (y, bottom) => `<div class="plaid" ${bottom ? B(y, 32) : T(y)}>Sécurisé par <b>${PLAID.replace('viewBox="0 0 72 72"', 'viewBox="14 14 44 44" width="14" height="14"').replace('fill="#fff"', 'fill="none"')}PLAID</b></div>`;
+  const plaid = (y, bottom) => `<div class="plaid" ${bottom ? B(y, 32) : T(y)}>Sécurisé par <b>${PLAID.replace('viewBox="0 0 72 72"', 'viewBox="14 14 44 44" width="14" height="14"').replace('fill="#fff"', 'fill="none"').replace('fill="#111"', 'fill="currentColor"')}PLAID</b></div>`;
   const success = (y, confetti) => `<div class="success" ${T(y)} aria-hidden="true"><div class="g"></div><div class="ring"></div><div class="disc">${CHECK}</div>${confetti ? [["#b8f27c", 104, 4, 4, 12], ["#7fe8c8", 158, 40, 6, 6], ["#f6c76b", 170, 110, 4, 10], ["#f2607a", 30, 120, 6, 6], ["#4f9fb8", 36, 50, 4, 12], ["#fff", 58, 26, 6, 6], ["#f6c76b", 104, 182, 4, 10]].map(([c, x, yy, w, h]) => `<i class="c" style="background:${c};left:${x}px;top:${yy}px;width:${w}px;height:${h}px"></i>`).join("") : ""}</div>`;
   const glowStatus = (strong) => `<div class="glow${strong ? " strong" : ""}"></div><div class="sb" aria-hidden="true"><span class="time">9:41</span><span class="icons"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="bat"><i></i></span></span></div>`;
 
@@ -90,21 +101,20 @@
       <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)}><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>` }),
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}${step(1)}
-      <h2 class="hd a" data-t style="top:184px;left:24px">Ce que Mellow peut voir</h2>
-      <ul>
-        <li class="info" ${T(244)}><h3>Transactions</h3><p>Lecture seule de 12 mois de paiements.</p></li>
-        <li class="info" ${T(364)}><h3>Nom du compte</h3><p>Pour que tu reconnaisses le compte.</p></li>
-      </ul>
-      <h2 class="hd a" data-t style="top:488px;left:24px">Ce qu’il ne fera jamais</h2>
-      <ul class="never" ${T(536)}>
-        <li><span aria-hidden="true">✕</span>Déplacer, envoyer ou retirer ton argent</li>
-        <li><span aria-hidden="true">✕</span>Voir le mot de passe de ta banque</li>
-        <li><span aria-hidden="true">✕</span>Vendre ou partager tes données</li>
-      </ul>
-      ${plaid(668, true)}
-      ${btn(716, "Accepter et continuer", 'data-go="signin"')}` }),
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Mellow lit<br>tes paiements.</h1>
+      <ul>${feat(272, ICO.pay, "mint", "Tes paiements", "Lecture seule. Les 12 derniers mois.")}${feat(380, ICO.user, "mint", "Le nom de ton compte", "Pour que tu le reconnaisses.")}</ul>
+      <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite : ce que Mellow ne fera jamais.</p>
+      ${btn(716, "Suivant", 'data-go="consent2"')}` }),
 
-    signin: () => ({ html: `${nav("Connexion à " + S.bank.short, "consent")}${step(2)}
+    consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Il ne touche jamais<br>à ton argent.</h1>
+      <ul>${feat(272, ICO.money, "coral", "Déplacer ton argent", "Ni envoi, ni retrait.")}${feat(380, ICO.key, "coral", "Voir ton mot de passe", "Tu te connectes chez ta banque.")}${feat(488, ICO.data, "coral", "Vendre tes données", "Jamais vendues, jamais partagées.")}</ul>
+      <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite, tu te connectes à ta banque.</p>
+      ${plaid(668, true)}
+      ${btn(716, "Connecter ma banque", 'data-go="signin"')}
+      ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
+
+    signin: () => ({ html: `${nav("Connexion à " + S.bank.short, "consent2")}${step(2)}
       <div class="handoff" ${T(180)} aria-hidden="true">
         <span class="logo" style="left:63px">${PLAID}</span>
         <span class="dots">${[0, 1, 2, 3, 4].map((i) => `<i class="${i === 2 ? "on" : ""}"></i>`).join("")}</span>
