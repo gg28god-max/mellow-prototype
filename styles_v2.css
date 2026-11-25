@@ -231,3 +231,10 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .disc svg{width:28px;height:28px}
 .disc.mint{background:rgba(127,232,200,.16)}
 .disc.coral{background:rgba(242,96,122,.16)}
+
+.orbit{width:390px;height:300px}
+.orbit .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.14)}
+.orbit .chip{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:30%;font:700 16px/1 Inter;font-style:normal;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.orbit .sphere-glow{position:absolute;left:100px;top:51px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(115,190,153,.45),rgba(51,102,84,0) 70%)}
+.orbit .sphere{position:absolute;left:153px;top:104px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#e8f5c0 0%,#b4c97a 30%,#5fa391 65%,#2c7d78 100%);display:flex;align-items:center;justify-content:center}
+.orbit .sphere b{font:700 40px/1 Inter;color:#0a2a1f}
