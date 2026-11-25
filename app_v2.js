@@ -22,7 +22,7 @@
     key: ico('<circle cx="8" cy="15" r="4"/><path d="M11 12L20 3M17 6l3 3M14 9l2 2"/>' + slash(CORAL), CORAL),
     data: ico('<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>' + slash(CORAL), CORAL),
   };
-  const feat = (y, icon, tone, title, sub) => `<li class="row feat" data-t style="top:${y}px"><span class="disc ${tone}" aria-hidden="true">${icon}</span><span class="t">${title}</span><span class="s">${sub}</span></li>`;
+  const feat = (y, icon, tone, title, sub) => `<li class="row feat" data-t style="top:${y}px"><span class="disc ${tone}" aria-hidden="true">${icon}</span><span class="txt"><span class="t">${title}</span><span class="s">${sub}</span></span></li>`;
   const CHECK = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 25l8 8 16-17" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // ---------- Data ----------
@@ -101,14 +101,14 @@
       <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)}><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>` }),
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}${step(1)}
-      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Mellow lit<br>tes paiements.</h1>
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">On lit seulement<br>tes paiements.</h1>
       <ul>${feat(272, ICO.pay, "mint", "Tes paiements", "Lecture seule. Les 12 derniers mois.")}${feat(380, ICO.user, "mint", "Le nom de ton compte", "Pour que tu le reconnaisses.")}</ul>
-      <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite : ce que Mellow ne fera jamais.</p>
+      <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite : ce qu’on ne fera jamais.</p>
       ${btn(716, "Suivant", 'data-go="consent2"')}` }),
 
     consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
-      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Il ne touche jamais<br>à ton argent.</h1>
-      <ul>${feat(272, ICO.money, "coral", "Déplacer ton argent", "Ni envoi, ni retrait.")}${feat(380, ICO.key, "coral", "Voir ton mot de passe", "Tu te connectes chez ta banque.")}${feat(488, ICO.data, "coral", "Vendre tes données", "Jamais vendues, jamais partagées.")}</ul>
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Ce qu’on ne<br>fera jamais.</h1>
+      <ul>${feat(272, ICO.money, "coral", "On ne déplace jamais ton argent", "On ne peut ni l’envoyer, ni le retirer.")}${feat(380, ICO.key, "coral", "On ne voit jamais ton mot de passe", "Tu te connectes sur le site de ta banque.")}${feat(488, ICO.data, "coral", "On ne vend jamais tes données", "Elles ne sont ni vendues, ni partagées.")}</ul>
       <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite, tu te connectes à ta banque.</p>
       ${plaid(668, true)}
       ${btn(716, "Connecter ma banque", 'data-go="signin"')}
