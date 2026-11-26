@@ -35,11 +35,11 @@
   ];
   const sub = (id) => SUBS.find((s) => s.id === id);
   const BANKS = [
-    { id: "rbc", name: "RBC Banque Royale", short: "RBC", logo: tile("RBC", "#005DAA", "#FFD200") },
-    { id: "scotia", name: "Banque Scotia", short: "Scotia", logo: tile("S", "#EC111A") },
-    { id: "desj", name: "Desjardins", short: "Desjardins", logo: tile("D", "#00874E") },
-    { id: "td", name: "Banque TD", short: "TD", logo: tile("TD", "#34A853") },
-    { id: "bmo", name: "BMO", short: "BMO", logo: tile("BMO", "#0079C1") },
+    { id: "rbc", name: "RBC Banque Royale", short: "RBC", logo: `<img src="logos/rbc.png" alt="" style="border-radius:50%">` },
+    { id: "scotia", name: "Banque Scotia", short: "Scotia", logo: `<img src="logos/scotiabank.png" alt="" style="border-radius:50%">` },
+    { id: "desj", name: "Desjardins", short: "Desjardins", logo: `<img src="logos/desjardins.png" alt="" style="border-radius:50%">` },
+    { id: "td", name: "Banque TD", short: "TD", logo: `<img src="logos/td.png" alt="" style="border-radius:50%">` },
+    { id: "bmo", name: "BMO", short: "BMO", logo: `<img src="logos/bmo.png" alt="" style="border-radius:50%">` },
   ];
   const REVIEW = [
     { id: "r1", raw: "DRI*ADOBE 8004", guess: "Adobe Acrobat", price: 14.99 },
