@@ -103,14 +103,14 @@
       <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)}><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>` }),
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}${step(1)}
-      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">On lit seulement<br>tes paiements.</h1>
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em;white-space:nowrap">On lit tes paiements.</h1>
       <ul>${feat(272, ICO.pay, "mint", "Tes paiements", "Lecture seule. Les 12 derniers mois.")}${feat(380, ICO.user, "mint", "Le nom de ton compte", "Pour que tu le reconnaisses.")}${feat(488, ICO.shield, "mint", "Connexion chiffrée", "Tu peux la couper quand tu veux.").replace('class="row feat"', 'class="row feat trust"')}</ul>
       ${plaid(594)}
       <p class="body a center" data-t style="top:636px;left:24px;width:342px">Ensuite : ce qu’on ne fera jamais.</p>
       ${btn(716, "Suivant", 'data-go="consent2"')}` }),
 
     consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
-      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">Ce qu’on ne<br>fera jamais.</h1>
+      <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em;white-space:nowrap">Ce qu’on ne fera jamais.</h1>
       <ul>${feat(272, ICO.money, "coral", "On ne déplace jamais ton argent", "On ne peut ni l’envoyer, ni le retirer.")}${feat(380, ICO.key, "coral", "On ne voit jamais ton mot de passe", "Tu te connectes sur le site de ta banque.")}${feat(488, ICO.data, "coral", "On ne vend jamais tes données", "Elles ne sont ni vendues, ni partagées.")}</ul>
       <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite, tu te connectes à ta banque.</p>
       ${plaid(668, true)}
