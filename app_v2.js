@@ -501,7 +501,7 @@
     const b = $("taskbar");
     if (!show) { b.innerHTML = ""; return; }
     const task = TASKS[H.idx];
-    b.innerHTML = `<div class="ov"><div class="taskbar" role="region" aria-label="Tâche en cours"><span class="lbl">${H.idx + 1}/3 · ${task.short}</span><button data-h="reread">Relire</button><button data-h="giveup">Abandonner</button></div></div>`;
+    b.innerHTML = `<div class="ov"><div class="taskbar" role="region" aria-label="Tâche en cours"><button class="tb-chip" data-h="tb" aria-expanded="false" aria-label="Tâche ${H.idx + 1} sur 3 : ${esc(task.short)}">${H.idx + 1}/3</button><span class="lbl">${H.idx + 1}/3 · ${task.short}</span><button data-h="reread">Relire</button><button data-h="giveup">Abandonner</button></div></div>`;
   }
   function overlay(html) { $("harness-layer").innerHTML = `<div class="harness" role="dialog" aria-modal="true">${html}</div>`; const f = $("harness-layer").querySelector("h1"); if (f) { f.tabIndex = -1; f.focus(); } }
   const closeOverlay = () => { $("harness-layer").innerHTML = ""; };
@@ -564,6 +564,12 @@
   function harness(action, el) {
     if (action === "next") { H.idx = 0; return taskCard(); }
     if (action === "start") return startTask();
+    if (action === "tb") {
+      const bar = el.closest(".taskbar"), open = bar.classList.toggle("open");
+      el.setAttribute("aria-expanded", open); clearTimeout(H.tbT);
+      if (open) H.tbT = setTimeout(() => { bar.classList.remove("open"); el.setAttribute("aria-expanded", "false"); }, 6000);
+      return;
+    }
     if (action === "reread") {
       const task = TASKS[H.idx];
       return sheet(`<div class="tx" style="top:48px"><h2 id="sh-t">Tâche ${H.idx + 1}</h2><p style="color:#fff;font-size:18px;line-height:26px">${task.text}</p></div><button class="btn" style="top:300px" data-close>OK</button>`);

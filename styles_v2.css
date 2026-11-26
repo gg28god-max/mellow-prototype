@@ -361,3 +361,14 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .finds b{font-weight:600;color:#fff}
 .finds .ck{flex:none;width:24px;height:24px;border-radius:12px;background:rgba(127,232,200,.16);color:var(--mint);display:grid;place-items:center;font:700 13px/1 Inter}
 .fine{position:absolute;left:24px;width:342px;font:400 13px/18px Inter;color:var(--grey);text-align:center}
+
+/* ---- Tester task bar: quiet chip by default, opens on tap (never covers the app) ---- */
+.taskbar{left:auto;right:10px;top:6px;width:auto;height:28px;padding:0;background:rgba(244,241,234,.9);gap:0;overflow:hidden;transition:width .25s var(--ease)}
+.taskbar .lbl,.taskbar [data-h=reread],.taskbar [data-h=giveup]{display:none}
+.taskbar .tb-chip{text-decoration:none;color:#111;padding:0 12px;height:28px;font:600 12px/28px Inter}
+.taskbar.open{left:8px;right:8px;top:4px;height:36px;gap:10px;padding:0 6px 0 4px}
+.taskbar.open .tb-chip{display:none}
+.taskbar.open .lbl,.taskbar.open [data-h=reread],.taskbar.open [data-h=giveup]{display:block}
+.taskbar.open .lbl{padding-left:10px}
+.framed .taskbar:not(.open){left:50%;right:auto;top:10px;height:24px;transform:translateX(-50%)}
+.framed .taskbar:not(.open) .tb-chip{height:24px;line-height:24px;padding:0 10px;font-size:11px}
