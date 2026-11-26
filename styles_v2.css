@@ -731,3 +731,38 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .logo img.lg{position:absolute;inset:0;width:100%;height:100%}
 .logo img.lg.sym{padding:17%}
 .logo img.lg.sym.bleed{padding:0}
+
+/* ---- Comptes: carousel of account cards + that account's payments (preview) ---- */
+.wdots{left:0;right:0;display:flex;justify-content:center;gap:8px}
+.wd{width:8px;height:8px;border-radius:99px;border:0;padding:0;background:rgba(255,255,255,.2);transition:width .3s var(--ease),background .3s}
+.wd.on{width:28px;background:var(--mint)}
+.wcar{left:0;width:390px;display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 40px 18px;box-sizing:border-box;scroll-padding:0 40px;scrollbar-width:none}
+.wcar::-webkit-scrollbar{display:none}
+.wcard{position:relative;flex:none;width:310px;height:190px;border-radius:26px;scroll-snap-align:center;overflow:hidden;border:1px solid var(--line2);background:linear-gradient(145deg,#2a2f2d,#0f1110);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.wcard::before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(ellipse at 120% 120%,rgba(255,255,255,.05) 0 1px,transparent 1px 7px);opacity:.7}
+.wcard.c-sav{background:linear-gradient(145deg,#1f3b34,#0c1513)}
+.wcard.c-visa{background:linear-gradient(145deg,#26304a,#0d1018)}
+.wcard.c-mc{background:linear-gradient(145deg,#4a2b2b,#140d0d)}
+.wcard .logo{position:absolute;left:20px;top:20px;width:44px;height:44px;border-radius:14px;background:#fff}
+.wcard .wk{position:absolute;right:20px;top:26px;font:600 11px/14px Inter;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.wcard .wb{position:absolute;left:20px;right:20px;bottom:18px;display:flex;flex-direction:column;gap:4px}
+.wcard .wb b{font:600 20px/24px Inter;letter-spacing:-.01em}
+.wcard .wm{font:500 15px/20px ui-monospace,SFMono-Regular,Menlo,monospace;color:rgba(255,255,255,.75);letter-spacing:.06em}
+.wl{left:28px;width:334px}
+.wl .wt{font:700 24px/30px Inter;letter-spacing:-.02em;margin:0}
+.wl .ws{margin:4px 0 16px;font:400 15px/22px Inter;color:var(--grey)}
+.wl .ws b{color:#fff;font-weight:600}
+.wrows{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.wrows li{border-bottom:1px solid var(--line)}
+.wrow{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:14px;padding:14px 2px;cursor:pointer}
+.wrow:focus-visible{outline:2px solid var(--mint);outline-offset:2px;border-radius:12px}
+.wrow .logo{position:relative;flex:none;width:44px;height:44px;border-radius:14px;color:var(--mint)}
+.wrow .logo.gic svg{width:22px;height:22px}
+.wrow .wn{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wrow .wn b{font:600 16px/22px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow small{font:400 13px/18px Inter;color:var(--grey)}
+.wrow .wn small{color:var(--grey)}
+.wrow .wp{font:600 16px/22px Inter;text-align:right}
+.wrow .wp small{display:inline;font-weight:400;margin-left:2px}
+.wempty{font:400 15px/22px Inter;color:var(--grey);padding:18px 0}
+.wdots,.wcar,.wl{position:absolute}

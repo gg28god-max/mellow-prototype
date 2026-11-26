@@ -66,6 +66,8 @@
     { id: "visa", name: "Carte de crédit Visa", kind: "Carte de crédit", mask: "7712" },
     { id: "mc", name: "Carte de crédit Mastercard", kind: "Carte de crédit", mask: "0441" },
   ];
+  const STREAM = ["Vidéo", "Musique", "Vidéo et musique", "Livraison et vidéo", "Télé"], SOFT = ["Stockage", "Actualités", "Sécurité", "Logiciel"];
+  const accOf = (x) => ACCTS.find((c) => c.id === (STREAM.includes(x.cat) ? "visa" : SOFT.includes(x.cat) ? "mc" : "chq"));
   const DOMAIN = { rbc: "rbcroyalbank.com", scotia: "scotiabank.com", desj: "desjardins.com", td: "td.com", bmo: "bmo.com" };
   const navLogo = (back) => `<header class="nav navlogo"><button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button><span class="logo" role="img" aria-label="${esc(S.bank.name)}">${S.bank.logo}</span></header>`;
   const nAcc = () => S.accts.length;
@@ -262,6 +264,14 @@
       <ul aria-label="Abonnements reconnus">${okRows.map(miniRow).join("")}</ul>
       <div class="pinspace" data-t style="top:${endY}px;height:150px" aria-hidden="true"></div>` }; },
 
+    wallet: () => {
+      const i = S.walletIdx || 0;
+      return { html: `${nav("Mes comptes", "scanned")}
+      <div class="wdots" data-t style="top:112px" id="wdots" role="tablist" aria-label="Comptes">${ACCTS.map((c, k) => `<button class="wd${k === i ? " on" : ""}" role="tab" data-wi="${k}" aria-selected="${k === i}" aria-label="${esc(c.name)}"></button>`).join("")}</div>
+      <div class="wcar" data-t style="top:136px" id="wcar" tabindex="0" aria-label="Tes comptes, fais glisser">${ACCTS.map((c, k) => `<article class="wcard c-${c.id}" aria-label="${esc(c.name)} ····${c.mask}"><span class="logo" aria-hidden="true">${S.bank.logo}</span><span class="wk">${esc(c.kind)}</span><div class="wb"><b>${esc(c.name.replace("Carte de crédit ", "").replace("Compte ", "Compte "))}</b><span class="wm">···· ${c.mask}</span></div></article>`).join("")}</div>
+      <div class="wl" data-t style="top:352px" id="wlist" aria-live="polite"></div>
+      <div class="pinspace" data-t style="top:900px;height:40px" aria-hidden="true"></div>` }; },
+
     review: () => {
       const left = REVIEW.filter((r) => !S.review[r.id]).length;
       const done = REVIEW.filter((r) => S.review[r.id] && S.review[r.id] !== "later");
@@ -378,6 +388,22 @@
     c.style.height = Math.max(viewH, need) + "px";
   }
 
+  function wireWallet() {
+    const car = $("wcar"), list = $("wlist"); if (!car || !list) return;
+    const draw = (i) => {
+      S.walletIdx = i; const c = ACCTS[i];
+      const mine = SCAN_POOL.filter((x) => accOf(x).id === c.id).sort((a, b) => monthly(b) - monthly(a));
+      const tot = mine.reduce((t, x) => t + monthly(x), 0);
+      document.querySelectorAll(".wd").forEach((d, k) => { d.classList.toggle("on", k === i); d.setAttribute("aria-selected", k === i); });
+      list.innerHTML = `<h2 class="wt">${esc(c.name)}</h2><p class="ws">${mine.length ? `${mine.length} paiements récurrents · <b>${money(tot)}</b> /mois` : "Aucun paiement récurrent trouvé"}</p>` +
+        (mine.length ? `<ul class="wrows">${mine.map((x) => { const u = x.uncertain; return `<li><button class="wrow" data-${u ? "evq" : "ev"}="${esc(x.name)}"><span class="logo${u || /currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${u ? QMARK : x.logo}</span><span class="wn"><b>${esc(u ? x.raw : x.name)}</b><small>${u ? (x.guess ? x.guess + " ?" : "Non reconnu") : esc(x.cat)}</small></span><span class="wp">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span></button></li>`; }).join("")}</ul>` : `<p class="wempty">Ce compte sert surtout à épargner. Rien à annuler ici.</p>`);
+      layout();
+    };
+    const step = () => { const a = car.querySelector(".wcard"); return a.offsetWidth + 14; };
+    let t; car.addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(() => { const i = Math.max(0, Math.min(ACCTS.length - 1, Math.round(car.scrollLeft / step()))); if (i !== S.walletIdx) draw(i); }, 60); });
+    document.querySelectorAll(".wd").forEach((d) => d.addEventListener("click", () => { const i = +d.dataset.wi; car.scrollTo({ left: i * step(), behavior: reduceMotion() ? "auto" : "smooth" }); draw(i); }));
+    car.scrollLeft = (S.walletIdx || 0) * step(); draw(S.walletIdx || 0);
+  }
   function wireBankSearch() {
     const inp = $("bq"); if (!inp) return;
     const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -441,6 +467,7 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
+    if (S.screen === "wallet") wireWallet();
     if (S.screen === "scanning") runScan();
     if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("accounts"); }, 2200);
   }
@@ -538,7 +565,7 @@
     const rid = rv ? { "Adobe Acrobat": "r1", "Inconnu": "r2", "Spotify": "r3" }[name] : null, open = rid && !(S.review[rid] && S.review[rid] !== "later");
     const h = [...name].reduce((n, c) => n + c.charCodeAt(0), 0), day = 3 + (h % 22), yearly = x.per === "an";
     const sel = ACCTS.filter((c) => S.accts.includes(c.id)), card = sel.find((c) => c.kind === "Carte de crédit");
-    const acc = (["Vidéo", "Musique", "Vidéo et musique", "Livraison et vidéo", "Télé", "Stockage", "Actualités", "Sécurité", "Logiciel"].includes(x.cat) && card) ? card : (sel.find((c) => c.kind === "Chèques") || sel[0] || ACCTS[0]);
+    const a0 = accOf(x), acc = (S.screen === "wallet" || S.accts.includes(a0.id)) ? a0 : (sel[0] || ACCTS[0]);
     const pays = yearly ? [{ d: `12 janv. 2026`, p: x.price }] : [0, 1, 2, 3].map((i) => ({ d: `${day} ${MONTHS[(10 - i + 12) % 12]} 2026`, p: x.price }));
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet ev" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>
       <div class="evbody">
@@ -743,7 +770,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["dash", "Abonnements"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["wallet", "Comptes · aperçu cartes"], ["review", "Vérification"], ["dash", "Abonnements"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
@@ -783,6 +810,7 @@
   if (framedMQ.addEventListener) framedMQ.addEventListener("change", fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
   const demo = new URLSearchParams(location.search).has("demo");
+  if (new URLSearchParams(location.search).has("wallet")) { S.screen = "wallet"; S.bank = S.bank || BANKS[0]; }
   render();
   fit();
   if (!demo) intro();
