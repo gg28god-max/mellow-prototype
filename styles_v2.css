@@ -427,3 +427,13 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .harness .tsegs i.on{background:#141414}
 .harness .tsegs i.done{background:#7a5b2c}
 .harness .tnext{color:#333;font-weight:500}
+
+/* ---- Back button token: rounded square, thin chevron (one style app-wide) ---- */
+:root{--back-r:14px;--back-ink:rgba(255,255,255,.82)}
+.back{width:44px;height:44px;border-radius:var(--back-r);font:inherit;padding:0;color:var(--back-ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.back svg{display:block}
+.nav{height:44px}
+.bl-back{width:44px;height:44px;border-radius:var(--back-r);padding:0;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);font:inherit}
+.bl-back svg{display:block}
+.bl-back2{display:flex;align-items:center;gap:2px;padding:0 12px 0 6px;font:500 16px/44px Inter}
+.bl-back2 svg{display:block}

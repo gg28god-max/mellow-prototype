@@ -79,7 +79,8 @@
   const B = (y, h) => `data-b style="bottom:${844 - y - h}px"`; // anchored to the bottom (buttons)
 
   // ---------- Building blocks ----------
-  const nav = (title, back) => `<header class="nav">${back ? `<button class="back" data-go="${back}" aria-label="Retour">‹</button>` : ""}<h1>${esc(title)}</h1></header>`;
+  const BACK_ICO = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>`;
+  const nav = (title, back) => `<header class="nav">${back ? `<button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button>` : ""}<h1>${esc(title)}</h1></header>`;
   const step = (n) => `<div class="step" role="img" aria-label="Étape ${n} sur 3"><div class="eb">ÉTAPE ${n} SUR 3</div><div class="segs">${[1, 2, 3].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div></div>`;
   const btn = (y, label, attrs, cls = "") => `<button class="btn ${cls}" ${B(y, 56)} ${attrs}>${label}</button>`;
   const link = (y, label, attrs, cls = "") => `<button class="link ${cls}" ${B(y, 28)} ${attrs}>${label}</button>`;
@@ -129,7 +130,7 @@
     banklogin: () => { const b = S.bank, th = b.theme; return { bare: true, light: true, html: `
       <div class="bl" style="--bh:${th.hero};--bh2:${th.hero2};--ba:${th.acc}">
         <div class="bl-hero" aria-hidden="true"></div>
-        <button class="bl-back" data-go="consent" aria-label="Retour">‹</button>
+        <button class="bl-back" data-go="consent" aria-label="Retour">${BACK_ICO}</button>
         <span class="bl-logo" aria-hidden="true">${b.logo}</span>
         <h1 class="bl-name">${esc(b.name)}</h1>
         <p class="bl-sub">${esc(th.svc)}</p>
@@ -187,7 +188,7 @@
       ${btn(716, "Voir les résultats pour l’instant", 'data-go="scanned"', "sec")}` }),
 
     slow: () => ({ strong: true, html: `
-      <button class="bl-back2" data-go="connected" aria-label="Retour">‹ Retour</button>
+      <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
       <p class="eb2 a" data-t style="top:240px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · ANALYSE EN COURS</p>
       <h1 class="hd pt a center w342" data-t style="top:266px;left:24px;white-space:normal;line-height:34px">Ça prend plus de temps que prévu</h1>
       <div class="pbar a" data-t style="top:350px" aria-hidden="true"><i style="width:65%"></i></div>
@@ -197,7 +198,7 @@
       ${link(782, "Annuler l’analyse", 'data-go="connected"')}` }),
 
     empty: () => ({ strong: true, html: `
-      <button class="bl-back2" data-go="connected" aria-label="Retour">‹ Retour</button>
+      <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
       <p class="eb2 a" data-t style="top:290px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · RÉSULTAT</p>
       <h1 class="hd pt a center w342" data-t style="top:316px;left:24px;white-space:normal">Aucun paiement récurrent</h1>
       <p class="body a center w342" data-t style="top:372px">On a vérifié 12 mois de transactions sur ce compte. Essaie un autre compte, ou ajoute un abonnement toi-même.</p>
