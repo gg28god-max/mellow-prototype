@@ -81,7 +81,7 @@
   // ---------- Building blocks ----------
   const nav = (title, back) => `<header class="nav">${back ? `<button class="back" data-go="${back}" aria-label="Retour">‹</button>` : ""}<h1>${esc(title)}</h1></header>`;
   const step = (n) => `<div class="step" role="img" aria-label="Étape ${n} sur 3"><div class="eb">ÉTAPE ${n} SUR 3</div><div class="segs">${[1, 2, 3].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div></div>`;
-  const btn = (y, label, attrs) => `<button class="btn" ${B(y, 56)} ${attrs}>${label}</button>`;
+  const btn = (y, label, attrs, cls = "") => `<button class="btn ${cls}" ${B(y, 56)} ${attrs}>${label}</button>`;
   const link = (y, label, attrs, cls = "") => `<button class="link ${cls}" ${B(y, 28)} ${attrs}>${label}</button>`;
   const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${val}</div></div>`;
   const plaid = (y, bottom) => `<div class="plaid" ${bottom ? B(y, 32) : T(y)}>Sécurisé par <b>${PLAID.replace('viewBox="0 0 72 72"', 'viewBox="14 14 44 44" width="14" height="14"').replace('fill="#fff"', 'fill="none"').replace('fill="#111"', 'fill="currentColor"')}PLAID</b></div>`;
@@ -166,14 +166,44 @@
       <h1 class="title a center w342" data-t style="top:396px;line-height:48px">Banque connectée</h1>
       <p class="body a center w342" data-t style="top:452px">${esc(S.bank.name)} · Chèques ··4821</p>
       <span class="logo l56" data-t style="top:496px;left:167px" aria-hidden="true">${S.bank.logo}</span>
-      ${btn(716, "Analyser mon compte", 'data-go="scanned"')}` }),
+      ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
 
-    scanned: () => ({ strong: true, html: `${success(150, true)}
-      <h1 class="title a center w342" data-t style="top:366px;line-height:48px">Analyse terminée</h1>
-      ${metric(440, "14 abonnements trouvés", "412 $/mois")}
-      <p class="body a center w342" data-t style="top:584px">On a vérifié 12 mois de transactions.</p>
-      <div class="a" data-t style="top:624px;left:95px;width:200px;height:44px" aria-hidden="true">${[NETFLIX, SPOTIFY, PRIME, ACROBAT].map((l, i) => `<span class="logo l44" style="left:${i * 52}px;top:0">${l}</span>`).join("")}</div>
-      ${btn(716, "Vérifier les frais", 'data-go="review"')}` }),
+    scanning: () => ({ strong: true, html: `
+      <p class="eb2 a" data-t style="top:150px;left:24px">ÉTAPE 3 SUR 3 · RECHERCHE DES PAIEMENTS</p>
+      <h1 class="hd pt a" data-t style="top:176px;left:24px">On analyse 12 mois…</h1>
+      <div class="pbar a" data-t style="top:236px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
+      <div class="cnt a" data-t style="top:258px" aria-live="polite"><span id="sc-n">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
+      <ul id="sc-list" aria-label="Abonnements trouvés"></ul>
+      ${btn(716, "Voir les résultats pour l’instant", 'data-go="scanned"', "sec")}` }),
+
+    slow: () => ({ strong: true, html: `
+      <button class="bl-back2" data-go="connected" aria-label="Retour">‹ Retour</button>
+      <p class="eb2 a" data-t style="top:240px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · ANALYSE EN COURS</p>
+      <h1 class="hd pt a center w342" data-t style="top:266px;left:24px;white-space:normal;line-height:34px">Ça prend plus de temps que prévu</h1>
+      <div class="pbar a" data-t style="top:350px" aria-hidden="true"><i style="width:65%"></i></div>
+      <p class="body a center w342" data-t style="top:380px">Certaines banques mettent quelques minutes. Tu peux quitter cet écran : Mellow continue et te prévient quand c’est prêt.</p>
+      <div class="set a" data-t style="top:486px;left:24px;width:342px"><span id="l-ready">Me prévenir quand c’est prêt</span><button class="switch" role="switch" aria-labelledby="l-ready" aria-checked="${S.toggles.push}" data-toggle="push"></button></div>
+      ${btn(716, "Continuer en arrière-plan", 'data-go="scanned"')}
+      ${link(782, "Annuler l’analyse", 'data-go="connected"')}` }),
+
+    empty: () => ({ strong: true, html: `
+      <button class="bl-back2" data-go="connected" aria-label="Retour">‹ Retour</button>
+      <p class="eb2 a" data-t style="top:290px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · RÉSULTAT</p>
+      <h1 class="hd pt a center w342" data-t style="top:316px;left:24px;white-space:normal">Aucun paiement récurrent</h1>
+      <p class="body a center w342" data-t style="top:372px">On a vérifié 12 mois de transactions sur ce compte. Essaie un autre compte, ou ajoute un abonnement toi-même.</p>
+      ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
+      ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
+
+    scanned: () => ({ strong: true, html: `${success(120, true)}
+      <h1 class="title a center w342" data-t style="top:318px;line-height:48px">Analyse terminée</h1>
+      ${metric(388, "14 abonnements trouvés", "412 $/mois")}
+      <ul class="finds a" data-t style="top:536px">
+        <li><span class="ck" aria-hidden="true">✓</span><span>12 mois de paiements lus</span></li>
+        <li><span class="ck" aria-hidden="true">✓</span><span>Noms cryptiques reconnus : « DRI*ADOBE » devient Adobe Acrobat</span></li>
+        <li><span class="ck" aria-hidden="true">✓</span><span><b>3 à vérifier.</b> Le reste est bon.</span></li>
+      </ul>
+      ${btn(740 - 24, "Voir quoi annuler", 'data-go="review"')}
+      <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }),
 
     review: () => {
       const left = REVIEW.filter((r) => !S.review[r.id]).length;
@@ -336,7 +366,33 @@
     const h = el.querySelector("h1");
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
+    if (S.screen === "scanning") runScan();
     if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("connected"); }, 2200);
+  }
+
+  // ---------- Scan progress (counts tick up, newest finds rise in) ----------
+  const SCAN_MODE = new URLSearchParams(location.search).get("scan") || "";   // "", "slow", "empty" (demo links)
+  const SCAN_TICKS = [[0, 0, 8], [1, 16, 22], [3, 62, 45], [8, 214, 68], [12, 341, 88], [14, 412, 100]];
+  const SCAN_FOUND = ["netflix", "prime", "spotify", "adobe"];
+  function runScan() {
+    let i = 0;
+    const stopAt = SCAN_MODE === "slow" ? 2 : SCAN_MODE === "empty" ? 1 : 5;
+    const tick = () => {
+      if (S.screen !== "scanning") return;
+      const [n, m, pct] = SCAN_TICKS[SCAN_MODE === "empty" ? 0 : i];
+      const bar = $("pb"); if (!bar) return;
+      bar.style.width = pct + "%"; bar.parentNode.setAttribute("aria-valuenow", pct);
+      $("sc-n").textContent = n + (n > 1 ? " trouvés" : " trouvé");
+      $("sc-m").textContent = m + " $/mois";
+      const shown = SCAN_FOUND.slice(0, Math.min(n, 4)).slice(-3);
+      const list = $("sc-list");
+      list.innerHTML = shown.map((id, k) => { const x = sub(id); const hint = id === "prime" ? "AMZN*Prime" : "Trouvé";
+        return `<li class="row scan" data-t style="top:${304 + k * 104}px"><span class="logo" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${hint}</span><span class="p">${money(x.price)}</span><span class="pp">par ${x.per}</span></li>`; }).join("");
+      layout();
+      if (i >= stopAt) { setTimeout(() => { if (S.screen === "scanning") go(SCAN_MODE === "slow" ? "slow" : SCAN_MODE === "empty" ? "empty" : "scanned"); }, SCAN_MODE ? 1800 : 1200); return; }
+      i++; setTimeout(tick, 1100);
+    };
+    setTimeout(tick, 500);
   }
 
   // ---------- Sheets ----------

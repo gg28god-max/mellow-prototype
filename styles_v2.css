@@ -346,3 +346,18 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bsheet .bl2{position:absolute;left:20px;top:396px;width:350px;height:32px;border:0;background:none;color:var(--ba);font:600 16px/1 Inter}
 .bsheet .bfoot{position:absolute;left:20px;top:452px;width:350px;display:flex;justify-content:space-between;font:500 14px/20px Inter;color:var(--ba)}
 @media (prefers-reduced-motion:reduce){.bsheet{animation:none!important}}
+
+/* ---- Scan screens (progress, slow, empty, complete) ---- */
+.eb2{font:500 12px/16px Inter;letter-spacing:.08em;color:#9ba7a2;white-space:nowrap}
+.pbar{left:24px;width:342px;height:8px;border-radius:4px;background:#2a2a2c;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;border-radius:4px;background:var(--mint);transition:width 1s var(--ease)}
+.cnt{left:24px;width:342px;display:flex;justify-content:space-between;font:400 16px/24px Inter;color:var(--grey)}
+.cnt b{font-weight:500;color:#fff}
+.row.scan{animation:rise .45s var(--ease) both}
+.btn.sec{background:#1c1c1e;color:#fff;border:1px solid var(--line2)}
+.bl-back2{position:absolute;left:16px;top:68px;height:44px;padding:0 12px;border:0;background:none;color:var(--mint);font:500 16px/44px Inter}
+.finds{left:24px;width:342px;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.finds li{display:flex;gap:12px;font:400 15px/22px Inter;color:#d6dbd9}
+.finds b{font-weight:600;color:#fff}
+.finds .ck{flex:none;width:24px;height:24px;border-radius:12px;background:rgba(127,232,200,.16);color:var(--mint);display:grid;place-items:center;font:700 13px/1 Inter}
+.fine{position:absolute;left:24px;width:342px;font:400 13px/18px Inter;color:var(--grey);text-align:center}
