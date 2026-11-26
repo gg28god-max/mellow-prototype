@@ -803,3 +803,6 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .notif .app.dodo{background:#e8f5ee;overflow:hidden;display:grid;place-items:center}
 .notif .app.dodo img{width:86%;height:86%;object-fit:contain}
 .orbit .sphere.dodo{width:112px;height:131px;left:139px;top:80px;animation:none}
+/* dodo only: no orbiting logos, rings or glow disc behind it */
+.orbit.solo .ring,.orbit.solo .orb,.orbit.solo .sphere-glow{display:none}
+.orbit .sphere.dodo{width:210px;height:246px;left:90px;top:62px}
