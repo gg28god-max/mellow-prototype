@@ -465,7 +465,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .attn{left:24px;width:342px;border-radius:24px;background:rgba(246,199,107,.09);border:1px solid rgba(246,199,107,.35);padding:18px 20px 18px 62px;text-align:left}
 .attn .ai{position:absolute;left:20px;top:18px;width:30px;height:30px;border-radius:15px;background:rgba(246,199,107,.18);color:#f6c76b;display:grid;place-items:center}
 .attn h2{font:600 18px/24px Inter;margin:0 0 4px}
-.attn p{font:400 15px/21px Inter;color:#d6d0c2;margin:0 0 12px}
+.attn p{font:400 15px/21px Inter;color:#d6d0c2;margin:0}
 .attn .raws{display:flex;flex-wrap:wrap;gap:6px;margin-left:-42px;margin-right:-8px}
 .attn .raws span{font:500 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#e9dfc4;background:rgba(255,255,255,.07);border-radius:8px;padding:7px 8px}
 .okline{left:24px;width:342px;display:flex;align-items:center;gap:10px;font:400 15px/22px Inter;color:#b6c0bc}

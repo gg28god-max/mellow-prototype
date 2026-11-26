@@ -212,9 +212,8 @@
         <span class="ai" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01"/></svg></span>
         <h2>${REVIEW.length} paiements à vérifier</h2>
         <p>Leur nom n’est pas clair. Compte environ 1 minute.</p>
-        <div class="raws">${REVIEW.map((r) => `<span>${esc(r.raw)}</span>`).join("")}</div>
       </section>
-      <p class="okline a" data-t style="top:580px"><span class="ck" aria-hidden="true">✓</span>Les ${SCAN_POOL.length - REVIEW.length} autres sont reconnus.</p>
+      <p class="okline a" data-t style="top:520px"><span class="ck" aria-hidden="true">✓</span>Les ${SCAN_POOL.length - REVIEW.length} autres sont reconnus.</p>
       ${btn(716, "Vérifier les " + REVIEW.length + " paiements", 'data-go="review"')}
       <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }),
 
