@@ -685,3 +685,10 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .sheet.ev.act h3{margin:12px 0 6px}
 .sheet.ev.act .evcard{padding:9px 16px}
 .sheet.ev.act .evlist li{padding:8px 16px}
+
+/* ---- Real logos (transparent PNG, cropped to artwork) on a single white tile ---- */
+.logo img.lg{width:100%;height:100%;display:block;object-fit:contain;padding:15%;background:#fff;border-radius:0;transform:none}
+.logo img.lg.bleed{padding:0;object-fit:cover}
+.bl-logo{border-radius:22px}
+.bl-logo img.lg{border-radius:0;transform:none;object-fit:contain;padding:16%}
+.plaid .plaidlogo{height:13px;width:auto;filter:brightness(0) invert(.62);vertical-align:-2px;margin-left:2px}
