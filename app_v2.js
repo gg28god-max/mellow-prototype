@@ -58,7 +58,16 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true } };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"] };
+  const ACCTS = [
+    { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
+    { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
+    { id: "visa", name: "Carte de crédit Visa", kind: "Carte de crédit", mask: "7712" },
+    { id: "mc", name: "Carte de crédit Mastercard", kind: "Carte de crédit", mask: "0441" },
+  ];
+  const DOMAIN = { rbc: "rbcroyalbank.com", scotia: "scotiabank.com", desj: "desjardins.com", td: "td.com", bmo: "bmo.com" };
+  const nAcc = () => S.accts.length;
+  const authLabel = () => nAcc() ? `Autoriser · ${nAcc()} compte${nAcc() > 1 ? "s" : ""}` : "Choisis au moins un compte";
 
   // ---------- Test harness state ----------
   const TASKS = [
@@ -154,7 +163,24 @@
         <button class="btn" type="submit" ${B(716, 56)}>Se connecter</button>
       </form>` }),
 
-    connecting: () => ({ html: `${nav("Connexion", "banklogin")}
+    accounts: () => ({ strong: "calm", html: `${nav(S.bank.short, "banklogin")}
+      <h1 class="hd pt a" data-t style="top:128px;left:24px">Quels comptes partager ?</h1>
+      <p class="body a" data-t style="top:172px;left:24px;width:342px;font-size:14px;line-height:20px">Lecture seule · Révocable en tout temps · Via Plaid</p>
+      <ul class="acctlist" aria-label="Comptes de ${esc(S.bank.short)}">${ACCTS.map((x, i) => `<li><button class="row acct" ${T(228 + i * 88)} role="checkbox" aria-checked="${S.accts.includes(x.id)}" data-acct="${x.id}"><span class="ack" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span></button></li>`).join("")}</ul>
+      <button class="btn authz" id="authz" ${B(716, 56)} data-go="access"${nAcc() ? "" : " disabled"}>${authLabel()}</button>
+      ${link(782, "Refuser", 'data-go="bank"')}` }),
+
+    access: () => ({ strong: "calm", html: `${nav(DOMAIN[S.bank.id], "accounts")}
+      <h2 class="hd a" data-t style="top:128px;left:24px">Ce que Mellow lit</h2>
+      <p class="body a" data-t style="top:172px;left:24px;width:342px;font-size:15px;line-height:22px">Nom du compte, solde, transactions, dates des relevés et détails des paiements.</p>
+      <h2 class="sect a" data-t style="top:262px;left:28px">Partager plus <span class="opt">(facultatif)</span></h2>
+      <div class="set tall" ${T(308)}><span id="l-holder">Nom et rôle du titulaire<small>Vérifie la propriété du compte. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-holder" aria-checked="${S.toggles.holder}" data-toggle="holder"></button></div>
+      <div class="set tall" ${T(412)}><span id="l-routing">Numéro de compte<small>Permet de déplacer de l’argent. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-routing" aria-checked="${S.toggles.routing}" data-toggle="routing"></button></div>
+      <p class="fine legal" data-t style="top:536px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
+      <p class="fine legal" data-t style="top:628px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
+      ${btn(716, authLabel(), 'data-go="connecting"', "authz")}` }),
+
+    connecting: () => ({ html: `${nav("Connexion", "access")}
       <div class="handoff" ${T(230)} role="img" aria-label="Plaid transmet les données de ${esc(S.bank.short)} à Mellow">
         <span class="logo" style="left:63px">${PLAID}</span>
         <span class="dots">${[0, 1, 2, 3, 4].map(() => "<i></i>").join("")}</span>
@@ -168,14 +194,14 @@
     connected: () => ({ strong: "calm", html: `
       <header class="nav"><h2>Compte lié</h2></header>
       <span class="logo l88" data-t style="top:140px;left:151px" aria-hidden="true">${S.bank.logo}</span>
-      <h1 class="hd pt a center w342" data-t style="top:256px;left:24px">Compte chèques ··4821</h1>
-      <p class="body a center w342" data-t style="top:298px;left:24px">${esc(S.bank.name)}</p>
+      ${(() => { const sel = ACCTS.filter((x) => S.accts.includes(x.id)); const one = sel.length === 1 ? sel[0] : null; return `<h1 class="hd pt a center w342" data-t style="top:256px;left:24px">${one ? esc(one.name) + " ··" + one.mask : sel.length + " comptes liés"}</h1>
+      <p class="body a center w342" data-t style="top:298px;left:24px">${one ? esc(S.bank.name) : esc(S.bank.short) + " · " + [...new Set(sel.map((x) => x.kind.toLowerCase()))].join(", ")}</p>`; })()}
       <section class="okcard a" data-t style="top:356px" aria-label="Banque connectée">
         <span class="okck" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
         <h2>Banque connectée</h2>
         <p>Mellow peut lire tes paiements des 12 derniers mois. Il ne peut rien payer ni déplacer.</p>
       </section>
-      ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
+      ${btn(716, nAcc() > 1 ? "Analyser mes comptes" : "Analyser mon compte", 'data-go="scanning"')}` }),
 
     scanning: () => ({ strong: "calm", html: `
       <div class="scanbank a" data-t style="top:60px;left:151px" aria-hidden="true"><i></i><i></i><span class="logo l88">${S.bank.logo}</span><b class="sweep"></b></div>
@@ -463,7 +489,7 @@
         <input id="p" class="bf" type="password" value="demo1234" autocomplete="off" aria-label="Mot de passe">
         <button class="bb" type="submit">Se connecter</button>
       </form></div></div>`;
-    $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; go("connecting"); });
+    $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; S.accts = ["chq"]; go("accounts"); });
     $("u").focus({ preventScroll: true });
   }
   const closeSheet = () => {
@@ -525,6 +551,7 @@
       if (d.rv === "no") return nameSheet(r);
       if (d.rv === "later") { S.review[r.id] = "later"; closeSheet(); return render(); }
     }
+    if (d.acct) { const on = !S.accts.includes(d.acct); S.accts = on ? [...S.accts, d.acct] : S.accts.filter((x) => x !== d.acct); t.setAttribute("aria-checked", on); const z = $("authz"); z.textContent = authLabel(); z.disabled = !nAcc(); return; }
     if (d.toggle) { S.toggles[d.toggle] = !S.toggles[d.toggle]; t.setAttribute("aria-checked", S.toggles[d.toggle]); return; }
     if ("notif" in d) { $("notif-layer").innerHTML = ""; H.notifUsed = true; S.detail = "adobe"; mark("open_adobe"); return go("detail"); }
     if (d.h) return harness(d.h, t);
