@@ -671,3 +671,17 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.warnrow.done .s.warn{color:var(--grey)}
 .row.warnrow.done .chev{color:var(--mint);font-size:16px;top:24px;left:298px}
 .sheet.ev .evcard .evdates{color:#cfd8d4;margin-top:4px}
+
+.sheet.ev .evhead .warnp{color:#f6c76b;font:500 13.5px/18px Inter;margin-top:1px}
+.sheet.ev.act h3{margin:14px 0 6px}
+.sheet.ev.act .evcard{padding:11px 16px}
+.sheet.ev.act .evlist li{padding:9px 16px}
+.sheet.ev.act .evmore{margin-top:8px}
+.sheet.ev.act .evbody{bottom:170px;-webkit-mask-image:linear-gradient(#000 calc(100% - 22px),transparent);mask-image:linear-gradient(#000 calc(100% - 22px),transparent)}
+.sheet.ev.act .evbody{bottom:160px;top:26px}
+.sheet.ev.act .evfoot{gap:6px;bottom:16px}
+.sheet.ev.act .evfoot .btn{height:46px;line-height:46px}
+.sheet.ev.act .evfoot .link{height:26px;line-height:26px}
+.sheet.ev.act h3{margin:12px 0 6px}
+.sheet.ev.act .evcard{padding:9px 16px}
+.sheet.ev.act .evlist li{padding:8px 16px}

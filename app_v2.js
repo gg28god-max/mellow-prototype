@@ -542,15 +542,14 @@
     const pays = yearly ? [{ d: `12 janv. 2026`, p: x.price }] : [0, 1, 2, 3].map((i) => ({ d: `${day} ${MONTHS[(10 - i + 12) % 12]} 2026`, p: x.price }));
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet ev" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>
       <div class="evbody">
-        <div class="evhead"><span class="logo${rid || /currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${rid ? QMARK : x.logo}</span><div><h2 id="sh-t">${esc(rid ? x.raw : x.name)}</h2><p>${money(x.price)} /${yearly ? "an" : "mois"}${rid ? "" : " · " + esc(x.cat)}</p></div></div>
-        ${rid ? `<div class="evask"><b>${x.guess ? "On pense que c’est " + esc(x.guess) : "On ne reconnaît pas ce nom"}</b><span>${x.guess ? "Le nom sur ton relevé ressemble à celui de ce service." : "Aucun service connu ne correspond à ce texte."}</span></div>` : ""}
+        <div class="evhead"><span class="logo${rid || /currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${rid ? QMARK : x.logo}</span><div><h2 id="sh-t">${esc(rid ? x.raw : x.name)}</h2><p>${money(x.price)} /${yearly ? "an" : "mois"}${rid ? "" : " · " + esc(x.cat)}</p>${rid ? `<p class="warnp">${x.guess ? "On pense que c’est " + esc(x.guess) + " ?" : "On ne reconnaît pas ce nom"}</p>` : ""}</div></div>
         <h3>Dans ton relevé bancaire</h3>
         <div class="evcard"><b class="mono">${esc(DESC[x.name] || x.name.toUpperCase())}</b><span>${esc(acc.name)} · ····${acc.mask}</span></div>
         <h3>Le motif</h3>
-        <div class="evcard"><b>${yearly ? "Chaque année · le 12 janv." : "Chaque mois · vers le " + day}</b><span>${yearly ? "1 paiement" : "12 paiements identiques"} · sur 12 mois</span>${open && !yearly ? `<span class="evdates">${pays.map((q) => q.d.replace(" 2026", "")).join(" · ")} · …</span>` : ""}</div>
-        ${open ? "" : `<h3>${yearly ? "Dernier paiement" : "Derniers paiements"}</h3>
+        <div class="evcard"><b>${yearly ? "Chaque année · le 12 janv." : "Chaque mois · vers le " + day}</b><span>${yearly ? "1 paiement" : "12 paiements identiques"} · sur 12 mois</span></div>
+        <h3>${yearly ? "Dernier paiement" : "Derniers paiements"}</h3>
         <ul class="evlist">${pays.map((q) => `<li><span>${q.d}</span><b>${money(q.p)}</b></li>`).join("")}</ul>
-        ${yearly ? "" : '<p class="evmore">+ 8 paiements plus anciens, même montant</p>'}`}
+        ${yearly ? "" : '<p class="evmore">+ 8 paiements plus anciens, même montant</p>'}
       </div>
       ${open ? (x.guess ? `<div class="evfoot"><button class="btn evbtn" data-rv="yes" data-id="${rid}">Oui, c’est ${esc(x.guess)}</button><button class="btn sec evbtn" data-rv="no" data-id="${rid}">Non, c’est autre chose</button><button class="link" data-rv="later" data-id="${rid}">Pas sûr, plus tard</button></div>` : `<div class="evfoot"><button class="btn evbtn" data-rv="no" data-id="${rid}">Nommer ce paiement</button><button class="link" data-rv="later" data-id="${rid}">Plus tard</button></div>`) : `<div class="evfoot"><button class="btn evbtn" data-close>Fermer</button></div>`}</div></div>`;
     $("sheet-layer").querySelector(".sheet.ev").classList.toggle("act", !!open);
