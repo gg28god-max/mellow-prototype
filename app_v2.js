@@ -404,6 +404,14 @@
     const step = () => { const a = car.querySelector(".wcard"); return a.offsetWidth + 14; };
     let t; car.addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(() => { const i = Math.max(0, Math.min(AC.length - 1, Math.round(car.scrollLeft / step()))); if (i !== S.walletIdx) draw(i); }, 60); });
     document.querySelectorAll(".wd").forEach((d) => d.addEventListener("click", () => { const i = +d.dataset.wi; car.scrollTo({ left: i * step(), behavior: reduceMotion() ? "auto" : "smooth" }); draw(i); }));
+    // mouse / trackpad drag (touch already swipes natively) + arrow keys + big forgiving drag zone
+    const k = () => car.getBoundingClientRect().width / car.offsetWidth || 1;
+    let down = false, x0 = 0, s0 = 0, moved = false;
+    car.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") return; down = true; moved = false; x0 = e.clientX; s0 = car.scrollLeft; car.classList.add("drag"); });
+    window.addEventListener("pointermove", (e) => { if (!down) return; const dx = e.clientX - x0; if (Math.abs(dx) > 4) moved = true; car.scrollLeft = s0 - dx / k(); });
+    window.addEventListener("pointerup", () => { if (!down) return; down = false; const d = (car.scrollLeft - s0); car.classList.remove("drag"); const b = Math.round(s0 / step()), i = Math.max(0, Math.min(AC.length - 1, Math.abs(d) > 40 ? b + Math.sign(d) : b)); car.scrollTo({ left: i * step(), behavior: reduceMotion() ? "auto" : "smooth" }); });
+    car.addEventListener("dragstart", (e) => e.preventDefault());
+    car.addEventListener("keydown", (e) => { if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; e.preventDefault(); const i = Math.max(0, Math.min(AC.length - 1, (S.walletIdx || 0) + (e.key === "ArrowRight" ? 1 : -1))); car.scrollTo({ left: i * step(), behavior: "smooth" }); });
     car.scrollLeft = (S.walletIdx || 0) * step(); draw(S.walletIdx || 0);
   }
   function wireBankSearch() {
@@ -788,7 +796,7 @@
     const jump = (id) => {
       if (id === "detail") S.detail = S.detail || "adobe";
       if (id === "cancelled") S.adobe = "cancelled";
-      if (id === "connected" && S.accts.length < 2) S.accts = ["chq", "sav", "visa"];
+      if ((id === "connected" || id === "wallet" || id === "scanned") && S.accts.length < 2) S.accts = ["chq", "sav", "visa"];
       if (S.screen === "scanning") clearTimeout(0);
       $("harness-layer").innerHTML = ""; $("sheet-layer").innerHTML = ""; $("notif-layer").innerHTML = "";
       nextTrans = "fade"; prev = []; S.screen = id; render();
@@ -812,7 +820,7 @@
   if (framedMQ.addEventListener) framedMQ.addEventListener("change", fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
   const demo = new URLSearchParams(location.search).has("demo");
-  if (new URLSearchParams(location.search).has("wallet")) { S.screen = "wallet"; S.bank = S.bank || BANKS[0]; }
+  if (new URLSearchParams(location.search).has("wallet")) { S.screen = "wallet"; S.accts = ["chq", "sav", "visa", "mc"]; S.bank = S.bank || BANKS[0]; }
   render();
   fit();
   if (!demo) intro();

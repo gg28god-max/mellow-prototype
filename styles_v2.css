@@ -770,3 +770,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bycard span{color:var(--mint);font-size:18px;line-height:1}
 .bycard{right:42px;height:28px;padding:0 10px;font:500 13px/26px Inter;z-index:3}
 .bycard span{font-size:16px}
+.wcar{touch-action:pan-x pan-y;overscroll-behavior-x:contain;cursor:grab;-webkit-overflow-scrolling:touch;user-select:none}
+.wcar.drag{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}
+.wcard{scroll-snap-stop:always}
+.wcar{padding-left:40px;padding-right:40px;height:226px;box-sizing:border-box}
+.wcard *{pointer-events:none}
