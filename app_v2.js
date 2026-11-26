@@ -514,7 +514,7 @@
     const task = TASKS[H.idx];
     b.innerHTML = `<div class="ov"><div class="taskbar" role="region" aria-label="Tâche en cours"><button class="tb-chip" data-h="tb" aria-expanded="false" aria-label="Tâche ${H.idx + 1} sur 3 : ${esc(task.short)}">${H.idx + 1}/3</button><span class="lbl">${H.idx + 1}/3 · ${task.short}</span><button data-h="reread">Relire</button><button data-h="giveup">Abandonner</button></div></div>`;
   }
-  function overlay(html) { $("harness-layer").innerHTML = `<div class="harness" role="dialog" aria-modal="true">${html}</div>`; const f = $("harness-layer").querySelector("h1"); if (f) { f.tabIndex = -1; f.focus(); } }
+  function overlay(html) { const layer = $("harness-layer"), fresh = !layer.firstElementChild; layer.innerHTML = `<div class="harness${fresh ? "" : " swap"}" role="dialog" aria-modal="true">${html}</div>`; const f = $("harness-layer").querySelector("h1"); if (f) { f.tabIndex = -1; f.focus(); } }
   const closeOverlay = () => { $("harness-layer").innerHTML = ""; };
 
   const HI = (d) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;

@@ -437,3 +437,4 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bl-back svg{display:block}
 .bl-back2{display:flex;align-items:center;gap:2px;padding:0 12px 0 6px;font:500 16px/44px Inter}
 .bl-back2 svg{display:block}
+.harness.swap{animation:none}
