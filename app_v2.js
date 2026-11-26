@@ -156,8 +156,12 @@
       </form>` }),
 
     connecting: () => ({ html: `${nav("Connexion", "banklogin")}${step(3)}
-      <div class="spin" ${T(240)} role="img" aria-label="Chargement"></div>
-      <span class="logo l56" data-t style="top:260px;left:167px" aria-hidden="true">${S.bank.logo}</span>
+      <div class="handoff" ${T(230)} role="img" aria-label="Plaid transmet les données de ${esc(S.bank.short)} à Mellow">
+        <span class="logo" style="left:63px">${PLAID}</span>
+        <span class="dots">${[0, 1, 2, 3, 4].map(() => "<i></i>").join("")}</span>
+        <span class="logo" style="left:207px">${S.bank.logo}</span>
+        <span class="lb" style="left:63px">Plaid</span><span class="lb" style="left:207px">${esc(S.bank.short)}</span>
+      </div>
       <h2 class="hd a center w342" data-t style="top:372px">Connexion à ${esc(S.bank.short)}</h2>
       <p class="body a center" data-t style="top:424px;left:40px;width:310px">On relie ton compte de façon sécurisée. Ça prend environ 30 secondes.</p>
       ${link(740, "Annuler", 'data-go="bank"')}` }),
