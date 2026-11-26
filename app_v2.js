@@ -204,10 +204,10 @@
       const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
       const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
       const warnRow = (x, i) => { const sub = x.guess ? x.guess + " ?" : "Non reconnu";
-        return `<li class="row warnrow" ${T(356 + i * 84)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:36px" aria-label="${esc(x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}, à vérifier"></button>
+        return `<li class="row warnrow" ${T(356 + i * 76)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:36px" aria-label="${esc(x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}, à vérifier"></button>
           <span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t" aria-hidden="true">${esc(x.raw)}</span><span class="s warn" aria-hidden="true">${esc(sub)}</span>
-          <span class="p" aria-hidden="true">${money(x.price)}</span><span class="pp" aria-hidden="true">par ${x.per}</span><span class="chev" aria-hidden="true">›</span></li>`; };
-      const y2 = 356 + 3 * 84 + 24;                                   // second group starts below a clear gap
+          <span class="p" aria-hidden="true">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="chev" aria-hidden="true">›</span></li>`; };
+      const y2 = 356 + 3 * 76 + 24;                                   // second group starts below a clear gap
       const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 52 + i * 68)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
       const endY = y2 + 52 + okRows.length * 68;
       return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `

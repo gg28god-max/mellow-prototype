@@ -526,3 +526,13 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.mini .ok{left:298px;top:17px}
 .row.mini .t{font-size:15px;max-width:150px}
 .row.mini .t{font-size:14.5px;max-width:140px}.row.mini .p{left:172px;width:108px}
+
+/* À vérifier = same pill as Reconnus; only the guess line and chevron stay amber */
+.row.warnrow{height:64px;background:var(--pill-bg);border-color:var(--pill-line)}
+.row.warnrow .logo{left:12px;top:12px}
+.row.warnrow .t{left:64px;top:12px;font:500 15px/20px Inter;max-width:150px}
+.row.warnrow .s.warn{left:64px;top:34px;font:400 12px/16px Inter}
+.row.warnrow .p{left:172px;width:108px;top:21px;font:500 16px/22px Inter}
+.row.warnrow .p small{font:400 12px/1 Inter;color:var(--grey);margin-left:2px}
+.row.warnrow .chev{left:298px;top:18px}
+.row.warnrow .t{font-size:14px;max-width:122px;letter-spacing:-.01em}
