@@ -764,7 +764,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["wallet", "Par compte (cartes)"], ["review", "Vérification"], ["dash", "Abonnements"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
@@ -775,8 +775,11 @@
     dv.innerHTML = `<h2>Écrans</h2><div class="dv-nav"><button data-dv="prev" aria-label="Écran précédent">←</button><button data-dv="next" class="dv-next">Suivant →</button></div>
       <h3>Banque</h3><div class="dv-banks">${BANKS.map((b) => `<button data-dvbank="${b.id}" aria-pressed="${b.id === S.bank.id}">${esc(b.short)}</button>`).join("")}</div>
       <h3>Parcours</h3><ol>${DEV_FLOW.map(([id, l]) => `<li><button data-dvgo="${id}">${esc(l)}</button></li>`).join("")}</ol>
-      <p class="dv-hint">Flèches ← → du clavier. Panneau visible seulement sur grand écran.</p>`;
+      <p class="dv-hint">Flèches ← → du clavier. Sur petit écran : bouton « Écrans » en bas à droite.</p>`;
     document.body.appendChild(dv);
+    const tg = document.createElement("button"); tg.id = "dvtoggle"; tg.type = "button"; tg.textContent = "Écrans ☰"; tg.setAttribute("aria-controls", "dev");
+    tg.addEventListener("click", () => { const o = dv.classList.toggle("open"); tg.setAttribute("aria-expanded", o); });
+    document.body.appendChild(tg);
     const jump = (id) => {
       if (id === "detail") S.detail = S.detail || "adobe";
       if (id === "cancelled") S.adobe = "cancelled";

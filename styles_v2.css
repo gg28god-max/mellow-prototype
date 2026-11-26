@@ -584,8 +584,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 
 /* ---- Designer panel (outside the phone frame) ---- */
 #dev{display:none}
-@media (min-width:960px){
-  #dev{display:block;position:fixed;right:20px;top:20px;bottom:20px;width:236px;overflow:auto;padding:16px;border-radius:20px;background:#141416;border:1px solid var(--line2);color:#fff;font:500 14px/20px Inter;z-index:80;scrollbar-width:thin}
+  #dev{position:fixed;right:20px;top:20px;bottom:20px;width:236px;z-index:50;overflow:auto;padding:16px;border-radius:20px;background:#141416;border:1px solid var(--line2);color:#fff;font:500 14px/20px Inter;z-index:80;scrollbar-width:thin}
   #dev h2{font:700 15px/20px Inter;margin:0 0 12px}
   #dev h3{font:600 11px/16px Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:16px 0 8px}
   #dev button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left}
@@ -603,7 +602,10 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
   #dev ol button.on{background:#26262a;color:#fff;font-weight:600}
   .dv-hint{margin:14px 0 0;font:400 12px/16px Inter;color:var(--grey)}
   #dev button:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
-}
+#dev.open{display:block}
+@media (min-width:960px){#dev{display:block}#dvtoggle{display:none!important}}
+#dvtoggle{position:fixed;right:12px;bottom:12px;z-index:60;height:40px;padding:0 16px;border-radius:99px;border:1px solid var(--line2);background:#141416;color:#fff;font:600 14px/38px Inter;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+@media (max-width:959px){#dev{width:min(260px,86vw);top:12px;bottom:64px;right:12px}}
 
 /* Linked accounts list (Compte lié) */
 .row.acc{height:64px;border-radius:var(--row-r);background:var(--pill-bg);border-color:var(--pill-line)}
