@@ -820,3 +820,17 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .plaidtop{position:absolute;left:0;right:0;flex-direction:column;justify-content:center;gap:8px;height:auto;text-align:center}
 .plaidtop img{height:40px}
 .plaidtop span{padding:0;border:0;font:500 13.5px/18px Inter;color:#b8bcc0}
+
+/* Linked accounts connect one by one: row slides in, spinner, then the green check pops */
+.row.acc{animation:accin .5s var(--ease) var(--d,0s) backwards}
+.row.acc .ok{background:var(--mint);color:#06281d;animation:okpop .45s var(--ease) calc(var(--d,0s) + .75s) both}
+.row.acc .ok svg{display:block}
+.row.acc .ok path{stroke-dasharray:22;stroke-dashoffset:22;animation:okdraw .4s var(--ease) calc(var(--d,0s) + .9s) forwards}
+.row.acc .spin{position:absolute;left:298px;top:20px;width:24px;height:24px;box-sizing:border-box;border-radius:50%;border:2px solid rgba(255,255,255,.18);border-top-color:var(--mint);animation:accspin .8s linear calc(var(--d,0s) + .15s) both;pointer-events:none}
+@keyframes accin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes accspin{0%{opacity:0;transform:rotate(0)}12%{opacity:1}88%{opacity:1}100%{opacity:0;transform:rotate(560deg)}}
+.okcard.late{animation:accin .5s var(--ease) var(--od,0s) backwards,okglow 1.2s ease-out calc(var(--od,0s) + .6s) both}
+.okcard.late .okck{animation-delay:calc(var(--od,0s) + .45s)}
+.okcard.late .okck::after{animation-delay:calc(var(--od,0s) + .7s)}
+.okcard.late .okck path{animation-delay:calc(var(--od,0s) + .8s)}
+@media (prefers-reduced-motion:reduce){.row.acc,.row.acc .ok,.row.acc .ok path,.okcard.late{animation:none!important}.row.acc .ok path{stroke-dashoffset:0}.row.acc .spin{display:none}}

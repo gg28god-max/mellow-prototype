@@ -203,13 +203,13 @@
 
     connected: () => { const sel = ACCTS.filter((x) => S.accts.includes(x.id)), n = sel.length, y0 = 262, endY = y0 + n * 72;
       const AI = { Chèques: GI('<rect x="3" y="6" width="18" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>'), Épargne: GI('<path d="M5 11c0-3.3 3.1-6 7-6s7 2.7 7 6c0 2-1 3.7-2.5 4.8V19h-3v-1.5h-3V19h-3v-3.2C6 14.7 5 13 5 11z"/><path d="M9.5 10.5v.01M19 10.5h2"/>'), "Carte de crédit": GI('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 14.5h3"/>') };
-      const row = (x, i) => `<li class="row acc" ${T(y0 + i * 72)}><span class="logo gic" aria-hidden="true">${AI[x.kind]}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span><span class="ok" aria-hidden="true">✓</span></li>`;
+      const row = (x, i) => `<li class="row acc" data-t style="top:${y0 + i * 72}px;--d:${(0.35 + i * 0.8).toFixed(2)}s"><span class="logo gic" aria-hidden="true">${AI[x.kind]}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span><i class="spin" aria-hidden="true"></i><span class="ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></li>`;
       return { strong: "calm", html: `
       <span class="logo l56" data-t style="top:84px;left:167px" aria-hidden="true">${S.bank.logo}</span>
       <h1 class="hd pt a center w342" data-t style="top:158px;left:24px">${n} compte${n > 1 ? "s" : ""} lié${n > 1 ? "s" : ""}</h1>
       <p class="body a center w342" data-t style="top:202px;left:24px">${esc(S.bank.name)}</p>
       <ul aria-label="Comptes liés">${sel.map(row).join("")}</ul>
-      <section class="okcard a" data-t style="top:${endY + 12}px" aria-label="Banque connectée">
+      <section class="okcard a late" data-t style="top:${endY + 12}px;--od:${(0.35 + n * 0.8).toFixed(2)}s" aria-label="Banque connectée">
         <span class="okck" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
         <h2>Banque connectée</h2>
         <p>Mellow peut lire tes paiements des 12 derniers mois. Il ne peut rien payer ni déplacer.</p>
