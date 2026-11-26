@@ -118,9 +118,12 @@
       ${link(740, "J’ai déjà un compte", 'data-go="bank"')}` }),
 
     bank: () => ({ html: `${nav("Choisis ta banque", "welcome")}
-      <div class="a" data-t style="top:128px;left:24px;width:342px;height:52px;border-radius:26px;background:var(--raised);border:1px solid var(--line2);display:flex;align-items:center;gap:10px;padding:0 18px;color:var(--grey);font:400 16px/1 Inter" aria-hidden="true"><i style="width:16px;height:16px;border-radius:50%;border:2px solid var(--grey)"></i>Rechercher une banque</div>
-      <h2 class="sect a" data-t style="top:200px;left:28px">Banques populaires</h2>
-      <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)}><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>` }),
+      <form class="srch a" data-t style="top:128px" role="search" id="bqform" novalidate><label class="sr" for="bq">Rechercher une banque</label>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+        <input id="bq" type="search" placeholder="Rechercher une banque" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="bq-x" aria-label="Effacer la recherche" hidden>×</button></form>
+      <h2 class="sect a" data-t style="top:200px;left:28px" id="bq-h">Banques populaires</h2>
+      <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)} data-key="${esc(b.name + " " + b.short + " " + (b.alias || ""))}"><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>
+      <p class="a bq-empty" id="bq-empty" data-t style="top:260px;left:24px;width:342px" hidden role="status"></p>` }),
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}
       <h1 class="hd pt a" data-t style="top:184px;left:24px">Tu gardes le contrôle.</h1>
@@ -374,6 +377,22 @@
     c.style.height = Math.max(viewH, need) + "px";
   }
 
+  function wireBankSearch() {
+    const inp = $("bq"); if (!inp) return;
+    const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const rows = [...document.querySelectorAll(".row.bank")], head = $("bq-h"), empty = $("bq-empty"), x = $("bq-x");
+    const run = () => {
+      const q = norm(inp.value.trim()); let n = 0;
+      rows.forEach((li) => { const hit = !q || norm(li.dataset.key).includes(q); li.hidden = !hit; if (hit) { li.style.top = 244 + n * 96 + "px"; n++; } });
+      head.textContent = q ? (n ? (n === 1 ? "1 résultat" : n + " résultats") : "Aucun résultat") : "Banques populaires";
+      empty.hidden = n > 0; if (!n) empty.innerHTML = `On n’a pas trouvé « ${esc(inp.value.trim())} ».<br>Vérifie l’orthographe ou essaie un autre nom.`;
+      x.hidden = !inp.value; layout();
+    };
+    inp.addEventListener("input", run);
+    x.addEventListener("click", (e) => { e.stopPropagation(); inp.value = ""; run(); inp.focus(); });
+    $("bqform").addEventListener("submit", (e) => { e.preventDefault(); const v = rows.filter((li) => !li.hidden); if (v.length === 1) v[0].querySelector("button").click(); else inp.blur(); });
+  }
+
   // ---------- Render ----------
   let prev = [];
   let nextTrans = "fade";
@@ -420,6 +439,7 @@
     const h = el.querySelector("h1");
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
+    if (S.screen === "bank") wireBankSearch();
     if (S.screen === "scanning") runScan();
     if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("accounts"); }, 2200);
   }

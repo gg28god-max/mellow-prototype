@@ -649,3 +649,13 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .sheet.ev .evlist b{font-weight:500;color:#fff}
 .sheet.ev .evmore{margin:10px 4px 0;font:400 13px/18px Inter;color:var(--grey)}
 .sheet.ev .evbtn{position:absolute;left:24px;bottom:24px;width:314px}
+
+/* ---- Bank search ---- */
+.srch{left:24px;width:342px;height:52px;border-radius:26px;background:var(--raised);border:1px solid var(--line2);display:flex;align-items:center;gap:10px;padding:0 14px 0 18px;color:var(--grey);margin:0}
+.srch:focus-within{border-color:rgba(127,232,200,.55);color:var(--mint)}
+.srch input{flex:1;min-width:0;height:100%;border:0;background:none;outline:0;color:#fff;font:400 16px/1 Inter;-webkit-appearance:none;appearance:none}
+.srch input::placeholder{color:var(--grey)}
+.srch input::-webkit-search-cancel-button{display:none}
+.srch-x{width:28px;height:28px;border-radius:14px;border:0;background:rgba(255,255,255,.1);color:#fff;font:400 18px/26px Inter;text-align:center;padding:0}
+.row.bank[hidden],.bq-empty[hidden]{display:none}
+.bq-empty{margin:0;font:400 15px/22px Inter;color:var(--grey);text-align:center}
