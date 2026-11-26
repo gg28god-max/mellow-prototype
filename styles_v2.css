@@ -840,3 +840,5 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .plaidtop{gap:6px}
 .plaidtop b{font:800 17px/20px Inter;letter-spacing:.24em;padding-left:.24em;color:#fff;opacity:.92}
 .plaidtop span{margin-top:2px}
+.btn:disabled{opacity:.32;cursor:not-allowed;box-shadow:none}
+#lk-b{transition:opacity .4s var(--ease)}

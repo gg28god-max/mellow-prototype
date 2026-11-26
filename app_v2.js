@@ -206,15 +206,15 @@
       const row = (x, i) => `<li class="row acc" data-t style="top:${y0 + i * 72}px;--d:${(0.35 + i * 0.8).toFixed(2)}s"><span class="logo gic" aria-hidden="true">${AI[x.kind]}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span><i class="spin" aria-hidden="true"></i><span class="ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></li>`;
       return { strong: "calm", html: `
       <span class="logo l56" data-t style="top:84px;left:167px" aria-hidden="true">${S.bank.logo}</span>
-      <h1 class="hd pt a center w342" data-t style="top:158px;left:24px">${n} compte${n > 1 ? "s" : ""} lié${n > 1 ? "s" : ""}</h1>
-      <p class="body a center w342" data-t style="top:202px;left:24px">${esc(S.bank.name)}</p>
+      <h1 class="hd pt a center w342" id="lk-t" data-t style="top:158px;left:24px">${reduceMotion() ? n + " compte" + (n > 1 ? "s" : "") + " lié" + (n > 1 ? "s" : "") : "Connexion de tes comptes…"}</h1>
+      <p class="body a center w342" id="lk-s" data-t style="top:202px;left:24px" aria-live="polite">${esc(S.bank.name)}</p>
       <ul aria-label="Comptes liés">${sel.map(row).join("")}</ul>
       <section class="okcard a late" data-t style="top:${endY + 12}px;--od:${(0.35 + n * 0.8).toFixed(2)}s" aria-label="Banque connectée">
         <span class="okck" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
         <h2>Banque connectée</h2>
         <p>Mellow peut lire tes paiements des 12 derniers mois. Il ne peut rien payer ni déplacer.</p>
       </section>
-      ${btn(716, n > 1 ? "Analyser mes comptes" : "Analyser mon compte", 'data-go="scanning"')}` }; },
+      ${btn(716, n > 1 ? "Analyser mes comptes" : "Analyser mon compte", `id="lk-b" data-go="scanning"${reduceMotion() ? "" : " disabled"}`)}` }; },
 
     scanning: () => ({ strong: "calm", html: `
       <div class="scanbank a" data-t style="top:60px;left:151px" aria-hidden="true"><i></i><i></i><span class="logo l88">${S.bank.logo}</span><b class="sweep"></b></div>
@@ -398,6 +398,15 @@
     car.addEventListener("keydown", (e) => { if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; e.preventDefault(); const i = Math.max(0, Math.min(AC.length - 1, (S.walletIdx || 0) + (e.key === "ArrowRight" ? 1 : -1))); car.scrollTo({ left: i * step(), behavior: "smooth" }); });
     car.scrollLeft = (S.walletIdx || 0) * step(); draw(S.walletIdx || 0);
   }
+  let lkTimers = [];
+  function wireConnected() {
+    lkTimers.forEach(clearTimeout); lkTimers = [];
+    if (reduceMotion()) return;
+    const sel = ACCTS.filter((x) => S.accts.includes(x.id)), n = sel.length, t = $("lk-t"), sub = $("lk-s"), b = $("lk-b");
+    const at = (ms, f) => lkTimers.push(setTimeout(() => { if (S.screen === "connected" && $("lk-t")) f(); }, ms));
+    sel.forEach((x, i) => at((0.35 + i * 0.8 + 0.8) * 1000, () => { sub.textContent = `${S.bank.name} · ${i + 1} sur ${n} connecté${i ? "s" : ""}`; }));
+    at((0.35 + (n - 1) * 0.8 + 1.25) * 1000, () => { t.textContent = `${n} compte${n > 1 ? "s" : ""} lié${n > 1 ? "s" : ""}`; sub.textContent = S.bank.name; b.disabled = false; });
+  }
   function wireBankSearch() {
     const inp = $("bq"); if (!inp) return;
     const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -462,6 +471,7 @@
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
     if (S.screen === "wallet") wireWallet();
+    if (S.screen === "connected") wireConnected();
     if (S.screen === "scanning") runScan();
     if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("accounts"); }, 2200);
   }
