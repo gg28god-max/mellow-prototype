@@ -722,3 +722,4 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .sheet.ev.act h3{margin:14px 0 6px}
 .sheet.ev .evhead .eyebrow{margin:0 0 3px;font:600 11px/14px Inter;color:#7be0b0}
 .sheet.ev .evhead .eyebrow.warn{color:#f6c76b}
+.logo img.lg:not(.bleed){padding:11%}

@@ -5,7 +5,7 @@
   "use strict";
 
   // ---------- Logos ----------
-  const LG = (n, cls = "") => `<img class="lg ${cls}" src="logos/v2/${n}-icon.png" alt="">`;
+  const LG = (n, cls = "") => `<img class="lg ${cls}" src="logos/v2/${n}${["netflix", "spotify", "acrobat"].includes(n) ? "-icon" : ""}.png" alt="">`;
   const ACROBAT = LG("acrobat", "bleed");
   const PRIME = LG("prime");
   const tile = (txt, bg, fg = "#fff", size) => `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="${bg}"/><text x="24" y="24" dy=".35em" text-anchor="middle" font-family="Inter,Arial" font-weight="800" font-size="${size || (txt.length > 2 ? 13 : txt.length > 1 ? 16 : 22)}" fill="${fg}">${txt}</text></svg>`;
