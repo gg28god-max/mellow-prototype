@@ -200,12 +200,13 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => { const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL, rawOf = { "Adobe Acrobat": "DRI*ADOBE 8004", Inconnu: "DRI*XYZ 8004", Spotify: "SPOTIFY P1A2B3" };
+    scanned: () => { const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
       const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
       const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
-      const warnRow = (x, i) => `<li class="row warnrow" ${T(356 + i * 108)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(x.name)}, ${money(x.price)} par ${x.per}, ${esc(rawOf[x.name])}, à vérifier"></button>
-          <span class="logo${x.unknown ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t" aria-hidden="true">${esc(x.name)}</span><span class="s" aria-hidden="true">${esc(rawOf[x.name])}</span>
-          <span class="p" aria-hidden="true">${money(x.price)}</span><span class="pp" aria-hidden="true">par ${x.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
+      const warnRow = (x, i) => { const sub = x.guess ? x.guess + " ?" : "Non reconnu";
+        return `<li class="row warnrow" ${T(356 + i * 108)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}, à vérifier"></button>
+          <span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t" aria-hidden="true">${esc(x.raw)}</span><span class="s warn" aria-hidden="true">${esc(sub)}</span>
+          <span class="p" aria-hidden="true">${money(x.price)}</span><span class="pp" aria-hidden="true">par ${x.per}</span><span class="chev" aria-hidden="true">›</span></li>`; };
       const y2 = 356 + 3 * 108 + 24;                                   // second group starts below a clear gap
       const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 52 + i * 72)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.cat)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
       const endY = y2 + 52 + okRows.length * 72;
@@ -393,8 +394,8 @@
   const PNGLOGO = (n) => `<img src="logos/${n}.png" alt="" class="fit">`;
   const SCAN_POOL = [
     { name: "Netflix", cat: "Vidéo", price: 16.49, per: "mois", logo: NETFLIX },
-    { name: "Spotify", cat: "Musique", price: 11.99, per: "mois", logo: SPOTIFY },
-    { name: "Adobe Acrobat", cat: "Logiciel", price: 14.99, per: "mois", logo: ACROBAT },
+    { name: "Spotify", cat: "Musique", price: 11.99, per: "mois", logo: SPOTIFY, uncertain: true, raw: "SPOTIFY P1A2B3", guess: "Spotify" },
+    { name: "Adobe Acrobat", cat: "Logiciel", price: 14.99, per: "mois", logo: ACROBAT, uncertain: true, raw: "DRI*ADOBE 8004", guess: "Adobe Acrobat" },
     { name: "Amazon Prime", cat: "Livraison et vidéo", price: 99.0, per: "an", logo: PRIME },
     { name: "HBO Max", cat: "Vidéo", price: 12.99, per: "mois", logo: PNGLOGO("hbo") },
     { name: "YouTube", cat: "Vidéo et musique", price: 15.99, per: "mois", logo: PNGLOGO("youtube") },
@@ -402,11 +403,12 @@
     { name: "Salle de sport", cat: "Sport", price: 64.99, per: "mois", logo: GI('<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>') },
     { name: "Stockage cloud", cat: "Stockage", price: 9.99, per: "mois", logo: GI('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z"/>') },
     { name: "Journal en ligne", cat: "Actualités", price: 14.99, per: "mois", logo: GI('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>') },
-    { name: "Inconnu", cat: "Non reconnu", price: 9.0, per: "mois", unknown: true, raw: "DRI*XYZ 8004", logo: GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>') },
+    { name: "Inconnu", cat: "Non reconnu", price: 9.0, per: "mois", unknown: true, uncertain: true, raw: "DRI*XYZ 8004", logo: GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>') },
     { name: "VPN", cat: "Sécurité", price: 11.99, per: "mois", logo: GI('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>') },
     { name: "Boîte repas", cat: "Repas", price: 110.0, per: "mois", logo: GI('<path d="M6 8h12l-1 11H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>') },
     { name: "Forfait mobile", cat: "Téléphonie", price: 55.0, per: "mois", logo: GI('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>') },
   ];
+  const QMARK = GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>');
   const monthly = (x) => (x.per === "an" ? x.price / 12 : x.price);
   const SCAN_TOTAL = 412;   // same total as the dashboard; the last find is sized so the 14 finds add up to it
   SCAN_POOL[SCAN_POOL.length - 1].price = Math.round((SCAN_TOTAL - SCAN_POOL.slice(0, -1).reduce((t, x) => t + monthly(x), 0)) * 100) / 100;
@@ -421,7 +423,7 @@
     const t0 = performance.now(); let shown = 0, shownSum = 0, cur = 0, rows = [];
     const rowEl = (x, slot) => { const li = document.createElement("li"); li.className = "row scan"; li.setAttribute("aria-hidden", "false");
       li.style.setProperty("--s", slot + 0.7); li.style.opacity = 0;
-      li.innerHTML = `<span class="logo gic" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.cat)}</span><span class="p">${money(x.price)}</span><span class="pp">par ${x.per}</span>`;
+      const unsure = x.uncertain; li.innerHTML = `<span class="logo gic" aria-hidden="true">${unsure ? QMARK : x.logo}</span><span class="t">${esc(unsure ? x.raw : x.name)}</span><span class="s">${esc(unsure ? "À confirmer" : x.cat)}</span><span class="p">${money(x.price)}</span><span class="pp">par ${x.per}</span>`;
       list.appendChild(li); return li; };
     const addRow = (x) => {
       if (rows.length === 3) { const old = rows.shift(); old.el.style.setProperty("--s", -1); old.el.style.opacity = 0; setTimeout(() => old.el.remove(), 650); }

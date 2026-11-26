@@ -497,3 +497,5 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .pinspace{position:absolute;left:0;width:390px}
 .row.mini .logo.gic{width:40px;height:40px}
 .row.mini .logo.gic img.fit{padding:4px}
+.row.warnrow .t{max-width:150px;font-size:15.5px}
+.row.warnrow .s.warn{color:#f6c76b;font-size:12.5px}
