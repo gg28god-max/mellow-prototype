@@ -837,3 +837,6 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 /* check badge on the right side of the confirmation card */
 .okcard{padding:18px 64px 20px 20px}
 .okcard .okck{left:auto;right:20px}
+.plaidtop{gap:6px}
+.plaidtop b{font:800 17px/20px Inter;letter-spacing:.24em;padding-left:.24em;color:#fff;opacity:.92}
+.plaidtop span{margin-top:2px}
