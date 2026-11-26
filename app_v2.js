@@ -239,32 +239,15 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => { const secY = 132 + 168 + 24, rowY = secY + 52;
-      const heroMetric = () => { const n = items.length, nc = left, pc = Math.round(((n - nc) / n) * 100);
-        return `<section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">${n} abonnements trouvés</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span>${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`; };
-      const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
-      const RID = { "Adobe Acrobat": "r1", "Inconnu": "r2", "Spotify": "r3" }, resolved = (x) => { const v = S.review[RID[x.name]]; return v && v !== "later" ? v : null; }, left = toCheck.filter((n) => !resolved(items.find((x) => x.name === n))).length;
-      const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
-      const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
-      const warnRow = (x, i) => { const done = resolved(x), sub = done ? "Confirmé" : x.guess ? x.guess + " ?" : "Non reconnu";
-        return `<li class="row warnrow${done ? " done" : ""}" ${T(rowY + i * 88)}><button class="row-hit" data-evq="${esc(x.name)}" style="position:absolute;inset:0;border-radius:22px" aria-label="${esc(done || x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}. Voir la preuve dans ta banque"></button>
-          <span class="logo gic" aria-hidden="true">${done && x.guess === done ? x.logo : QMARK}</span><span class="t" aria-hidden="true">${esc(done || x.raw)}</span><span class="s warn" aria-hidden="true">${esc(done ? x.raw : sub)}</span>
-          <span class="p" aria-hidden="true">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="chev" aria-hidden="true">${done ? "✓" : "›"}</span></li>`; };
-      const y2 = rowY + 3 * 88 + 28;                                   // second group starts below a clear gap
-      const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 66 + i * 80)}><button class="row-hit" data-ev="${esc(x.name)}" style="position:absolute;inset:0;border-radius:22px" aria-label="${esc(x.name)}, ${money(x.price)} par ${x.per}. Voir la preuve dans ta banque"></button><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
-      const endY = y2 + 66 + okRows.length * 80;
-      return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="${left ? "review" : "dash"}">${left ? "Vérifier les " + left + " paiements" : "Continuer"}</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
+    scanned: () => {
+      const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], RID = { "Adobe Acrobat": "r1", "Inconnu": "r2", "Spotify": "r3" };
+      const left = toCheck.filter((n) => { const v = S.review[RID[n]]; return !(v && v !== "later"); }).length, n = SCAN_POOL.length;
+      return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="${left ? "review" : "wallet"}">${left ? "Continuer" : "Voir mes abonnements"}</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
-      ${S.accts.length > 1 ? `<button class="bycard a" data-go="wallet" data-t style="top:141px" aria-label="Voir les paiements par compte">Par compte <span aria-hidden="true">›</span></button>` : ""}
-      ${heroMetric()}
-      ${sectionWithCount(secY, "À vérifier", left)}
-      <ul>${checkRows.map(warnRow).join("")}</ul>
-      <div class="sep" data-t style="top:${y2 - 12}px" aria-hidden="true"></div>
-      <div class="a calm" data-t style="top:${y2}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">Reconnus</h2><span class="count" aria-label="${okRows.length} au total">${okRows.length}</span></div>
-      <p class="a hintline" data-t style="top:${y2 + 36}px;left:28px">Touche une ligne pour voir d’où elle vient.</p>
-      <ul aria-label="Abonnements reconnus">${okRows.map(miniRow).join("")}</ul>
-      <div class="pinspace" data-t style="top:${endY}px;height:150px" aria-hidden="true"></div>` }; },
+      <section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">${n} abonnements trouvés</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div></section>
+      ${left ? `<div class="row todo a" ${T(276)} role="status"><span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t">${left} paiement${left > 1 ? "s" : ""} à confirmer</span><span class="s warn">On n’est pas sûr de leur nom</span></div>` : `<p class="a hintline" data-t style="top:300px;left:28px">Tout est vérifié.</p>`}
+      <div class="pinspace" data-t style="top:420px;height:150px" aria-hidden="true"></div>` }; },
 
     wallet: () => {
       const AC = myAccts(), i = Math.min(S.walletIdx || 0, AC.length - 1);
@@ -272,25 +255,25 @@
       <div class="wdots" data-t style="top:112px" id="wdots" role="tablist" aria-label="Comptes">${AC.map((c, k) => `<button class="wd${k === i ? " on" : ""}" role="tab" data-wi="${k}" aria-selected="${k === i}" aria-label="${esc(c.name)}"></button>`).join("")}</div>
       <div class="wcar" data-t style="top:136px" id="wcar" tabindex="0" aria-label="Tes comptes, fais glisser">${AC.map((c, k) => `<article class="wcard c-${c.id}" aria-label="${esc(c.name)} ····${c.mask}"><span class="logo" aria-hidden="true">${S.bank.logo}</span><span class="wk">${esc(c.kind)}</span><div class="wb"><b>${esc(c.name.replace("Carte de crédit ", "").replace("Compte ", "Compte "))}</b><span class="wm">···· ${c.mask}</span></div></article>`).join("")}</div>
       <div class="wl" data-t style="top:352px" id="wlist" aria-live="polite"></div>
-      <div class="pinspace" data-t style="top:900px;height:40px" aria-hidden="true"></div>` }; },
+      <div class="pinspace" data-t style="top:900px;height:150px" aria-hidden="true"></div>`, pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="dash">Continuer</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>` }; },
 
     review: () => {
-      const left = REVIEW.filter((r) => !S.review[r.id]).length;
-      const done = REVIEW.filter((r) => S.review[r.id] && S.review[r.id] !== "later");
-      const banner = done.length > 0;
-      const y0 = banner ? 288 : 228;
-      const names = done.map((r) => esc(S.review[r.id]));
-      return { html: `${nav("Vérification", "scanned")}
-      <h1 class="hd a" data-t style="top:128px;left:24px">14 trouvés, ${left === 0 ? "tout est vérifié" : left + " à vérifier"}</h1>
-      <p class="body a" data-t style="top:172px;left:24px">${11 + done.length} confirmés · 412 $/mois</p>
-      ${banner ? `<div class="banner" ${T(212)} role="status">${names.length > 1 ? names.slice(0, -1).join(", ") + " et " + names.slice(-1) : names[0]} confirmé${names.length > 1 ? "s" : ""}.${left ? " " + left + " à vérifier." : ""}</div>` : ""}
-      <h2 class="sect a" data-t style="top:${y0}px;left:28px">À regarder</h2>
-      <ul>${REVIEW.map((r, i) => { const v = S.review[r.id]; const ok = v && v !== "later";
-        const t = ok ? v : r.guess || r.raw;
-        const s = ok ? "Confirmé" : v === "later" ? "Plus tard" : r.guess ? "Payé le 4 nov." : "Inconnu · touche pour nommer";
-        return `<li class="row charge" ${T(y0 + 44 + i * 104)}><button data-review="${r.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(t)}, ${money(r.price)} par mois, ${s}"></button><span class="box${ok ? " on" : ""}" aria-hidden="true">${ok ? "✓" : ""}</span><span class="t" aria-hidden="true">${esc(t)}</span><span class="s" aria-hidden="true">${s}</span><span class="p" aria-hidden="true">${money(r.price)}</span><span class="pp" aria-hidden="true">par mois</span></li>`; }).join("")}</ul>
-      <div class="cta-fade" ${B(716, 128)}></div>
-      ${btn(756, left === 0 ? "Continuer" : "Continuer (vérifier plus tard)", 'data-go="dash"')}` };
+      const cur = REVIEW.find((r) => !S.review[r.id]), total = REVIEW.length, doneN = REVIEW.filter((r) => S.review[r.id]).length;
+      const bars = `<div class="rvbars" data-t style="top:116px" aria-hidden="true">${REVIEW.map((r, i) => `<i class="${S.review[r.id] ? "on" : i === doneN ? "cur" : ""}"></i>`).join("")}</div>`;
+      if (!cur) { const ok = REVIEW.filter((r) => S.review[r.id] !== "later").length;
+        return { html: `${nav("Vérification", "scanned")}${bars}
+        <h1 class="hd a" data-t style="top:160px;left:24px">Tout est vérifié</h1>
+        <p class="body a" data-t style="top:208px;left:24px">${ok} paiement${ok > 1 ? "s" : ""} confirmé${ok > 1 ? "s" : ""}${ok < total ? ", " + (total - ok) + " pour plus tard" : ""}.</p>
+        <div class="cta-fade" ${B(716, 128)}></div>${btn(756, "Voir mes abonnements", 'data-go="wallet"')}` }; }
+      const k = doneN + 1;
+      return { html: `${nav("Vérification", "scanned")}${bars}
+      <p class="eyebrow-s a" data-t style="top:144px;left:28px">${k} sur ${total}</p>
+      <section class="rvcard a" ${T(176)} aria-label="Paiement à confirmer"><span class="logo gic" aria-hidden="true">${QMARK}</span><h1 class="rvt">${esc(cur.raw)}</h1><p class="rvp"><b>${money(cur.price)}</b> /mois</p>
+        ${cur.guess ? `<p class="rvg">On pense que c’est <b>${esc(cur.guess)}</b> ?</p>` : `<p class="rvg">On ne reconnaît pas ce nom</p>`}
+        <button class="rvproof" data-evq="${esc(SCAN_POOL.find((x) => x.raw === cur.raw).name)}">Voir la preuve dans ta banque <span aria-hidden="true">›</span></button></section>
+      <div class="cta-fade" ${B(716, 188)}></div>
+      ${cur.guess ? `${btn(584, "Oui, c’est " + esc(cur.guess), `data-rv="yes" data-id="${cur.id}"`)}${btn(652, "Non, c’est autre chose", `data-rv="no" data-id="${cur.id}"`, "sec")}` : btn(652, "Nommer ce paiement", `data-rv="no" data-id="${cur.id}"`)}
+      ${link(722, "Pas sûr, plus tard", `data-rv="later" data-id="${cur.id}"`)}` };
     },
 
     dash: () => {

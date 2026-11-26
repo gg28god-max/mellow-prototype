@@ -775,3 +775,24 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .wcard{scroll-snap-stop:always}
 .wcar{padding-left:40px;padding-right:40px;height:226px;box-sizing:border-box}
 .wcard *{pointer-events:none}
+
+/* results = 3 short steps */
+.row.todo{position:absolute;left:24px;right:24px;height:72px;border-radius:var(--row-r,22px);background:var(--pill-bg,#151515);border:1px solid var(--pill-line,rgba(255,255,255,.14))}
+.row.todo .logo{left:16px;top:16px;width:40px;height:40px;border-radius:12px;color:var(--mint)}
+.row.todo .t{position:absolute;left:72px;top:14px;font:600 16px/22px Inter}
+.row.todo .s{position:absolute;left:72px;top:38px;font:400 13.5px/18px Inter;color:#f6c76b}
+.rvbars{left:24px;right:24px;display:flex;gap:6px}
+.rvbars i{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.14)}
+.rvbars i.on{background:var(--mint)}.rvbars i.cur{background:rgba(127,232,200,.45)}
+.eyebrow-s{margin:0;font:600 12px/16px Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--grey)}
+.rvcard{position:absolute;left:24px;right:24px;padding:28px 24px 22px;border-radius:26px;background:var(--pill-bg,#151515);border:1px solid var(--pill-line,rgba(255,255,255,.14));display:flex;flex-direction:column;gap:6px}
+.rvcard .logo{position:relative;width:64px;height:64px;border-radius:22px;color:var(--mint);margin-bottom:14px;background:rgba(127,232,200,.1)}
+.rvcard .logo svg{width:30px;height:30px}
+.rvt{margin:0;font:700 26px/32px Inter;letter-spacing:-.02em}
+.rvp{margin:0;font:400 16px/22px Inter;color:var(--grey)}.rvp b{color:#fff;font-weight:600;font-size:18px}
+.rvg{margin:10px 0 0;font:500 16px/22px Inter;color:#f6c76b}.rvg b{font-weight:700}
+.rvproof{all:unset;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font:500 14.5px/20px Inter;color:var(--mint);cursor:pointer}
+.rvproof:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.rvbars,.eyebrow-s{position:absolute}
+.row.todo .t,.row.todo .s{right:16px;white-space:nowrap;overflow:visible;max-width:none;width:auto}
+.canvas .metric.mvc{height:124px}
