@@ -372,3 +372,19 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .taskbar.open .lbl{padding-left:10px}
 .framed .taskbar:not(.open){left:50%;right:auto;top:10px;height:24px;transform:translateX(-50%)}
 .framed .taskbar:not(.open) .tb-chip{height:24px;line-height:24px;padding:0 10px;font-size:11px}
+
+/* ---- Tester intro: icon rows, callouts ---- */
+.harness .hhead{display:flex;align-items:center;gap:12px}
+.harness .hbadge{flex:none;width:40px;height:40px;border-radius:20px;background:#141414;color:#f4f1ea;display:grid;place-items:center}
+.harness .hbadge svg{width:20px;height:20px}
+.harness .lead{font:500 17px/1.35 Inter;color:#141414}
+.harness .hcall{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:16px;padding:12px 14px}
+.harness .hcall p{margin:0;font-size:14px;line-height:1.4}
+.harness .hcall .hic{margin-top:1px}
+.harness .hic{flex:none;color:#7a5b2c;display:grid;place-items:center;width:22px;height:22px}
+.harness .hsub{font:700 12px/1 Inter;letter-spacing:.1em;text-transform:uppercase;color:#7a5b2c;margin-top:4px}
+.harness ul.hlist{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.harness .hlist li{display:flex;gap:12px;align-items:center;font-size:14px;line-height:1.35}
+.harness .hlist .hic{width:36px;height:36px;border-radius:18px;background:#e6dfd0;color:#141414}
+.harness .hpriv{display:flex;gap:8px;align-items:center;font-size:12px;line-height:1.3}
+.harness .hpriv svg{width:14px;height:14px}

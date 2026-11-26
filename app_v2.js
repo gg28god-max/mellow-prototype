@@ -506,20 +506,34 @@
   function overlay(html) { $("harness-layer").innerHTML = `<div class="harness" role="dialog" aria-modal="true">${html}</div>`; const f = $("harness-layer").querySelector("h1"); if (f) { f.tabIndex = -1; f.focus(); } }
   const closeOverlay = () => { $("harness-layer").innerHTML = ""; };
 
+  const HI = (d) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const HICO = {
+    flask: HI('<path d="M9 3h6M10 3v6l-5.2 8.6A2 2 0 0 0 6.5 21h11a2 2 0 0 0 1.7-3.4L14 9V3"/><path d="M7.5 15h9"/>'),
+    tasks: HI('<path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.3 1.3L7 5M3.5 12l1.3 1.3L7 11M3.5 18l1.3 1.3L7 17"/>'),
+    mic: HI('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
+    chat: HI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9 11h6M9 14h3"/>'),
+    copy: HI('<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
+    lock: HI('<rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+    info: HI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+    user: HI('<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>'),
+  };
+  const irow = (ico, html) => `<li><span class="hic" aria-hidden="true">${ico}</span><span>${html}</span></li>`;
   function intro() {
-    overlay(`<div class="kicker">Test utilisateur · environ 10 minutes</div>
+    overlay(`<div class="hhead"><span class="hbadge" aria-hidden="true">${HICO.flask}</span><div class="kicker">Test utilisateur · environ 10 minutes</div></div>
       <h1>Merci de tester Mellow</h1>
-      <p>Mellow est une app qui trouve tes abonnements et les annule pour toi. C’est un <b>prototype</b> : rien n’est réel, aucune vraie banque n’est connectée.</p>
-      <p>On teste l’app, <b>pas toi</b>. Si quelque chose est difficile, c’est l’app qui doit changer.</p>
-      <ul><li>Tu vas faire 3 petites tâches.</li><li>Si tu peux, dis à voix haute ce que tu penses.</li><li>Après chaque tâche, une question rapide.</li><li>À la fin, tu copies tes résultats et tu les envoies à la personne qui t’a invité.</li></ul>
-      <p class="muted">Aucune donnée n’est envoyée ni enregistrée par ce site.</p>
+      <p class="lead">Mellow trouve tes abonnements et les annule pour toi.</p>
+      <div class="hcall"><span class="hic" aria-hidden="true">${HICO.info}</span><p><b>C’est un prototype.</b> Rien n’est réel et aucune vraie banque n’est connectée.</p></div>
+      <div class="hcall"><span class="hic" aria-hidden="true">${HICO.user}</span><p>On teste l’app, <b>pas toi</b>. Si c’est difficile, c’est l’app qui doit changer.</p></div>
+      <h2 class="hsub">Ce qui t’attend</h2>
+      <ul class="hlist">${irow(HICO.tasks, "<b>3 petites tâches</b> à faire dans l’app.")}${irow(HICO.mic, "Dis à voix haute ce que tu penses, si tu peux.")}${irow(HICO.chat, "<b>Une question rapide</b> après chaque tâche.")}${irow(HICO.copy, "À la fin, copie tes résultats et envoie-les à la personne qui t’a invité.")}</ul>
+      <p class="muted hpriv"><span aria-hidden="true">${HICO.lock}</span>Aucune donnée n’est envoyée ni enregistrée par ce site.</p>
       <button class="hbtn" data-h="next">Commencer</button>`);
   }
   function taskCard() {
     const task = TASKS[H.idx];
     overlay(`<div class="kicker">Tâche ${H.idx + 1} sur 3</div><h1>${task.short}</h1>
       <p class="task-text">${task.text}</p>
-      <p class="muted">Le chronomètre démarre quand tu touches le bouton. La consigne reste en haut de l’écran.</p>
+      <p class="muted">Le chronomètre démarre quand tu touches le bouton. Touche la pastille 1/3 en haut pour relire la consigne.</p>
       <button class="hbtn" data-h="start">Commencer la tâche</button>`);
   }
   function startTask() {
