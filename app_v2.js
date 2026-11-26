@@ -244,8 +244,8 @@
           <span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t" aria-hidden="true">${esc(x.raw)}</span><span class="s warn" aria-hidden="true">${esc(sub)}</span>
           <span class="p" aria-hidden="true">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="chev" aria-hidden="true">›</span></li>`; };
       const y2 = rowY + 3 * 88 + 28;                                   // second group starts below a clear gap
-      const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 56 + i * 80)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
-      const endY = y2 + 56 + okRows.length * 80;
+      const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 66 + i * 80)}><button class="row-hit" data-ev="${esc(x.name)}" style="position:absolute;inset:0;border-radius:22px" aria-label="${esc(x.name)}, ${money(x.price)} par ${x.per}. Voir la preuve dans ta banque"></button><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
+      const endY = y2 + 66 + okRows.length * 80;
       return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
@@ -254,6 +254,7 @@
       <ul>${checkRows.map(warnRow).join("")}</ul>
       <div class="sep" data-t style="top:${y2 - 12}px" aria-hidden="true"></div>
       <div class="a calm" data-t style="top:${y2}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">Reconnus</h2><span class="count" aria-label="${okRows.length} au total">${okRows.length}</span></div>
+      <p class="a hintline" data-t style="top:${y2 + 36}px;left:28px">Touche une ligne pour voir d’où elle vient.</p>
       <ul aria-label="Abonnements reconnus">${okRows.map(miniRow).join("")}</ul>
       <div class="pinspace" data-t style="top:${endY}px;height:150px" aria-hidden="true"></div>` }; },
 
@@ -509,6 +510,28 @@
   };
   const sb = (y, h) => `style="top:${y}px"`;
 
+  const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  const DESC = { "Netflix": "NETFLIX.COM", "Amazon Prime": "AMZN PRIME CA", "HBO Max": "MAX.COM HBO", "YouTube": "GOOGLE YOUTUBE PREMIUM", "Bell Média": "BELL MEDIA CRAVE", "Salle de sport": "GYM FITNESS PLUS", "Stockage cloud": "CLOUD STORAGE PLAN", "Journal": "JOURNAL NUMERIQUE", "VPN": "VPN SECURE SERVICE", "Boîte repas": "MEAL BOX LIVRAISON", "Forfait mobile": "FORFAIT MOBILE PREAUTH" };
+  function evSheet(name) {
+    const x = SCAN_POOL.find((s) => s.name === name); if (!x) return;
+    const h = [...name].reduce((n, c) => n + c.charCodeAt(0), 0), day = 3 + (h % 22), yearly = x.per === "an";
+    const sel = ACCTS.filter((c) => S.accts.includes(c.id)), card = sel.find((c) => c.kind === "Carte de crédit");
+    const acc = (["Vidéo", "Musique", "Vidéo et musique", "Livraison et vidéo", "Télé", "Stockage", "Actualités", "Sécurité", "Logiciel"].includes(x.cat) && card) ? card : (sel.find((c) => c.kind === "Chèques") || sel[0] || ACCTS[0]);
+    const pays = yearly ? [{ d: `12 janv. 2026`, p: x.price }] : [0, 1, 2, 3].map((i) => ({ d: `${day} ${MONTHS[(10 - i + 12) % 12]} 2026`, p: x.price }));
+    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet ev" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>
+      <div class="evbody">
+        <div class="evhead"><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><div><h2 id="sh-t">${esc(x.name)}</h2><p>${money(x.price)} /${yearly ? "an" : "mois"} · ${esc(x.cat)}</p></div></div>
+        <h3>Dans ton relevé bancaire</h3>
+        <div class="evcard"><b class="mono">${esc(DESC[x.name] || x.name.toUpperCase())}</b><span>${esc(acc.name)} · ····${acc.mask}</span></div>
+        <h3>Le motif</h3>
+        <div class="evcard"><b>${yearly ? "Chaque année · le 12 janv." : "Chaque mois · vers le " + day}</b><span>${yearly ? "1 paiement" : "12 paiements identiques"} · sur 12 mois</span></div>
+        <h3>${yearly ? "Dernier paiement" : "Derniers paiements"}</h3>
+        <ul class="evlist">${pays.map((q) => `<li><span>${q.d}</span><b>${money(q.p)}</b></li>`).join("")}</ul>
+        ${yearly ? "" : '<p class="evmore">+ 8 paiements plus anciens, même montant</p>'}
+      </div>
+      <button class="btn evbtn" data-close>Fermer</button></div></div>`;
+    $("sheet-layer").querySelector(".evbtn").focus({ preventScroll: true });
+  }
   function guessSheet(r) {
     sheet(`<div class="tx" ${sb(110)}><h2 id="sh-t">C’est ${esc(r.guess)} ?</h2><p>On a associé ${esc(r.raw)} à ${esc(r.guess)} à ${money(r.price)}.</p></div>
       <button class="btn" ${sb(236)} data-rv="yes" data-id="${r.id}">Oui, c’est ça</button>
@@ -546,6 +569,7 @@
     const d = t.dataset;
     if ("close" in d) return closeSheet();
     if (d.sheet === "banklogin") return bankSheet();
+    if (d.ev) return evSheet(d.ev);
     if (d.go) { closeSheet(); return go(d.go); }
     if (d.tab) return go(d.tab);
     if (d.bank) { S.bank = BANKS.find((b) => b.id === d.bank); return go("consent"); }
