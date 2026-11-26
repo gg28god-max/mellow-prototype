@@ -802,3 +802,4 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .orbit .sphere.dodo img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 10px 14px rgba(0,0,0,.45))}
 .notif .app.dodo{background:#e8f5ee;overflow:hidden;display:grid;place-items:center}
 .notif .app.dodo img{width:86%;height:86%;object-fit:contain}
+.orbit .sphere.dodo{width:112px;height:131px;left:139px;top:80px;animation:none}
