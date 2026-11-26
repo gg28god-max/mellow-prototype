@@ -188,7 +188,7 @@ ul,ol{list-style:none}
 .sheet .tx p{margin:8px 6px 0;font:400 15px/20px Inter;color:var(--grey)}
 .sheet .btn{left:24px;width:314px}
 .sheet .link{left:24px;width:314px}
-.sheet .field{left:10px;width:342px}
+.sheet .field{left:24px;width:314px}
 @keyframes up{from{transform:translateY(100%)}}
 @keyframes fade{from{opacity:0}}
 
