@@ -500,3 +500,11 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.warnrow .t{max-width:150px;font-size:15.5px}
 .row.warnrow .s.warn{color:#f6c76b;font-size:12.5px}
 .glow.calm{height:260px;opacity:1;background:radial-gradient(120% 100% at 50% 0%,#1a2a24 0%,#0b1411 46%,#000 100%)} /* calm glow: very dark green at the very top, black below (post-connection screens) */
+
+/* ---- Refined feature rows (consent): smaller pill, more air between rows ---- */
+.row.feat{height:76px;border-radius:22px}
+.row.feat .disc{left:16px;top:18px;width:40px;height:40px}
+.row.feat .disc svg{width:22px;height:22px}
+.feat .txt{left:70px;right:14px;gap:2px}
+.row.feat .t{font:500 16px/21px Inter}
+.row.feat .s{font:400 14px/19px Inter}

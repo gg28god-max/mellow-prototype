@@ -112,7 +112,7 @@
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}
       <h1 class="hd pt a" data-t style="top:184px;left:24px">Tu gardes le contrôle.</h1>
-      <ul>${feat(236, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(340, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(444, ICO.power, "mint", "Tu peux couper en tout temps", "Et tes données ne sont jamais vendues.")}${feat(548, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
+      <ul>${feat(244, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(336, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(428, ICO.power, "mint", "Tu peux couper en tout temps", "Tes données ne sont jamais vendues.")}${feat(520, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
       ${plaid(668, true)}
       ${btn(716, "Connecter ma banque", 'data-go="banklogin"')}
       ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
