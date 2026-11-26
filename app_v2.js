@@ -81,7 +81,6 @@
   // ---------- Building blocks ----------
   const BACK_ICO = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>`;
   const nav = (title, back) => `<header class="nav">${back ? `<button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button>` : ""}<h1>${esc(title)}</h1></header>`;
-  const step = (n) => `<div class="step" role="img" aria-label="Étape ${n} sur 3"><div class="eb">ÉTAPE ${n} SUR 3</div><div class="segs">${[1, 2, 3].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div></div>`;
   const btn = (y, label, attrs, cls = "") => `<button class="btn ${cls}" ${B(y, 56)} ${attrs}>${label}</button>`;
   const link = (y, label, attrs, cls = "") => `<button class="link ${cls}" ${B(y, 28)} ${attrs}>${label}</button>`;
   const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${val}</div></div>`;
@@ -112,14 +111,14 @@
       <h2 class="sect a" data-t style="top:200px;left:28px">Banques populaires</h2>
       <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)}><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>` }),
 
-    consent: () => ({ html: `${nav("Connecter ta banque", "bank")}${step(1)}
+    consent: () => ({ html: `${nav("Connecter ta banque", "bank")}
       <h1 class="hd pt a" data-t style="top:184px;left:24px">Tu gardes le contrôle.</h1>
       <ul>${feat(236, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(340, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(444, ICO.power, "mint", "Tu peux couper en tout temps", "Et tes données ne sont jamais vendues.")}${feat(548, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
       ${plaid(668, true)}
       ${btn(716, "Connecter ma banque", 'data-go="banklogin"')}
       ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
 
-    consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
+    consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}
       <h1 class="hd pt a" data-t style="top:184px;left:24px">Ce qu’on ne fera jamais.</h1>
       <ul>${feat(272, ICO.money, "coral", "On ne déplace jamais ton argent", "On ne peut ni l’envoyer, ni le retirer.")}${feat(380, ICO.key, "coral", "On ne voit jamais ton mot de passe", "Tu te connectes sur le site de ta banque.")}${feat(488, ICO.data, "coral", "On ne vend jamais tes données", "Elles ne sont ni vendues, ni partagées.")}</ul>
       <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite, tu te connectes à ta banque.</p>
@@ -139,7 +138,7 @@
         <p class="bl-note">Page simulée pour la démo. Mellow n’affiche jamais la vraie page de ta banque.</p>
       </div>` }; },
 
-    signin: () => ({ html: `${nav("Connexion à " + S.bank.short, "consent")}${step(2)}
+    signin: () => ({ html: `${nav("Connexion à " + S.bank.short, "consent")}
       <div class="handoff" ${T(180)} aria-hidden="true">
         <span class="logo" style="left:63px">${PLAID}</span>
         <span class="dots">${[0, 1, 2, 3, 4].map((i) => `<i class="${i === 2 ? "on" : ""}"></i>`).join("")}</span>
@@ -156,7 +155,7 @@
         <button class="btn" type="submit" ${B(716, 56)}>Se connecter</button>
       </form>` }),
 
-    connecting: () => ({ html: `${nav("Connexion", "banklogin")}${step(3)}
+    connecting: () => ({ html: `${nav("Connexion", "banklogin")}
       <div class="handoff" ${T(230)} role="img" aria-label="Plaid transmet les données de ${esc(S.bank.short)} à Mellow">
         <span class="logo" style="left:63px">${PLAID}</span>
         <span class="dots">${[0, 1, 2, 3, 4].map(() => "<i></i>").join("")}</span>
@@ -180,8 +179,7 @@
       ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
 
     scanning: () => ({ strong: true, html: `
-      <p class="eb2 a" data-t style="top:150px;left:24px">ÉTAPE 3 SUR 3 · RECHERCHE DES PAIEMENTS</p>
-      <h1 class="hd pt a" data-t style="top:176px;left:24px">On analyse 12 mois…</h1>
+      <h1 class="hd pt a" data-t style="top:156px;left:24px">On analyse 12 mois…</h1>
       <div class="pbar a" data-t style="top:236px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
       <div class="cnt a" data-t style="top:258px" aria-live="polite"><span id="sc-n">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
       <ul id="sc-list" aria-label="Abonnements trouvés"></ul>
@@ -189,7 +187,6 @@
 
     slow: () => ({ strong: true, html: `
       <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
-      <p class="eb2 a" data-t style="top:240px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · ANALYSE EN COURS</p>
       <h1 class="hd pt a center w342" data-t style="top:266px;left:24px;white-space:normal;line-height:34px">Ça prend plus de temps que prévu</h1>
       <div class="pbar a" data-t style="top:350px" aria-hidden="true"><i style="width:65%"></i></div>
       <p class="body a center w342" data-t style="top:380px">Certaines banques mettent quelques minutes. Tu peux quitter cet écran : Mellow continue et te prévient quand c’est prêt.</p>
@@ -199,7 +196,6 @@
 
     empty: () => ({ strong: true, html: `
       <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
-      <p class="eb2 a" data-t style="top:290px;left:24px;text-align:center;width:342px">ÉTAPE 3 SUR 3 · RÉSULTAT</p>
       <h1 class="hd pt a center w342" data-t style="top:316px;left:24px;white-space:normal">Aucun paiement récurrent</h1>
       <p class="body a center w342" data-t style="top:372px">On a vérifié 12 mois de transactions sur ce compte. Essaie un autre compte, ou ajoute un abonnement toi-même.</p>
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
