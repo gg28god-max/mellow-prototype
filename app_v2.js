@@ -180,8 +180,8 @@
     scanning: () => ({ strong: true, html: `
       <h1 class="hd pt a" data-t style="top:156px;left:24px">On analyse 12 mois…</h1>
       <div class="pbar a" data-t style="top:236px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
-      <div class="cnt a" data-t style="top:258px" aria-live="polite"><span id="sc-n">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
-      <ul id="sc-list" aria-label="Abonnements trouvés"></ul>
+      <div class="cnt a" data-t style="top:258px"><span id="sc-n" aria-live="polite">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
+      <ul id="sc-list" class="sclist" aria-label="Abonnements trouvés"></ul>
       ${btn(716, "Voir les résultats pour l’instant", 'data-go="scanned"', "sec")}` }),
 
     slow: () => ({ strong: true, html: `
@@ -202,7 +202,7 @@
 
     scanned: () => ({ strong: true, html: `${success(120, true)}
       <h1 class="title a center w342" data-t style="top:318px;line-height:48px">Analyse terminée</h1>
-      ${metric(388, "14 abonnements trouvés", "412 $/mois")}
+      ${metric(388, "14 abonnements trouvés", SCAN_TOTAL + " $/mois")}
       <ul class="finds a" data-t style="top:536px">
         <li><span class="ck" aria-hidden="true">✓</span><span>12 mois de paiements lus</span></li>
         <li><span class="ck" aria-hidden="true">✓</span><span>Noms cryptiques reconnus : « DRI*ADOBE » devient Adobe Acrobat</span></li>
@@ -378,27 +378,59 @@
 
   // ---------- Scan progress (counts tick up, newest finds rise in) ----------
   const SCAN_MODE = new URLSearchParams(location.search).get("scan") || "";   // "", "slow", "empty" (demo links)
-  const SCAN_TICKS = [[0, 0, 8], [1, 16, 22], [3, 62, 45], [8, 214, 68], [12, 341, 88], [14, 412, 100]];
-  const SCAN_FOUND = ["netflix", "prime", "spotify", "adobe"];
+  // 14 different charges the scan "finds" (brands we have logos for + generic categories with cryptic bank names).
+  const GI = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const PNGLOGO = (n) => `<img src="logos/${n}.png" alt="" class="fit">`;
+  const SCAN_POOL = [
+    { name: "Netflix", cat: "Vidéo", price: 16.49, per: "mois", logo: NETFLIX },
+    { name: "Spotify", cat: "Musique", price: 11.99, per: "mois", logo: SPOTIFY },
+    { name: "Adobe Acrobat", cat: "Logiciel", price: 14.99, per: "mois", logo: ACROBAT },
+    { name: "Amazon Prime", cat: "Livraison et vidéo", price: 99.0, per: "an", logo: PRIME },
+    { name: "HBO Max", cat: "Vidéo", price: 12.99, per: "mois", logo: PNGLOGO("hbo") },
+    { name: "YouTube", cat: "Vidéo et musique", price: 15.99, per: "mois", logo: PNGLOGO("youtube") },
+    { name: "Bell Média", cat: "Télé", price: 24.99, per: "mois", logo: PNGLOGO("bell") },
+    { name: "Salle de sport", cat: "Sport", price: 59.99, per: "mois", logo: GI('<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>') },
+    { name: "Stockage cloud", cat: "Stockage", price: 3.99, per: "mois", logo: GI('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z"/>') },
+    { name: "Journal en ligne", cat: "Actualités", price: 9.99, per: "mois", logo: GI('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>') },
+    { name: "Jeux vidéo", cat: "Jeux", price: 14.99, per: "mois", logo: GI('<rect x="3" y="8" width="18" height="9" rx="4.5"/><path d="M8 11v3M6.5 12.5h3M15.5 11.8h.01M17.5 13.2h.01"/>') },
+    { name: "VPN", cat: "Sécurité", price: 5.99, per: "mois", logo: GI('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>') },
+    { name: "Boîte repas", cat: "Repas", price: 110.0, per: "mois", logo: GI('<path d="M6 8h12l-1 11H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>') },
+    { name: "Forfait mobile", cat: "Téléphonie", price: 55.0, per: "mois", logo: GI('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>') },
+  ];
+  const monthly = (x) => (x.per === "an" ? x.price / 12 : x.price);
+  const SCAN_TOTAL = 412;   // same total as the dashboard; the last find is sized so the 14 finds add up to it
+  SCAN_POOL[SCAN_POOL.length - 1].price = Math.round((SCAN_TOTAL - SCAN_POOL.slice(0, -1).reduce((t, x) => t + monthly(x), 0)) * 100) / 100;
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const easeIO = (x) => 0.5 - 0.5 * Math.cos(Math.PI * x);
+
+  // One continuous timeline (requestAnimationFrame): the bar, the counts and the finds all follow the same progress p.
   function runScan() {
-    let i = 0;
-    const stopAt = SCAN_MODE === "slow" ? 2 : SCAN_MODE === "empty" ? 1 : 5;
-    const tick = () => {
-      if (S.screen !== "scanning") return;
-      const [n, m, pct] = SCAN_TICKS[SCAN_MODE === "empty" ? 0 : i];
-      const bar = $("pb"); if (!bar) return;
-      bar.style.width = pct + "%"; bar.parentNode.setAttribute("aria-valuenow", pct);
-      $("sc-n").textContent = n + (n > 1 ? " trouvés" : " trouvé");
-      $("sc-m").textContent = m + " $/mois";
-      const shown = SCAN_FOUND.slice(0, Math.min(n, 4)).slice(-3);
-      const list = $("sc-list");
-      list.innerHTML = shown.map((id, k) => { const x = sub(id); const hint = id === "prime" ? "AMZN*Prime" : "Trouvé";
-        return `<li class="row scan" data-t style="top:${304 + k * 104}px"><span class="logo" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${hint}</span><span class="p">${money(x.price)}</span><span class="pp">par ${x.per}</span></li>`; }).join("");
-      layout();
-      if (i >= stopAt) { setTimeout(() => { if (S.screen === "scanning") go(SCAN_MODE === "slow" ? "slow" : SCAN_MODE === "empty" ? "empty" : "scanned"); }, SCAN_MODE ? 1800 : 1200); return; }
-      i++; setTimeout(tick, 1100);
+    const bar = $("pb"), list = $("sc-list"); if (!bar || !list) return;
+    const items = shuffle([...SCAN_POOL]), total = items.length;
+    const endP = SCAN_MODE === "slow" ? 0.62 : 1, DUR = 8400;
+    const t0 = performance.now(); let shown = 0, shownSum = 0, cur = 0, rows = [];
+    const rowEl = (x, slot) => { const li = document.createElement("li"); li.className = "row scan"; li.setAttribute("aria-hidden", "false");
+      li.style.setProperty("--s", slot + 0.7); li.style.opacity = 0;
+      li.innerHTML = `<span class="logo gic" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.cat)}</span><span class="p">${money(x.price)}</span><span class="pp">par ${x.per}</span>`;
+      list.appendChild(li); return li; };
+    const addRow = (x) => {
+      if (rows.length === 3) { const old = rows.shift(); old.el.style.setProperty("--s", -1); old.el.style.opacity = 0; setTimeout(() => old.el.remove(), 650); }
+      rows.forEach((r, i) => { r.slot = i; r.el.style.setProperty("--s", i); });
+      const slot = rows.length, el = rowEl(x, slot); rows.push({ el, slot });
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.setProperty("--s", slot); el.style.opacity = 1; }));
     };
-    setTimeout(tick, 500);
+    const frame = (now) => {
+      if (S.screen !== "scanning" || !$("pb")) return;
+      const x = Math.min((now - t0) / DUR, 1), p = easeIO(x) * endP;
+      bar.style.transform = `scaleX(${p})`; bar.parentNode.setAttribute("aria-valuenow", Math.round(p * 100));
+      const n = SCAN_MODE === "empty" ? 0 : Math.min(total, Math.floor(p * total + 1e-6));
+      while (shown < n) { const it = items[shown]; addRow(it); shownSum += monthly(it); shown++; $("sc-n").textContent = shown + (shown > 1 ? " trouvés" : " trouvé"); }
+      cur += (shownSum - cur) * 0.14; if (Math.abs(shownSum - cur) < 0.5) cur = shownSum;
+      $("sc-m").textContent = Math.round(cur) + " $/mois";
+      if (x < 1) return requestAnimationFrame(frame);
+      setTimeout(() => { if (S.screen === "scanning") go(SCAN_MODE === "slow" ? "slow" : SCAN_MODE === "empty" ? "empty" : "scanned"); }, SCAN_MODE ? 1400 : 900);
+    };
+    setTimeout(() => requestAnimationFrame(frame), 500);
   }
 
   // ---------- Sheets ----------
