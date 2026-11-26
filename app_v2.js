@@ -232,22 +232,30 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => { const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
+    scanned: () => { const MV = new URLSearchParams(location.search).get("mv") || "", MH = { a: 150, b: 176, c: 176 }[MV] || 120, secY = MV ? 132 + MH + 24 : 308, rowY = secY + 52;
+      const perYear = (SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ");
+      const heroMetric = () => {
+        const n = items.length, nc = toCheck.length, pc = Math.round(((n - nc) / n) * 100);
+        if (MV === "a") return `<section class="metric mv mv-a a" ${T(132)} aria-label="Total mensuel"><p class="cap">On a trouvé ${n} abonnements</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><p class="yr">≈ ${perYear} $ par an</p></section>`;
+        if (MV === "b") return `<section class="metric mv mv-b a" ${T(132)} aria-label="Total mensuel"><p class="cap">Tu paies chaque mois</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><div class="cells"><div><b>${perYear} $</b><span>par an</span></div><div><b>${n}</b><span>abonnements</span></div></div></section>`;
+        if (MV === "c") return `<section class="metric mv mv-c a" ${T(132)} aria-label="Total mensuel"><p class="cap">On a trouvé ${n} abonnements</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span class="g">${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`;
+        return metric(132, "On a trouvé " + n + " abonnements", SCAN_TOTAL + " $/mois") + `<p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">Environ ${perYear} $ par an · fais défiler pour tout voir</p>`;
+      };
+      const toCheckX = null; const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
       const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
       const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
       const warnRow = (x, i) => { const sub = x.guess ? x.guess + " ?" : "Non reconnu";
-        return `<li class="row warnrow" ${T(360 + i * 88)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:22px" aria-label="${esc(x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}, à vérifier"></button>
+        return `<li class="row warnrow" ${T(rowY + i * 88)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:22px" aria-label="${esc(x.raw)}, ${money(x.price)} par ${x.per}, ${esc(sub)}, à vérifier"></button>
           <span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t" aria-hidden="true">${esc(x.raw)}</span><span class="s warn" aria-hidden="true">${esc(sub)}</span>
           <span class="p" aria-hidden="true">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="chev" aria-hidden="true">›</span></li>`; };
-      const y2 = 360 + 3 * 88 + 28;                                   // second group starts below a clear gap
+      const y2 = rowY + 3 * 88 + 28;                                   // second group starts below a clear gap
       const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 56 + i * 80)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
       const endY = y2 + 56 + okRows.length * 80;
       return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
-      ${metric(132, "On a trouvé " + items.length + " abonnements", SCAN_TOTAL + " $/mois")}
-      <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">Environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an · fais défiler pour tout voir</p>
-      ${sectionWithCount(308, "À vérifier", toCheck.length)}
+      ${heroMetric()}
+      ${sectionWithCount(secY, "À vérifier", toCheck.length)}
       <ul>${checkRows.map(warnRow).join("")}</ul>
       <div class="sep" data-t style="top:${y2 - 12}px" aria-hidden="true"></div>
       <div class="a calm" data-t style="top:${y2}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">Reconnus</h2><span class="count" aria-label="${okRows.length} au total">${okRows.length}</span></div>
