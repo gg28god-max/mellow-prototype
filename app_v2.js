@@ -37,12 +37,19 @@
     { id: "prime", name: "Amazon Prime", short: "Amazon", price: 99.0, per: "an", next: "12 janv.", yearly: true, logo: PRIME },
   ];
   const sub = (id) => SUBS.find((s) => s.id === id);
+  const BL_ICO = {
+    lock: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`,
+    x: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+    face: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9.5v1.5M15 9.5v1.5M12 9.5v3.5h-1M9 16c1.7 1.2 4.3 1.2 6 0"/></svg>`,
+    chev: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>`,
+    down: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`,
+  };
   const BANKS = [
-    { id: "rbc", name: "RBC Banque Royale", short: "RBC", logo: `<img src="logos/rbc.png" alt="">` },
-    { id: "scotia", name: "Banque Scotia", short: "Scotia", logo: `<img src="logos/scotiabank.png" alt="">` },
-    { id: "desj", name: "Desjardins", short: "Desjardins", logo: `<img src="logos/desjardins.png" alt="">` },
-    { id: "td", name: "Banque TD", short: "TD", logo: `<img src="logos/td.png" alt="">` },
-    { id: "bmo", name: "BMO", short: "BMO", logo: `<img src="logos/bmo.png" alt="">` },
+    { id: "rbc", name: "RBC Banque Royale", short: "RBC", logo: `<img src="logos/rbc.png" alt="">`, theme: { hero: "#06336b", hero2: "#0a55b0", acc: "#0a55b0", svc: "Services bancaires aux particuliers", user: "Carte client ou nom d’utilisateur", reg: "S’inscrire", forgot: "Mot de passe oublié ?", prev: "Aperçu des comptes", prevs: "Soldes sans te connecter" } },
+    { id: "scotia", name: "Banque Scotia", short: "Scotia", logo: `<img src="logos/scotiabank.png" alt="">`, theme: { hero: "#0b1f3f", hero2: "#17346a", acc: "#0a62c9", svc: "Particuliers et entreprises", user: "Carte client ou nom d’utilisateur", reg: "S’inscrire", forgot: "Mot de passe oublié ?", prev: "Aperçu des comptes", prevs: "Soldes sans te connecter" } },
+    { id: "desj", name: "Desjardins", short: "Desjardins", logo: `<img src="logos/desjardins.png" alt="">`, theme: { hero: "#00452b", hero2: "#007a49", acc: "#007a49", svc: "AccèsD Particuliers", user: "Numéro de carte ou code d’utilisateur", reg: "Devenir membre", forgot: "Mot de passe oublié ?", prev: "Aperçu des comptes", prevs: "Soldes sans te connecter" } },
+    { id: "td", name: "Banque TD", short: "TD", logo: `<img src="logos/td.png" alt="">`, theme: { hero: "#0f4a1c", hero2: "#2a9a3a", acc: "#238a32", svc: "Services bancaires EasyWeb", user: "Numéro d’accès ou nom d’utilisateur", reg: "S’inscrire à EasyWeb", forgot: "Mot de passe oublié ?", prev: "Aperçu des comptes", prevs: "Soldes sans te connecter" } },
+    { id: "bmo", name: "BMO", short: "BMO", logo: `<img src="logos/bmo.png" alt="">`, theme: { hero: "#00396b", hero2: "#0079c1", acc: "#0075be", svc: "Services bancaires aux particuliers", user: "Numéro de carte ou nom d’utilisateur", reg: "S’inscrire", forgot: "Mot de passe oublié ?", prev: "Aperçu des comptes", prevs: "Soldes sans te connecter" } },
   ];
   const REVIEW = [
     { id: "r1", raw: "DRI*ADOBE 8004", guess: "Adobe Acrobat", price: 14.99 },
@@ -108,7 +115,7 @@
       <h1 class="hd pt a" data-t style="top:184px;left:24px">Tu gardes le contrôle.</h1>
       <ul>${feat(236, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(340, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(444, ICO.power, "mint", "Tu peux couper en tout temps", "Et tes données ne sont jamais vendues.")}${feat(548, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
       ${plaid(668, true)}
-      ${btn(716, "Connecter ma banque", 'data-go="signin"')}
+      ${btn(716, "Connecter ma banque", 'data-go="banklogin"')}
       ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
 
     consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
@@ -116,8 +123,20 @@
       <ul>${feat(272, ICO.money, "coral", "On ne déplace jamais ton argent", "On ne peut ni l’envoyer, ni le retirer.")}${feat(380, ICO.key, "coral", "On ne voit jamais ton mot de passe", "Tu te connectes sur le site de ta banque.")}${feat(488, ICO.data, "coral", "On ne vend jamais tes données", "Elles ne sont ni vendues, ni partagées.")}</ul>
       <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite, tu te connectes à ta banque.</p>
       ${plaid(668, true)}
-      ${btn(716, "Connecter ma banque", 'data-go="signin"')}
+      ${btn(716, "Connecter ma banque", 'data-go="banklogin"')}
       ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
+
+    banklogin: () => { const b = S.bank, th = b.theme; return { bare: true, light: true, html: `
+      <div class="bl" style="--bh:${th.hero};--bh2:${th.hero2};--ba:${th.acc}">
+        <div class="bl-hero" aria-hidden="true"></div>
+        <button class="bl-back" data-go="consent" aria-label="Retour">‹</button>
+        <span class="bl-logo" aria-hidden="true">${b.logo}</span>
+        <h1 class="bl-name">${esc(b.name)}</h1>
+        <p class="bl-sub">${esc(th.svc)}</p>
+        <button class="bl-in" data-sheet="banklogin">Se connecter</button>
+        <div class="bl-card" aria-label="${esc(th.prev)}"><span class="ic" aria-hidden="true">${BL_ICO.lock}</span><span class="tx"><b>${esc(th.prev)}</b><i>${esc(th.prevs)}</i></span><span class="ch" aria-hidden="true">${BL_ICO.chev}</span></div>
+        <p class="bl-note">Page simulée pour la démo. Mellow n’affiche jamais la vraie page de ta banque.</p>
+      </div>` }; },
 
     signin: () => ({ html: `${nav("Connexion à " + S.bank.short, "consent")}${step(2)}
       <div class="handoff" ${T(180)} aria-hidden="true">
@@ -136,7 +155,7 @@
         <button class="btn" type="submit" ${B(716, 56)}>Se connecter</button>
       </form>` }),
 
-    connecting: () => ({ html: `${nav("Connexion", "signin")}${step(3)}
+    connecting: () => ({ html: `${nav("Connexion", "banklogin")}${step(3)}
       <div class="spin" ${T(240)} role="img" aria-label="Chargement"></div>
       <span class="logo l56" data-t style="top:260px;left:167px" aria-hidden="true">${S.bank.logo}</span>
       <h2 class="hd a center w342" data-t style="top:372px">Connexion à ${esc(S.bank.short)}</h2>
@@ -308,7 +327,7 @@
       ghost.className = "canvas ghost out-" + trans;
       ghost.style.top = el.scrollTop + "px";
     }
-    el.innerHTML = `<div class="canvas${trans !== "none" ? " in-" + trans : ""}"${v.tabs ? ' data-tabs="1"' : ""}>${glowStatus(v.strong)}${v.html}<div class="home"></div></div>`;
+    el.innerHTML = `<div class="canvas${v.light ? " light" : ""}${trans !== "none" ? " in-" + trans : ""}"${v.tabs ? ' data-tabs="1"' : ""}>${v.bare ? glowStatus(false).replace(/<div class="glow[^>]*><\/div>/, "") : glowStatus(v.strong)}${v.html}<div class="home"></div></div>`;
     if (ghost) { el.appendChild(ghost); setTimeout(() => ghost.remove(), 340); }
     if (trans === "fwd" || trans === "up" || trans === "pop") el.querySelectorAll(".canvas > ul > li, .canvas .metric, .canvas .btn, .canvas .link").forEach((n, i) => { n.classList.add("stg"); n.style.setProperty("--i", Math.min(i, 8)); });
     $("tab-layer").innerHTML = v.tabs ? `<div class="ov">${tabbar(v.tabs)}</div>` : "";
@@ -325,6 +344,24 @@
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet${opts.red ? " red" : ""}${opts.tall ? " tall" : ""}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>${html}</div></div>`;
     const b = $("sheet-layer").querySelector(".sheet input,.sheet button");
     if (b) b.focus({ preventScroll: true });
+  }
+  function bankSheet() {
+    const b = S.bank, th = b.theme;
+    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="bsheet" style="--ba:${th.acc}" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+      <button class="x" data-close aria-label="Fermer">${BL_ICO.x}</button><h2 id="sh-t">Se connecter</h2><span class="lk" aria-hidden="true">${BL_ICO.lock}</span>
+      <form id="signin" novalidate>
+        <label class="fl" for="svc">Service</label>
+        <div class="sel" id="svc">${esc(th.svc)}<span aria-hidden="true">${BL_ICO.down}</span></div>
+        <label class="fl" for="u">${esc(th.user)}</label>
+        <input id="u" class="bf" value="demo.mellow" autocomplete="off" autocapitalize="off">
+        <label class="sr" for="p">Mot de passe</label>
+        <input id="p" class="bf" type="password" value="demo1234" autocomplete="off" aria-label="Mot de passe">
+        <button class="bb" type="submit"><span aria-hidden="true">${BL_ICO.face}</span>Se connecter avec Face ID</button>
+        <button class="bl2" type="submit">Utiliser le mot de passe</button>
+        <div class="bfoot"><span>${esc(th.forgot)}</span><span>${esc(th.reg)}</span></div>
+      </form></div></div>`;
+    $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; go("connecting"); });
+    $("u").focus({ preventScroll: true });
   }
   const closeSheet = () => {
     const layer = $("sheet-layer"), node = layer.firstElementChild;
@@ -370,6 +407,7 @@
     if (inApp && H.running) H.taps++;
     const d = t.dataset;
     if ("close" in d) return closeSheet();
+    if (d.sheet === "banklogin") return bankSheet();
     if (d.go) { closeSheet(); return go(d.go); }
     if (d.tab) return go(d.tab);
     if (d.bank) { S.bank = BANKS.find((b) => b.id === d.bank); return go("consent"); }

@@ -307,3 +307,42 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 @keyframes down2{to{transform:translateY(100%)}}
 .harness{animation:inFade .3s ease-out both}
 @media (prefers-reduced-motion:reduce){.canvas,.stg,.harness,.sheet{animation:none!important}.btn,.link,.back,.tabbar button,.row{transition:none}}
+
+/* ---- Bank sign-in (mock bank page, themed per bank via --bh/--bh2/--ba) ---- */
+.canvas.light{background:#f3f4f6}
+.canvas.light .home{background:#111}
+.canvas.light .sb{color:#fff}
+.bl{position:absolute;inset:0;color:#111}
+.bl-hero{position:absolute;left:0;top:0;width:390px;height:330px;background:radial-gradient(120% 90% at 50% 0%,var(--bh2) 0%,var(--bh) 70%)}
+.bl-back{position:absolute;left:16px;top:56px;width:44px;height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.16);color:#fff;font:400 30px/40px Inter;padding:0 0 4px}
+.bl-logo{position:absolute;left:159px;top:104px;width:72px;height:72px;border-radius:50%;background:#fff;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.bl-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;transform:scale(1.08)}
+.bl-name{position:absolute;left:0;width:390px;top:190px;text-align:center;color:#fff;font:600 24px/30px Inter;letter-spacing:-.02em}
+.bl-sub{position:absolute;left:24px;width:342px;top:222px;text-align:center;color:rgba(255,255,255,.75);font:400 14px/20px Inter}
+.bl-in{position:absolute;left:20px;top:268px;width:350px;height:57px;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);background:#fff;color:var(--ba);font:600 17px/1 Inter;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.bl-in:active{transform:scale(.98)}
+.bl-card{position:absolute;left:20px;top:366px;width:350px;height:68px;border-radius:14px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.bl-card .ic{width:38px;height:38px;border-radius:19px;background:color-mix(in srgb,var(--ba) 12%,#fff);color:var(--ba);display:grid;place-items:center}
+.bl-card .tx{flex:1;display:flex;flex-direction:column;gap:2px}
+.bl-card b{font:600 16px/20px Inter}
+.bl-card i{font:400 13px/18px Inter;font-style:normal;color:#6b7280}
+.bl-card .ch{color:#9ca3af}
+.bl-note{position:absolute;left:32px;width:326px;bottom:44px;text-align:center;font:400 13px/18px Inter;color:#6b7280}
+.bsheet{position:absolute;left:0;bottom:0;width:390px;height:540px;border-radius:28px 28px 0 0;background:#fff;color:#111;animation:up .28s var(--ease)}
+.bsheet.closing{animation:down2 .2s var(--ease-in) forwards;pointer-events:none}
+.bsheet h2{position:absolute;left:0;width:390px;top:22px;text-align:center;font:600 18px/28px Inter}
+.bsheet .x,.bsheet .lk{position:absolute;top:18px;width:36px;height:36px;border-radius:18px;border:0;background:#f0f1f3;color:#111;display:grid;place-items:center}
+.bsheet .x{left:16px}
+.bsheet .lk{right:16px;color:var(--ba);background:color-mix(in srgb,var(--ba) 12%,#fff)}
+.bsheet .fl{position:absolute;left:20px;font:500 13px/16px Inter;color:#6b7280}
+.bsheet [for=svc]{top:80px}.bsheet [for=u]{top:160px}
+.bsheet .sel,.bsheet .bf{position:absolute;left:20px;width:350px;height:52px;border-radius:12px;border:1px solid #d1d5db;background:#fff;font:500 16px/50px Inter;padding:0 16px;color:#111}
+.bsheet .sel{top:100px;display:flex;align-items:center;justify-content:space-between;line-height:1;font-size:15px}
+.bsheet .sel span{color:#6b7280;display:grid}
+.bsheet #u{top:180px}.bsheet #p{top:244px}
+.bsheet .bf:focus{outline:2px solid var(--ba);outline-offset:1px;border-color:var(--ba)}
+.bsheet .bb{position:absolute;left:20px;top:324px;width:350px;height:56px;border-radius:14px;border:0;background:var(--ba);color:#fff;font:600 17px/1 Inter;display:flex;align-items:center;justify-content:center;gap:10px}
+.bsheet .bb:active{transform:scale(.98)}
+.bsheet .bl2{position:absolute;left:20px;top:396px;width:350px;height:32px;border:0;background:none;color:var(--ba);font:600 16px/1 Inter}
+.bsheet .bfoot{position:absolute;left:20px;top:452px;width:350px;display:flex;justify-content:space-between;font:500 14px/20px Inter;color:var(--ba)}
+@media (prefers-reduced-motion:reduce){.bsheet{animation:none!important}}
