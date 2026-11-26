@@ -6,6 +6,9 @@
   --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
   --grey:#8e8e93;--mint:#7fe8c8;--coral:#f2607a;--green:#5b9f00;
   --s:1;--h:844;
+  /* design tokens added from Guillaume's feedback */
+  --pt-size:28px;--pt-lh:34px;--pt-track:-.03em; /* page title: always one line */
+  --trust-line:rgba(127,232,200,.35); /* trust/security highlight */
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000;color:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
@@ -245,3 +248,5 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .logo:has(img){background:#f5f5f5}
 .logo img{width:100%;height:100%;object-fit:cover}
 .row.trust{border-color:rgba(127,232,200,.35)}
+.hd.pt{font-size:var(--pt-size);line-height:var(--pt-lh);letter-spacing:var(--pt-track);white-space:nowrap}
+.row.trust{border-color:var(--trust-line)}
