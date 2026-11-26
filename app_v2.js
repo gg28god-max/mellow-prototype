@@ -129,7 +129,7 @@
       <ul>${BANKS.map((b, i) => `<li class="row bank" ${T(244 + i * 96)} data-key="${esc(b.name + " " + b.short + " " + (b.alias || ""))}"><button data-bank="${b.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(b.name)}"></button><span class="logo" aria-hidden="true">${b.logo}</span><span class="t" aria-hidden="true">${esc(b.name)}</span><span class="s" aria-hidden="true">Particuliers et entreprises</span><span class="chev" aria-hidden="true">›</span></li>`).join("")}</ul>
       <p class="a bq-empty" id="bq-empty" data-t style="top:260px;left:24px;width:342px" hidden role="status"></p>` }),
 
-    consent: () => ({ html: `${nav("Connecter ta banque", "bank")}
+    consent: () => ({ html: `<header class="nav"><button class="back" data-go="bank" aria-label="Retour">${BACK_ICO}</button><h1 class="sr">Connecter ta banque</h1></header>
       <div class="plaidtop a" data-t style="top:126px"><img src="logos/v2/plaid-icon.png" alt="Plaid"><span>Connexion sécurisée</span></div>
       <h1 class="hd pt a" data-t style="top:226px;left:24px">Tu gardes le contrôle.</h1>
       <ul>${feat(286, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(378, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(470, ICO.power, "mint", "Tu peux couper en tout temps", "Tes données ne sont jamais vendues.")}${feat(562, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
