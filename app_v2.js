@@ -460,9 +460,7 @@
         <input id="u" class="bf" value="demo.mellow" autocomplete="off" autocapitalize="off">
         <label class="sr" for="p">Mot de passe</label>
         <input id="p" class="bf" type="password" value="demo1234" autocomplete="off" aria-label="Mot de passe">
-        <button class="bb" type="submit"><span aria-hidden="true">${BL_ICO.face}</span>Se connecter avec Face ID</button>
-        <button class="bl2" type="submit">Utiliser le mot de passe</button>
-        <div class="bfoot"><span>${esc(th.forgot)}</span><span>${esc(th.reg)}</span></div>
+        <button class="bb" type="submit">Se connecter</button>
       </form></div></div>`;
     $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; go("connecting"); });
     $("u").focus({ preventScroll: true });
