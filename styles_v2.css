@@ -766,3 +766,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .wrow .wp small{display:inline;font-weight:400;margin-left:2px}
 .wempty{font:400 15px/22px Inter;color:var(--grey);padding:18px 0}
 .wdots,.wcar,.wl{position:absolute}
+.bycard{position:absolute;right:24px;height:32px;padding:0 14px;border-radius:99px;background:var(--pill-bg,#151515);border:1px solid var(--pill-line,rgba(255,255,255,.14));color:#fff;font:500 14px/30px Inter;display:flex;align-items:center;gap:6px}
+.bycard span{color:var(--mint);font-size:18px;line-height:1}
+.bycard{right:42px;height:28px;padding:0 10px;font:500 13px/26px Inter;z-index:3}
+.bycard span{font-size:16px}

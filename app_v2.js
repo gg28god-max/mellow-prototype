@@ -67,7 +67,8 @@
     { id: "mc", name: "Carte de crédit Mastercard", kind: "Carte de crédit", mask: "0441" },
   ];
   const STREAM = ["Vidéo", "Musique", "Vidéo et musique", "Livraison et vidéo", "Télé"], SOFT = ["Stockage", "Actualités", "Sécurité", "Logiciel"];
-  const accOf = (x) => ACCTS.find((c) => c.id === (STREAM.includes(x.cat) ? "visa" : SOFT.includes(x.cat) ? "mc" : "chq"));
+  const myAccts = () => { const m = ACCTS.filter((c) => S.accts.includes(c.id)); return m.length ? m : [ACCTS[0]]; };
+  const accOf = (x) => { const id = STREAM.includes(x.cat) ? "visa" : SOFT.includes(x.cat) ? "mc" : "chq", m = myAccts(); return m.find((c) => c.id === id) || m.find((c) => c.kind === "Chèques") || m[0]; };
   const DOMAIN = { rbc: "rbcroyalbank.com", scotia: "scotiabank.com", desj: "desjardins.com", td: "td.com", bmo: "bmo.com" };
   const navLogo = (back) => `<header class="nav navlogo"><button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button><span class="logo" role="img" aria-label="${esc(S.bank.name)}">${S.bank.logo}</span></header>`;
   const nAcc = () => S.accts.length;
@@ -240,7 +241,7 @@
 
     scanned: () => { const secY = 132 + 168 + 24, rowY = secY + 52;
       const heroMetric = () => { const n = items.length, nc = left, pc = Math.round(((n - nc) / n) * 100);
-        return `<section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">On a trouvé ${n} abonnements</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span>${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`; };
+        return `<section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">${n} abonnements trouvés</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span>${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`; };
       const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
       const RID = { "Adobe Acrobat": "r1", "Inconnu": "r2", "Spotify": "r3" }, resolved = (x) => { const v = S.review[RID[x.name]]; return v && v !== "later" ? v : null; }, left = toCheck.filter((n) => !resolved(items.find((x) => x.name === n))).length;
       const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
@@ -255,6 +256,7 @@
       return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="${left ? "review" : "dash"}">${left ? "Vérifier les " + left + " paiements" : "Continuer"}</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
+      ${S.accts.length > 1 ? `<button class="bycard a" data-go="wallet" data-t style="top:141px" aria-label="Voir les paiements par compte">Par compte <span aria-hidden="true">›</span></button>` : ""}
       ${heroMetric()}
       ${sectionWithCount(secY, "À vérifier", left)}
       <ul>${checkRows.map(warnRow).join("")}</ul>
@@ -265,10 +267,10 @@
       <div class="pinspace" data-t style="top:${endY}px;height:150px" aria-hidden="true"></div>` }; },
 
     wallet: () => {
-      const i = S.walletIdx || 0;
-      return { html: `${nav("Mes comptes", "scanned")}
-      <div class="wdots" data-t style="top:112px" id="wdots" role="tablist" aria-label="Comptes">${ACCTS.map((c, k) => `<button class="wd${k === i ? " on" : ""}" role="tab" data-wi="${k}" aria-selected="${k === i}" aria-label="${esc(c.name)}"></button>`).join("")}</div>
-      <div class="wcar" data-t style="top:136px" id="wcar" tabindex="0" aria-label="Tes comptes, fais glisser">${ACCTS.map((c, k) => `<article class="wcard c-${c.id}" aria-label="${esc(c.name)} ····${c.mask}"><span class="logo" aria-hidden="true">${S.bank.logo}</span><span class="wk">${esc(c.kind)}</span><div class="wb"><b>${esc(c.name.replace("Carte de crédit ", "").replace("Compte ", "Compte "))}</b><span class="wm">···· ${c.mask}</span></div></article>`).join("")}</div>
+      const AC = myAccts(), i = Math.min(S.walletIdx || 0, AC.length - 1);
+      return { html: `${nav("Par compte", "scanned")}
+      <div class="wdots" data-t style="top:112px" id="wdots" role="tablist" aria-label="Comptes">${AC.map((c, k) => `<button class="wd${k === i ? " on" : ""}" role="tab" data-wi="${k}" aria-selected="${k === i}" aria-label="${esc(c.name)}"></button>`).join("")}</div>
+      <div class="wcar" data-t style="top:136px" id="wcar" tabindex="0" aria-label="Tes comptes, fais glisser">${AC.map((c, k) => `<article class="wcard c-${c.id}" aria-label="${esc(c.name)} ····${c.mask}"><span class="logo" aria-hidden="true">${S.bank.logo}</span><span class="wk">${esc(c.kind)}</span><div class="wb"><b>${esc(c.name.replace("Carte de crédit ", "").replace("Compte ", "Compte "))}</b><span class="wm">···· ${c.mask}</span></div></article>`).join("")}</div>
       <div class="wl" data-t style="top:352px" id="wlist" aria-live="polite"></div>
       <div class="pinspace" data-t style="top:900px;height:40px" aria-hidden="true"></div>` }; },
 
@@ -389,9 +391,9 @@
   }
 
   function wireWallet() {
-    const car = $("wcar"), list = $("wlist"); if (!car || !list) return;
+    const car = $("wcar"), list = $("wlist"), AC = myAccts(); if (!car || !list) return;
     const draw = (i) => {
-      S.walletIdx = i; const c = ACCTS[i];
+      S.walletIdx = i; const c = AC[i];
       const mine = SCAN_POOL.filter((x) => accOf(x).id === c.id).sort((a, b) => monthly(b) - monthly(a));
       const tot = mine.reduce((t, x) => t + monthly(x), 0);
       document.querySelectorAll(".wd").forEach((d, k) => { d.classList.toggle("on", k === i); d.setAttribute("aria-selected", k === i); });
@@ -400,7 +402,7 @@
       layout();
     };
     const step = () => { const a = car.querySelector(".wcard"); return a.offsetWidth + 14; };
-    let t; car.addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(() => { const i = Math.max(0, Math.min(ACCTS.length - 1, Math.round(car.scrollLeft / step()))); if (i !== S.walletIdx) draw(i); }, 60); });
+    let t; car.addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(() => { const i = Math.max(0, Math.min(AC.length - 1, Math.round(car.scrollLeft / step()))); if (i !== S.walletIdx) draw(i); }, 60); });
     document.querySelectorAll(".wd").forEach((d) => d.addEventListener("click", () => { const i = +d.dataset.wi; car.scrollTo({ left: i * step(), behavior: reduceMotion() ? "auto" : "smooth" }); draw(i); }));
     car.scrollLeft = (S.walletIdx || 0) * step(); draw(S.walletIdx || 0);
   }
@@ -565,7 +567,7 @@
     const rid = rv ? { "Adobe Acrobat": "r1", "Inconnu": "r2", "Spotify": "r3" }[name] : null, open = rid && !(S.review[rid] && S.review[rid] !== "later");
     const h = [...name].reduce((n, c) => n + c.charCodeAt(0), 0), day = 3 + (h % 22), yearly = x.per === "an";
     const sel = ACCTS.filter((c) => S.accts.includes(c.id)), card = sel.find((c) => c.kind === "Carte de crédit");
-    const a0 = accOf(x), acc = (S.screen === "wallet" || S.accts.includes(a0.id)) ? a0 : (sel[0] || ACCTS[0]);
+    const acc = accOf(x);
     const pays = yearly ? [{ d: `12 janv. 2026`, p: x.price }] : [0, 1, 2, 3].map((i) => ({ d: `${day} ${MONTHS[(10 - i + 12) % 12]} 2026`, p: x.price }));
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet ev" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>
       <div class="evbody">
@@ -770,7 +772,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["wallet", "Comptes · aperçu cartes"], ["review", "Vérification"], ["dash", "Abonnements"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["wallet", "Par compte (cartes)"], ["review", "Vérification"], ["dash", "Abonnements"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
