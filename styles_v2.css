@@ -422,3 +422,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 @keyframes okdraw{to{stroke-dashoffset:0}}
 @keyframes okglow{0%{box-shadow:0 0 0 0 rgba(127,232,200,.0)}35%{box-shadow:0 0 28px 0 rgba(127,232,200,.28)}100%{box-shadow:0 0 0 0 rgba(127,232,200,0)}}
 @media (prefers-reduced-motion:reduce){.okcard,.okcard .okck,.okcard .okck::after{animation:none!important}.okcard .okck path{animation:none!important;stroke-dashoffset:0}}
+.harness .tsegs{display:flex;gap:8px}
+.harness .tsegs i{flex:1;height:6px;border-radius:3px;background:#d9d2c2}
+.harness .tsegs i.on{background:#141414}
+.harness .tsegs i.done{background:#7a5b2c}
+.harness .tnext{color:#333;font-weight:500}

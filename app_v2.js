@@ -541,8 +541,9 @@
   }
   function taskCard() {
     const task = TASKS[H.idx];
-    overlay(`<div class="kicker">Tâche ${H.idx + 1} sur 3</div><h1>${task.short}</h1>
+    overlay(`<div class="kicker">Tâche ${H.idx + 1} sur 3</div><div class="tsegs" role="img" aria-label="Tâche ${H.idx + 1} sur 3">${[0, 1, 2].map((i) => `<i class="${i < H.idx ? "done" : i === H.idx ? "on" : ""}"></i>`).join("")}</div><h1>${task.short}</h1>
       <p class="task-text">${task.text}</p>
+      <p class="muted tnext">${H.idx < 2 ? `Après celle-ci, il reste ${2 - H.idx} tâche${H.idx === 0 ? "s" : ""}. On te les montre une à la fois.` : "C’est la dernière tâche."}</p>
       <p class="muted">Le chronomètre démarre quand tu touches le bouton. Touche la pastille 1/3 en haut pour relire la consigne.</p>
       <button class="hbtn" data-h="start">Commencer la tâche</button>`);
   }
