@@ -180,9 +180,9 @@
       <ul>${feat(334, ICO.userx, "coral", "Ton nom et n° de compte", "Mellow n’en a pas besoin.")}${feat(422, ICO.money, "coral", "Aucun pouvoir sur ton argent", "On ne peut rien payer ni déplacer.")}</ul>
       <p class="fine legal" data-t style="top:526px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
       <p class="fine legal" data-t style="top:612px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
-      ${btn(716, authLabel(), 'data-go="connecting"', "authz")}` }),
+      ${btn(716, authLabel(), 'data-go="connected"', "authz")}` }),
 
-    connecting: () => ({ html: `${nav("Connexion", "access")}
+    connecting: () => ({ html: `${nav("Connexion", "banklogin")}
       <div class="handoff" ${T(230)} role="img" aria-label="Plaid transmet les données de ${esc(S.bank.short)} à Mellow">
         <span class="logo" style="left:63px">${PLAID}</span>
         <span class="dots">${[0, 1, 2, 3, 4].map(() => "<i></i>").join("")}</span>
@@ -417,7 +417,7 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "scanning") runScan();
-    if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("connected"); }, 2200);
+    if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("accounts"); }, 2200);
   }
 
   // ---------- Scan progress (counts tick up, newest finds rise in) ----------
@@ -495,7 +495,7 @@
         <input id="p" class="bf" type="password" value="demo1234" autocomplete="off" aria-label="Mot de passe">
         <button class="bb" type="submit">Se connecter</button>
       </form></div></div>`;
-    $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; S.accts = ["chq"]; go("accounts"); });
+    $("signin").addEventListener("submit", (e) => { e.preventDefault(); $("sheet-layer").innerHTML = ""; S.accts = ["chq"]; go("connecting"); });
     $("u").focus({ preventScroll: true });
   }
   const closeSheet = () => {
@@ -689,7 +689,7 @@
   // ---------- Designer panel (outside the phone, desktop only; ?dev=1 or ?demo=1) ----------
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
-    ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connecting", "Connexion en cours"], ["connected", "Compte lié"],
+    ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
     ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["dash", "Abonnements"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
