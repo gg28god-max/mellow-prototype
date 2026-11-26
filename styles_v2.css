@@ -411,3 +411,14 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .okcard .okck{position:absolute;left:20px;top:20px;width:24px;height:24px;border-radius:12px;background:var(--mint);color:#06281d;display:grid;place-items:center}
 .okcard h2{font:600 17px/24px Inter;margin:0 0 4px}
 .okcard p{font:400 15px/22px Inter;color:#cfd8d4;margin:0}
+
+/* ---- Connected check: disc pops in, ring ripples out, tick draws itself ---- */
+.okcard .okck{animation:okpop .5s var(--ease) .45s both}
+.okcard .okck::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--mint);opacity:0;animation:okring .9s ease-out .7s both}
+.okcard .okck path{stroke-dasharray:22;stroke-dashoffset:22;animation:okdraw .45s var(--ease) .8s forwards}
+.okcard{animation:okglow 1.2s ease-out .6s both}
+@keyframes okpop{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes okring{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
+@keyframes okdraw{to{stroke-dashoffset:0}}
+@keyframes okglow{0%{box-shadow:0 0 0 0 rgba(127,232,200,.0)}35%{box-shadow:0 0 28px 0 rgba(127,232,200,.28)}100%{box-shadow:0 0 0 0 rgba(127,232,200,0)}}
+@media (prefers-reduced-motion:reduce){.okcard,.okcard .okck,.okcard .okck::after{animation:none!important}.okcard .okck path{animation:none!important;stroke-dashoffset:0}}
