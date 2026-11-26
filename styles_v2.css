@@ -581,3 +581,26 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 /* Bank logo centred in the nav row (account picker + permissions) */
 .navlogo .logo{left:147px;top:0;width:48px;height:48px;border-radius:14px}
 .secdom{left:0;width:390px;margin:0;text-align:center;font:400 13px/18px Inter;color:var(--grey);display:flex;align-items:center;justify-content:center;gap:6px}
+
+/* ---- Designer panel (outside the phone frame) ---- */
+#dev{display:none}
+@media (min-width:960px){
+  #dev{display:block;position:fixed;right:20px;top:20px;bottom:20px;width:236px;overflow:auto;padding:16px;border-radius:20px;background:#141416;border:1px solid var(--line2);color:#fff;font:500 14px/20px Inter;z-index:80;scrollbar-width:thin}
+  #dev h2{font:700 15px/20px Inter;margin:0 0 12px}
+  #dev h3{font:600 11px/16px Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:16px 0 8px}
+  #dev button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left}
+  .dv-nav{display:flex;gap:8px}
+  #dev .dv-nav button{height:44px;border-radius:14px;background:#26262a;width:48px;text-align:center;font-size:18px}
+  #dev .dv-nav .dv-next{flex:1;background:#fff;color:#000;font-weight:600;font-size:15px;text-align:center}
+  .dv-banks{display:flex;flex-wrap:wrap;gap:6px}
+  #dev .dv-banks button{padding:6px 12px;border-radius:12px;background:#26262a;font-size:13px}
+  #dev .dv-banks button[aria-pressed="true"]{background:var(--mint);color:#06281d;font-weight:600}
+  #dev ol{list-style:none;margin:0;padding:0;counter-reset:s}
+  #dev ol li{counter-increment:s}
+  #dev ol button{display:flex;gap:10px;width:100%;padding:7px 10px;border-radius:10px;font-size:14px;color:#d6d6d8}
+  #dev ol button::before{content:counter(s);width:20px;color:var(--grey);font-size:12px}
+  #dev ol button:hover{background:#222226}
+  #dev ol button.on{background:#26262a;color:#fff;font-weight:600}
+  .dv-hint{margin:14px 0 0;font:400 12px/16px Inter;color:var(--grey)}
+  #dev button:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+}

@@ -409,6 +409,7 @@
     $("tab-layer").innerHTML = v.tabs ? `<div class="ov">${tabbar(v.tabs)}</div>` : v.pin ? `<div class="ov">${v.pin}</div>` : "";
     el.scrollTop = 0;
     layout();
+    if (window.syncDev) window.syncDev();
     const h = el.querySelector("h1");
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
@@ -680,6 +681,44 @@
       return;
     }
     if (action === "restart") location.reload();
+  }
+
+  // ---------- Designer panel (outside the phone, desktop only; ?dev=1 or ?demo=1) ----------
+  const DEV_FLOW = [
+    ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
+    ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connecting", "Connexion en cours"], ["connected", "Compte lié"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["dash", "Abonnements"],
+    ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
+    ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
+  ];
+  const q = new URLSearchParams(location.search);
+  if (q.has("dev") || q.has("demo")) {
+    const dv = document.createElement("aside");
+    dv.id = "dev"; dv.setAttribute("aria-label", "Panneau de navigation du designer");
+    dv.innerHTML = `<h2>Écrans</h2><div class="dv-nav"><button data-dv="prev" aria-label="Écran précédent">←</button><button data-dv="next" class="dv-next">Suivant →</button></div>
+      <h3>Banque</h3><div class="dv-banks">${BANKS.map((b) => `<button data-dvbank="${b.id}" aria-pressed="${b.id === S.bank.id}">${esc(b.short)}</button>`).join("")}</div>
+      <h3>Parcours</h3><ol>${DEV_FLOW.map(([id, l]) => `<li><button data-dvgo="${id}">${esc(l)}</button></li>`).join("")}</ol>
+      <p class="dv-hint">Flèches ← → du clavier. Panneau visible seulement sur grand écran.</p>`;
+    document.body.appendChild(dv);
+    const jump = (id) => {
+      if (id === "detail") S.detail = S.detail || "adobe";
+      if (id === "cancelled") S.adobe = "cancelled";
+      if (S.screen === "scanning") clearTimeout(0);
+      $("harness-layer").innerHTML = ""; $("sheet-layer").innerHTML = ""; $("notif-layer").innerHTML = "";
+      nextTrans = "fade"; prev = []; S.screen = id; render();
+    };
+    const step = (d) => { const i = DEV_FLOW.findIndex(([id]) => id === S.screen); jump(DEV_FLOW[(Math.max(i, 0) + d + DEV_FLOW.length) % DEV_FLOW.length][0]); };
+    dv.addEventListener("click", (e) => {
+      const t = e.target.closest("button"); if (!t) return; e.stopPropagation();
+      if (t.dataset.dv) return step(t.dataset.dv === "next" ? 1 : -1);
+      if (t.dataset.dvgo) return jump(t.dataset.dvgo);
+      if (t.dataset.dvbank) { S.bank = BANKS.find((b) => b.id === t.dataset.dvbank); dv.querySelectorAll("[data-dvbank]").forEach((x) => x.setAttribute("aria-pressed", x === t)); render(); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (/INPUT|TEXTAREA/.test(document.activeElement?.tagName || "") || e.metaKey || e.ctrlKey) return;
+      if (e.key === "ArrowRight") step(1); else if (e.key === "ArrowLeft") step(-1);
+    });
+    window.syncDev = () => dv.querySelectorAll("[data-dvgo]").forEach((x) => x.classList.toggle("on", x.dataset.dvgo === S.screen));
   }
 
   // ---------- Start ----------
