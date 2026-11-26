@@ -130,9 +130,9 @@
       <p class="a bq-empty" id="bq-empty" data-t style="top:260px;left:24px;width:342px" hidden role="status"></p>` }),
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}
-      <div class="plaidtop a" data-t style="top:138px;left:24px"><img src="logos/v2/plaid.png" alt="Plaid"><span>Connexion sécurisée</span></div>
-      <h1 class="hd pt a" data-t style="top:184px;left:24px">Tu gardes le contrôle.</h1>
-      <ul>${feat(244, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(336, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(428, ICO.power, "mint", "Tu peux couper en tout temps", "Tes données ne sont jamais vendues.")}${feat(520, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
+      <div class="plaidtop a" data-t style="top:126px"><img src="logos/v2/plaid-icon.png" alt="Plaid"><span>Connexion sécurisée</span></div>
+      <h1 class="hd pt a" data-t style="top:226px;left:24px">Tu gardes le contrôle.</h1>
+      <ul>${feat(286, ICO.shield, "mint", "Lecture seule", "On ne peut rien payer ni déplacer.")}${feat(378, ICO.keyok, "mint", "Ton mot de passe reste privé", "Tu te connectes chez ta banque.")}${feat(470, ICO.power, "mint", "Tu peux couper en tout temps", "Tes données ne sont jamais vendues.")}${feat(562, ICO.pay, "mint", "Seulement tes paiements", "Les récurrents, sur 12 mois.")}</ul>
       ${btn(716, "Connecter ma banque", 'data-go="banklogin"')}
       ${link(782, "Pas maintenant", 'data-go="bank"')}` }),
 

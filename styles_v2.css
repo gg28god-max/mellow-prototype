@@ -815,3 +815,6 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .plaidtop{display:flex;align-items:center;gap:10px;height:24px}
 .plaidtop img{height:20px;width:auto;filter:brightness(0) invert(1);opacity:.85}
 .plaidtop span{font:400 13px/18px Inter;color:var(--grey);padding-left:10px;border-left:1px solid var(--line2)}
+.plaidtop{position:absolute;left:0;right:0;flex-direction:column;justify-content:center;gap:8px;height:auto;text-align:center}
+.plaidtop img{height:40px}
+.plaidtop span{padding:0;border:0;font:500 13.5px/18px Inter;color:#b8bcc0}
