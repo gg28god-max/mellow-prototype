@@ -1,7 +1,7 @@
 /* Mellow prototype v2: pixel match to the Figma "Opal (Dark)" screens.
    Every screen is a 390 px wide canvas, like the Figma frame. JS scales it to the phone width
    (CSS zoom), so a 360, 390 or 430 px phone shows the same layout at the right size. */
-:root{
+:root{--orbit-t:30s;
   --bg:#000;--card:#0f0f10;--raised:#161617;--sheet:#1a1a1b;
   --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
   --grey:#8e8e93;--mint:#7fe8c8;--coral:#f2607a;--green:#5b9f00;
@@ -394,9 +394,9 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .orbit .orb .chip{left:0;top:0;transform:translateX(var(--r)) rotate(calc(var(--a)*-1deg));animation:orbc var(--sp) linear infinite}
 @keyframes orb{to{transform:rotate(calc(var(--a)*1deg + 360deg*var(--dir)))}}
 @keyframes orbc{to{transform:translateX(var(--r)) rotate(calc(var(--a)*-1deg - 360deg*var(--dir)))}}
-.orbit .sphere-glow{animation:glowp 3.5s ease-in-out infinite}
+.orbit .sphere-glow{animation:glowp 5.5s ease-in-out infinite}
 @keyframes glowp{50%{transform:scale(1.14);opacity:.7}}
-.orbit .sphere{animation:spherep 3.5s ease-in-out infinite}
+.orbit .sphere{animation:spherep 5.5s ease-in-out infinite}
 @keyframes spherep{50%{transform:scale(1.04)}}
 .orbit{animation:orbin .9s var(--ease) both}
 @keyframes orbin{from{opacity:0;transform:scale(.92)}}
