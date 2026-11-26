@@ -613,27 +613,17 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.acc .s{left:70px;top:34px;font:400 12.5px/16px Inter}
 .row.acc .ok{position:absolute;left:298px;top:20px;width:24px;height:24px;border-radius:12px;background:rgba(127,232,200,.14);color:var(--mint);display:grid;place-items:center;font:700 12px/1 Inter}
 
-/* ---- Hero summary options (preview via ?mv=a|b|c) ---- */
-.metric.mv{border-radius:28px;height:150px;border-color:rgba(127,232,200,.22);background:#0e1211}
-.metric.mv::before{background:radial-gradient(110% 120% at 0% 0%,rgba(127,232,200,.28) 0%,rgba(14,18,17,0) 62%);opacity:1}
-.metric.mv p{position:absolute;left:24px;margin:0}
-.metric.mv .cap{top:20px;font:500 15px/20px Inter;color:#a9b8b2}
-.metric.mv .big{top:44px;font:600 56px/60px Inter;letter-spacing:-.04em;white-space:nowrap}
-.metric.mv .big small{font:500 24px/30px Inter;letter-spacing:-.01em;color:#a9b8b2;margin-left:6px}
-.mv-a .yr{top:112px;font:500 15px/20px Inter;color:var(--mint)}
-.mv-b{height:176px!important;background:linear-gradient(180deg,#14100c,#0d0d0e);border-color:rgba(246,199,107,.28)!important}
-.mv-b::before{background:radial-gradient(110% 120% at 0% 0%,rgba(246,199,107,.3) 0%,rgba(14,14,14,0) 62%)!important}
-.mv-b .big{top:42px!important}
-.mv-b .cells{position:absolute;left:0;right:0;top:112px;height:64px;border-top:1px solid rgba(255,255,255,.1);display:flex}
-.mv-b .cells div{flex:1;padding:12px 24px 0;display:flex;flex-direction:column;gap:2px}
-.mv-b .cells div+div{border-left:1px solid rgba(255,255,255,.1)}
-.mv-b .cells b{font:600 18px/24px Inter}
-.mv-b .cells span{font:400 13px/16px Inter;color:var(--grey)}
-.mv-c{height:176px!important}
-.mv-c .seg{position:absolute;left:24px;right:24px;top:122px;height:10px;border-radius:5px;background:var(--mint);overflow:hidden;display:flex}
-.mv-c .seg i{display:block;height:100%;background:var(--mint)}
-.mv-c .seg i.w{flex:1;background:#f6c76b;margin-left:3px}
-.mv-c .leg{top:142px!important;right:24px;display:flex;gap:18px;font:500 13px/18px Inter}
-.mv-c .leg span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:6px;vertical-align:1px}
-.mv-c .leg .g{color:#cfd8d4}.mv-c .leg .g::before{background:var(--mint)}
-.mv-c .leg .y{color:#f6c76b}.mv-c .leg .y::before{background:#f6c76b}
+/* ---- Summary card (all screens): big number, small "$ CAD /unit", mint tint ---- */
+.metric{border-radius:28px;border-color:rgba(127,232,200,.2);background:#0e1211}
+.metric::before{background:radial-gradient(110% 120% at 0% 0%,rgba(127,232,200,.24) 0%,rgba(14,18,17,0) 62%);opacity:1}
+.metric .cap{left:24px;top:18px;font:500 15px/20px Inter;color:#a9b8b2}
+.metric .val{left:24px;top:40px;font:600 56px/60px Inter;letter-spacing:-.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.metric .val b{font-weight:600}
+.metric .val small{font:500 17px/22px Inter;letter-spacing:0;color:#a9b8b2}
+.metric.mvc{height:168px}
+.metric.mvc .seg{position:absolute;left:24px;right:24px;top:120px;height:4px;border-radius:2px;background:rgba(127,232,200,.3);display:flex;overflow:hidden}
+.metric.mvc .seg i{display:block;height:100%;background:rgba(127,232,200,.55)}
+.metric.mvc .seg i.w{flex:1;background:rgba(246,199,107,.5);margin-left:3px}
+.metric.mvc .leg{position:absolute;left:24px;top:134px;margin:0;display:flex;gap:16px;font:400 12.5px/16px Inter;color:var(--grey)}
+.metric.mvc .leg span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:3px;margin-right:6px;vertical-align:1px;background:rgba(127,232,200,.6)}
+.metric.mvc .leg .y::before{background:rgba(246,199,107,.7)}

@@ -94,7 +94,8 @@
   const nav = (title, back) => `<header class="nav">${back ? `<button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button>` : ""}<h1>${esc(title)}</h1></header>`;
   const btn = (y, label, attrs, cls = "") => `<button class="btn ${cls}" ${B(y, 56)} ${attrs}>${label}</button>`;
   const link = (y, label, attrs, cls = "") => `<button class="link ${cls}" ${B(y, 28)} ${attrs}>${label}</button>`;
-  const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${val}</div></div>`;
+  const metricVal = (val) => { const m = /^([\d\s\u00a0,.]+?)\s*\$(?:\/(\w+))?$/.exec(val); return m ? `<b>${m[1].trim()}</b><small>$ CAD${m[2] ? " /" + m[2] : ""}</small>` : esc(val); };
+  const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${metricVal(val)}</div></div>`;
   const plaid = (y, bottom) => `<div class="plaid" ${bottom ? B(y, 32) : T(y)}>Sécurisé par <b>${PLAID.replace('viewBox="0 0 72 72"', 'viewBox="14 14 44 44" width="14" height="14"').replace('fill="#fff"', 'fill="none"').replace('fill="#111"', 'fill="currentColor"')}PLAID</b></div>`;
   const success = (y, confetti) => `<div class="success" ${T(y)} aria-hidden="true"><div class="g"></div><div class="ring"></div><div class="disc">${CHECK}</div>${confetti ? [["#b8f27c", 104, 4, 4, 12], ["#7fe8c8", 158, 40, 6, 6], ["#f6c76b", 170, 110, 4, 10], ["#f2607a", 30, 120, 6, 6], ["#4f9fb8", 36, 50, 4, 12], ["#fff", 58, 26, 6, 6], ["#f6c76b", 104, 182, 4, 10]].map(([c, x, yy, w, h]) => `<i class="c" style="background:${c};left:${x}px;top:${yy}px;width:${w}px;height:${h}px"></i>`).join("") : ""}</div>`;
   const glowStatus = (strong) => `<div class="glow${strong === "calm" ? " calm" : strong ? " strong" : ""}"></div><div class="sb" aria-hidden="true"><span class="time">9:41</span><span class="icons"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="bat"><i></i></span></span></div>`;
@@ -232,16 +233,10 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => { const MV = new URLSearchParams(location.search).get("mv") || "", MH = { a: 150, b: 176, c: 176 }[MV] || 120, secY = MV ? 132 + MH + 24 : 308, rowY = secY + 52;
-      const perYear = (SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ");
-      const heroMetric = () => {
-        const n = items.length, nc = toCheck.length, pc = Math.round(((n - nc) / n) * 100);
-        if (MV === "a") return `<section class="metric mv mv-a a" ${T(132)} aria-label="Total mensuel"><p class="cap">On a trouvé ${n} abonnements</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><p class="yr">≈ ${perYear} $ par an</p></section>`;
-        if (MV === "b") return `<section class="metric mv mv-b a" ${T(132)} aria-label="Total mensuel"><p class="cap">Tu paies chaque mois</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><div class="cells"><div><b>${perYear} $</b><span>par an</span></div><div><b>${n}</b><span>abonnements</span></div></div></section>`;
-        if (MV === "c") return `<section class="metric mv mv-c a" ${T(132)} aria-label="Total mensuel"><p class="cap">On a trouvé ${n} abonnements</p><p class="big"><span>${SCAN_TOTAL} $</span><small>/mois</small></p><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span class="g">${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`;
-        return metric(132, "On a trouvé " + n + " abonnements", SCAN_TOTAL + " $/mois") + `<p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">Environ ${perYear} $ par an · fais défiler pour tout voir</p>`;
-      };
-      const toCheckX = null; const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
+    scanned: () => { const secY = 132 + 168 + 24, rowY = secY + 52;
+      const heroMetric = () => { const n = items.length, nc = toCheck.length, pc = Math.round(((n - nc) / n) * 100);
+        return `<section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">On a trouvé ${n} abonnements</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div><div class="seg" role="img" aria-label="${n - nc} reconnus, ${nc} à vérifier"><i style="width:${pc}%"></i><i class="w"></i></div><p class="leg"><span>${n - nc} reconnus</span><span class="y">${nc} à vérifier</span></p></section>`; };
+      const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL;
       const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
       const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
       const warnRow = (x, i) => { const sub = x.guess ? x.guess + " ?" : "Non reconnu";
