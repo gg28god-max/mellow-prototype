@@ -200,15 +200,22 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => ({ strong: true, html: `${success(120, true)}
-      <h1 class="title a center w342" data-t style="top:318px;line-height:48px">Analyse terminée</h1>
-      ${metric(388, "14 abonnements trouvés", SCAN_TOTAL + " $/mois")}
-      <ul class="finds a" data-t style="top:536px">
-        <li><span class="ck" aria-hidden="true">✓</span><span>12 mois de paiements lus</span></li>
-        <li><span class="ck" aria-hidden="true">✓</span><span>Noms cryptiques reconnus : « DRI*ADOBE » devient Adobe Acrobat</span></li>
-        <li><span class="ck" aria-hidden="true">✓</span><span><b>3 à vérifier.</b> Le reste est bon.</span></li>
-      </ul>
-      ${btn(740 - 24, "Voir quoi annuler", 'data-go="review"')}
+    scanned: () => ({ strong: true, html: `
+      <span class="bigck a" data-t style="top:116px;left:24px" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h1 class="hd pt a" data-t style="top:176px;left:24px">Analyse terminée</h1>
+      <section class="metric big a" data-t style="top:232px" aria-label="Résultat">
+        <div class="cap">${SCAN_POOL.length} abonnements · 12 mois analysés</div>
+        <div class="val">${SCAN_TOTAL} $/mois</div>
+        <div class="sub2">environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an</div>
+      </section>
+      <section class="attn a" data-t style="top:388px" aria-label="À vérifier">
+        <span class="ai" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01"/></svg></span>
+        <h2>${REVIEW.length} paiements à vérifier</h2>
+        <p>Leur nom n’est pas clair. Compte environ 1 minute.</p>
+        <div class="raws">${REVIEW.map((r) => `<span>${esc(r.raw)}</span>`).join("")}</div>
+      </section>
+      <p class="okline a" data-t style="top:580px"><span class="ck" aria-hidden="true">✓</span>Les ${SCAN_POOL.length - REVIEW.length} autres sont reconnus.</p>
+      ${btn(716, "Vérifier les " + REVIEW.length + " paiements", 'data-go="review"')}
       <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }),
 
     review: () => {
