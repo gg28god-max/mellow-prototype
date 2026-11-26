@@ -313,7 +313,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .canvas.light .home{background:#111}
 .canvas.light .sb{color:#fff}
 .bl{position:absolute;inset:0;color:#111}
-.bl-hero{position:absolute;left:0;top:0;width:390px;height:330px;background:radial-gradient(120% 90% at 50% 0%,var(--bh2) 0%,var(--bh) 70%)}
+.bl-hero{position:absolute;left:0;top:0;width:390px;height:366px;background:radial-gradient(120% 90% at 50% 0%,var(--bh2) 0%,var(--bh) 70%)}
 .bl-back{position:absolute;left:16px;top:56px;width:44px;height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.16);color:#fff;font:400 30px/40px Inter;padding:0 0 4px}
 .bl-logo{position:absolute;left:159px;top:104px;width:72px;height:72px;border-radius:50%;background:#fff;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .bl-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;transform:scale(1.08)}
@@ -321,7 +321,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bl-sub{position:absolute;left:24px;width:342px;top:222px;text-align:center;color:rgba(255,255,255,.75);font:400 14px/20px Inter}
 .bl-in{position:absolute;left:20px;top:268px;width:350px;height:57px;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);background:#fff;color:var(--ba);font:600 17px/1 Inter;box-shadow:0 8px 24px rgba(0,0,0,.18)}
 .bl-in:active{transform:scale(.98)}
-.bl-card{position:absolute;left:20px;top:366px;width:350px;height:68px;border-radius:14px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.bl-card{position:absolute;left:20px;top:398px;width:350px;height:68px;border-radius:14px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .bl-card .ic{width:38px;height:38px;border-radius:19px;background:color-mix(in srgb,var(--ba) 12%,#fff);color:var(--ba);display:grid;place-items:center}
 .bl-card .tx{flex:1;display:flex;flex-direction:column;gap:2px}
 .bl-card b{font:600 16px/20px Inter}
