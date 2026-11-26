@@ -200,21 +200,26 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => { const rowFor = (r, i) => { const x = r.guess ? sub(r.guess === "Adobe Acrobat" ? "adobe" : r.guess === "Spotify" ? "spotify" : "") : null;
-        const logo = x ? x.logo : GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>');
-        const name = r.guess || "Inconnu";
-        return `<li class="row" ${T(356 + i * 108)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(name)}, ${money(r.price)} par mois, ${esc(r.raw)}"></button>
-          <span class="logo${x ? "" : " gic"}" aria-hidden="true">${logo}</span><span class="t" aria-hidden="true">${esc(name)}</span><span class="s" aria-hidden="true">${esc(r.raw)}</span>
-          <span class="p" aria-hidden="true">${money(r.price)}</span><span class="pp" aria-hidden="true">par mois</span><span class="chev" aria-hidden="true">›</span></li>`; };
-      return { strong: true, html: `
+    scanned: () => { const toCheck = ["Adobe Acrobat", "Inconnu", "Spotify"], items = SCAN_POOL, rawOf = { "Adobe Acrobat": "DRI*ADOBE 8004", Inconnu: "DRI*XYZ 8004", Spotify: "SPOTIFY P1A2B3" };
+      const checkRows = toCheck.map((n) => items.find((x) => x.name === n));
+      const okRows = items.filter((x) => !toCheck.includes(x.name)).sort((a, b) => monthly(b) - monthly(a));
+      const warnRow = (x, i) => `<li class="row warnrow" ${T(356 + i * 108)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(x.name)}, ${money(x.price)} par ${x.per}, ${esc(rawOf[x.name])}, à vérifier"></button>
+          <span class="logo${x.unknown ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t" aria-hidden="true">${esc(x.name)}</span><span class="s" aria-hidden="true">${esc(rawOf[x.name])}</span>
+          <span class="p" aria-hidden="true">${money(x.price)}</span><span class="pp" aria-hidden="true">par ${x.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
+      const y2 = 356 + 3 * 108 + 24;                                   // second group starts below a clear gap
+      const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 52 + i * 72)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.cat)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
+      const endY = y2 + 52 + okRows.length * 72;
+      return { strong: true, pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
-      ${metric(132, "On a trouvé " + SCAN_POOL.length + " abonnements", SCAN_TOTAL + " $/mois")}
-      <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${SCAN_POOL.length - REVIEW.length} reconnus · environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an</p>
-      ${sectionWithCount(308, "À vérifier", REVIEW.length)}
-      <ul>${REVIEW.map(rowFor).join("")}</ul>
-      ${btn(716, "Vérifier les " + REVIEW.length + " paiements", 'data-go="review"')}
-      <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }; },
+      ${metric(132, "On a trouvé " + items.length + " abonnements", SCAN_TOTAL + " $/mois")}
+      <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">Environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an · fais défiler pour tout voir</p>
+      ${sectionWithCount(308, "À vérifier", toCheck.length)}
+      <ul>${checkRows.map(warnRow).join("")}</ul>
+      <div class="sep" data-t style="top:${y2 - 12}px" aria-hidden="true"></div>
+      <div class="a calm" data-t style="top:${y2}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">Reconnus</h2><span class="count" aria-label="${okRows.length} au total">${okRows.length}</span></div>
+      <ul aria-label="Abonnements reconnus">${okRows.map(miniRow).join("")}</ul>
+      <div class="pinspace" data-t style="top:${endY}px;height:150px" aria-hidden="true"></div>` }; },
 
     review: () => {
       const left = REVIEW.filter((r) => !S.review[r.id]).length;
@@ -371,7 +376,7 @@
     el.innerHTML = `<div class="canvas${v.light ? " light" : ""}${trans !== "none" ? " in-" + trans : ""}"${v.tabs ? ' data-tabs="1"' : ""}>${v.bare ? glowStatus(false).replace(/<div class="glow[^>]*><\/div>/, "") : glowStatus(v.strong)}${v.html}<div class="home"></div></div>`;
     if (ghost) { el.appendChild(ghost); setTimeout(() => ghost.remove(), 340); }
     if (trans === "fwd" || trans === "up" || trans === "pop") el.querySelectorAll(".canvas > ul > li, .canvas .metric, .canvas .btn, .canvas .link").forEach((n, i) => { n.classList.add("stg"); n.style.setProperty("--i", Math.min(i, 8)); });
-    $("tab-layer").innerHTML = v.tabs ? `<div class="ov">${tabbar(v.tabs)}</div>` : "";
+    $("tab-layer").innerHTML = v.tabs ? `<div class="ov">${tabbar(v.tabs)}</div>` : v.pin ? `<div class="ov">${v.pin}</div>` : "";
     el.scrollTop = 0;
     layout();
     const h = el.querySelector("h1");
@@ -394,11 +399,11 @@
     { name: "HBO Max", cat: "Vidéo", price: 12.99, per: "mois", logo: PNGLOGO("hbo") },
     { name: "YouTube", cat: "Vidéo et musique", price: 15.99, per: "mois", logo: PNGLOGO("youtube") },
     { name: "Bell Média", cat: "Télé", price: 24.99, per: "mois", logo: PNGLOGO("bell") },
-    { name: "Salle de sport", cat: "Sport", price: 59.99, per: "mois", logo: GI('<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>') },
-    { name: "Stockage cloud", cat: "Stockage", price: 3.99, per: "mois", logo: GI('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z"/>') },
-    { name: "Journal en ligne", cat: "Actualités", price: 9.99, per: "mois", logo: GI('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>') },
-    { name: "Jeux vidéo", cat: "Jeux", price: 14.99, per: "mois", logo: GI('<rect x="3" y="8" width="18" height="9" rx="4.5"/><path d="M8 11v3M6.5 12.5h3M15.5 11.8h.01M17.5 13.2h.01"/>') },
-    { name: "VPN", cat: "Sécurité", price: 5.99, per: "mois", logo: GI('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>') },
+    { name: "Salle de sport", cat: "Sport", price: 64.99, per: "mois", logo: GI('<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>') },
+    { name: "Stockage cloud", cat: "Stockage", price: 9.99, per: "mois", logo: GI('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z"/>') },
+    { name: "Journal en ligne", cat: "Actualités", price: 14.99, per: "mois", logo: GI('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>') },
+    { name: "Inconnu", cat: "Non reconnu", price: 9.0, per: "mois", unknown: true, raw: "DRI*XYZ 8004", logo: GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>') },
+    { name: "VPN", cat: "Sécurité", price: 11.99, per: "mois", logo: GI('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>') },
     { name: "Boîte repas", cat: "Repas", price: 110.0, per: "mois", logo: GI('<path d="M6 8h12l-1 11H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>') },
     { name: "Forfait mobile", cat: "Téléphonie", price: 55.0, per: "mois", logo: GI('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>') },
   ];
