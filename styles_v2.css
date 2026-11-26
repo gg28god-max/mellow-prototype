@@ -269,3 +269,41 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .handoff .dots i{animation:xfer 1.6s ease-in-out infinite}
 .handoff .dots i:nth-child(2){animation-delay:.16s}.handoff .dots i:nth-child(3){animation-delay:.32s}.handoff .dots i:nth-child(4){animation-delay:.48s}.handoff .dots i:nth-child(5){animation-delay:.64s}
 @media (prefers-reduced-motion:reduce){.handoff .dots i{animation:none}}
+
+/* ---------- Motion: screen transitions, press feedback ---------- */
+:root{--ease:cubic-bezier(.22,1,.36,1);--ease-in:cubic-bezier(.4,0,1,1)}
+@keyframes inR{from{opacity:0;transform:translateX(36px)}}
+@keyframes inL{from{opacity:0;transform:translateX(-36px)}}
+@keyframes inUp{from{opacity:0;transform:translateY(32px)}}
+@keyframes inPop{from{opacity:0;transform:scale(.96)}}
+@keyframes inFade{from{opacity:0}}
+@keyframes outL{to{opacity:0;transform:translateX(-26px)}}
+@keyframes outR{to{opacity:0;transform:translateX(26px)}}
+@keyframes outFade{to{opacity:0}}
+@keyframes outDown{to{opacity:0;transform:translateY(18px)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.canvas.in-fwd{animation:inR .4s var(--ease) both}
+.canvas.in-back{animation:inL .4s var(--ease) both}
+.canvas.in-up{animation:inUp .42s var(--ease) both}
+.canvas.in-pop{animation:inPop .45s var(--ease) both}
+.canvas.in-fade{animation:inFade .3s ease-out both}
+.canvas.ghost{position:absolute;left:0;right:0;margin:0 auto;pointer-events:none;z-index:5}
+.ghost.out-fwd{animation:outL .26s var(--ease-in) forwards}
+.ghost.out-back{animation:outR .26s var(--ease-in) forwards}
+.ghost.out-up{animation:outFade .22s ease-in forwards}
+.ghost.out-pop,.ghost.out-fade{animation:outFade .24s ease-in forwards}
+.stg{animation:rise .46s var(--ease) backwards;animation-delay:calc(var(--i,0)*45ms + 90ms)}
+/* press feedback */
+.btn,.link,.back,.tabbar button,.hbtn,.hlink,.row,.action,.set{transition:transform .14s var(--ease),opacity .18s,background-color .2s}
+.btn:active,.hbtn:active{transform:scale(.97)}
+.link:active,.hlink:active{opacity:.55}
+.back:active{transform:scale(.9)}
+.tabbar button:active{transform:scale(.93)}
+.row:has(button:active),.action:active,.set:active{transform:scale(.985)}
+/* sheets and test screens */
+.sheet.closing{animation:down2 .2s var(--ease-in) forwards;pointer-events:none}
+.scrim{animation:fade .25s ease-out}
+.scrim:has(~ .closing),.closing ~ .scrim{opacity:0}
+@keyframes down2{to{transform:translateY(100%)}}
+.harness{animation:inFade .3s ease-out both}
+@media (prefers-reduced-motion:reduce){.canvas,.stg,.harness,.sheet{animation:none!important}.btn,.link,.back,.tabbar button,.row{transition:none}}

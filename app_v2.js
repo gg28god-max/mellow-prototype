@@ -274,11 +274,21 @@
 
   // ---------- Render ----------
   let prev = [];
+  let nextTrans = "fade";
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function go(screen) {
+    const wasBack = screen === "back";
     if (screen === "back") { screen = prev.pop() || "dash"; }
     else if (S.screen !== screen) prev.push(S.screen);
     if (["dash", "calendar", "settings"].includes(screen)) prev = [];
     if (screen === "cancelled") S.adobe = "cancelled";
+    const from = S.screen, tabs = ["dash", "calendar", "settings"];
+    nextTrans = wasBack ? "back"
+      : tabs.includes(from) && tabs.includes(screen) ? "fade"
+      : screen === "detail" ? "up"
+      : ["connected", "scanned", "cancelled"].includes(screen) ? "pop"
+      : screen === "connecting" ? "fade"
+      : "fwd";
     S.screen = screen;
     render();
     onScreen(screen);
@@ -286,7 +296,21 @@
   function render() {
     const v = SCREENS[S.screen]();
     const el = $("screen");
-    el.innerHTML = `<div class="canvas"${v.tabs ? ' data-tabs="1"' : ""}>${glowStatus(v.strong)}${v.html}<div class="home"></div></div>`;
+    const trans = reduceMotion() ? "none" : nextTrans;
+    nextTrans = "none";
+    // keep the old screen as a non-interactive ghost so it can animate out
+    let ghost = null;
+    const old = el.querySelector(".canvas");
+    if (old && trans !== "none") {
+      ghost = old.cloneNode(true);
+      ghost.querySelectorAll("*").forEach((n) => { for (const a of [...n.attributes]) if (a.name.startsWith("data-") || a.name === "id" || a.name === "tabindex" || a.name === "for" || a.name === "href") n.removeAttribute(a.name); });
+      ghost.setAttribute("aria-hidden", "true"); ghost.inert = true;
+      ghost.className = "canvas ghost out-" + trans;
+      ghost.style.top = el.scrollTop + "px";
+    }
+    el.innerHTML = `<div class="canvas${trans !== "none" ? " in-" + trans : ""}"${v.tabs ? ' data-tabs="1"' : ""}>${glowStatus(v.strong)}${v.html}<div class="home"></div></div>`;
+    if (ghost) { el.appendChild(ghost); setTimeout(() => ghost.remove(), 340); }
+    if (trans === "fwd" || trans === "up" || trans === "pop") el.querySelectorAll(".canvas > ul > li, .canvas .metric, .canvas .btn, .canvas .link").forEach((n, i) => { n.classList.add("stg"); n.style.setProperty("--i", Math.min(i, 8)); });
     $("tab-layer").innerHTML = v.tabs ? `<div class="ov">${tabbar(v.tabs)}</div>` : "";
     el.scrollTop = 0;
     layout();
@@ -302,7 +326,12 @@
     const b = $("sheet-layer").querySelector(".sheet input,.sheet button");
     if (b) b.focus({ preventScroll: true });
   }
-  const closeSheet = () => { $("sheet-layer").innerHTML = ""; };
+  const closeSheet = () => {
+    const layer = $("sheet-layer"), node = layer.firstElementChild;
+    if (!node || reduceMotion()) { layer.innerHTML = ""; return; }
+    node.classList.add("closing");
+    setTimeout(() => { if (layer.firstElementChild === node) layer.innerHTML = ""; }, 200);
+  };
   const sb = (y, h) => `style="top:${y}px"`;
 
   function guessSheet(r) {
