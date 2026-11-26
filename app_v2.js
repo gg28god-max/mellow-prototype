@@ -86,7 +86,7 @@
   const metric = (y, cap, val) => `<div class="metric a" ${T(y)}><div class="cap">${cap}</div><div class="val">${val}</div></div>`;
   const plaid = (y, bottom) => `<div class="plaid" ${bottom ? B(y, 32) : T(y)}>Sécurisé par <b>${PLAID.replace('viewBox="0 0 72 72"', 'viewBox="14 14 44 44" width="14" height="14"').replace('fill="#fff"', 'fill="none"').replace('fill="#111"', 'fill="currentColor"')}PLAID</b></div>`;
   const success = (y, confetti) => `<div class="success" ${T(y)} aria-hidden="true"><div class="g"></div><div class="ring"></div><div class="disc">${CHECK}</div>${confetti ? [["#b8f27c", 104, 4, 4, 12], ["#7fe8c8", 158, 40, 6, 6], ["#f6c76b", 170, 110, 4, 10], ["#f2607a", 30, 120, 6, 6], ["#4f9fb8", 36, 50, 4, 12], ["#fff", 58, 26, 6, 6], ["#f6c76b", 104, 182, 4, 10]].map(([c, x, yy, w, h]) => `<i class="c" style="background:${c};left:${x}px;top:${yy}px;width:${w}px;height:${h}px"></i>`).join("") : ""}</div>`;
-  const glowStatus = (strong) => `<div class="glow${strong ? " strong" : ""}"></div><div class="sb" aria-hidden="true"><span class="time">9:41</span><span class="icons"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="bat"><i></i></span></span></div>`;
+  const glowStatus = (strong) => `<div class="glow${strong === "calm" ? " calm" : strong ? " strong" : ""}"></div><div class="sb" aria-hidden="true"><span class="time">9:41</span><span class="icons"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="bat"><i></i></span></span></div>`;
 
   function subRow(s, y, subtitle, opts = {}) {
     return `<li class="row" ${T(y)}><button class="row-hit" data-open="${s.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(s.name)}, ${money(s.price)} par ${s.per}, ${esc(subtitle)}"></button>
@@ -165,7 +165,7 @@
       <p class="body a center" data-t style="top:424px;left:40px;width:310px">On relie ton compte de façon sécurisée. Ça prend environ 30 secondes.</p>
       ${link(740, "Annuler", 'data-go="bank"')}` }),
 
-    connected: () => ({ strong: true, html: `
+    connected: () => ({ strong: "calm", html: `
       <header class="nav"><h2>Compte lié</h2></header>
       <span class="logo l88" data-t style="top:140px;left:151px" aria-hidden="true">${S.bank.logo}</span>
       <h1 class="hd pt a center w342" data-t style="top:256px;left:24px">Compte chèques ··4821</h1>
@@ -177,14 +177,14 @@
       </section>
       ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
 
-    scanning: () => ({ strong: true, html: `
+    scanning: () => ({ strong: "calm", html: `
       <h1 class="hd pt a" data-t style="top:156px;left:24px">On analyse 12 mois…</h1>
       <div class="pbar a" data-t style="top:236px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
       <div class="cnt a" data-t style="top:258px"><span id="sc-n" aria-live="polite">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
       <ul id="sc-list" class="sclist" aria-label="Abonnements trouvés"></ul>
       ${btn(716, "Voir les résultats pour l’instant", 'data-go="scanned"', "sec")}` }),
 
-    slow: () => ({ strong: true, html: `
+    slow: () => ({ strong: "calm", html: `
       <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
       <h1 class="hd pt a center w342" data-t style="top:266px;left:24px;white-space:normal;line-height:34px">Ça prend plus de temps que prévu</h1>
       <div class="pbar a" data-t style="top:350px" aria-hidden="true"><i style="width:65%"></i></div>
@@ -193,7 +193,7 @@
       ${btn(716, "Continuer en arrière-plan", 'data-go="scanned"')}
       ${link(782, "Annuler l’analyse", 'data-go="connected"')}` }),
 
-    empty: () => ({ strong: true, html: `
+    empty: () => ({ strong: "calm", html: `
       <button class="bl-back2" data-go="connected" aria-label="Retour">${BACK_ICO}<span>Retour</span></button>
       <h1 class="hd pt a center w342" data-t style="top:316px;left:24px;white-space:normal">Aucun paiement récurrent</h1>
       <p class="body a center w342" data-t style="top:372px">On a vérifié 12 mois de transactions sur ce compte. Essaie un autre compte, ou ajoute un abonnement toi-même.</p>
@@ -210,7 +210,7 @@
       const y2 = 356 + 3 * 108 + 24;                                   // second group starts below a clear gap
       const miniRow = (x, i) => `<li class="row mini" ${T(y2 + 52 + i * 72)}><span class="logo${/currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.cat)}</span><span class="p">${money(x.price)}<small>/${x.per === "an" ? "an" : "mois"}</small></span><span class="ok" aria-hidden="true">✓</span></li>`;
       const endY = y2 + 52 + okRows.length * 72;
-      return { strong: true, pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
+      return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="review">Vérifier les ${toCheck.length} paiements</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
       ${metric(132, "On a trouvé " + items.length + " abonnements", SCAN_TOTAL + " $/mois")}

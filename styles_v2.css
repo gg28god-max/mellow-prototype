@@ -499,3 +499,4 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.mini .logo.gic img.fit{padding:4px}
 .row.warnrow .t{max-width:150px;font-size:15.5px}
 .row.warnrow .s.warn{color:#f6c76b;font-size:12.5px}
+.glow.calm{height:260px;opacity:1;background:radial-gradient(120% 100% at 50% 0%,#1a2a24 0%,#0b1411 46%,#000 100%)} /* calm glow: very dark green at the very top, black below (post-connection screens) */
