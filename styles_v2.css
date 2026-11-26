@@ -630,9 +630,9 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 
 /* ---- Proof sheet for a recognised subscription ---- */
 .hintline{margin:0;font:400 13px/18px Inter;color:var(--grey)}
-.sheet.ev{height:680px;bottom:28px;background:var(--sheet)}
+.sheet.ev{height:min(680px,calc(var(--h) * 1px - 44px));bottom:28px;background:var(--sheet)}
 .sheet.ev::before{opacity:.35}
-.sheet.ev .evbody{position:absolute;left:0;right:0;top:30px;bottom:88px;padding:0 24px;overflow:auto;scrollbar-width:none}
+.sheet.ev .evbody{position:absolute;left:0;right:0;top:30px;bottom:92px;padding:0 24px;overflow:auto;scrollbar-width:none}
 .sheet.ev .evhead{display:flex;align-items:center;gap:14px;margin-bottom:6px}
 .sheet.ev .evhead .logo{position:relative;flex:none;width:52px;height:52px;border-radius:15px;color:var(--mint)}
 .sheet.ev .evhead .logo.gic svg{width:24px;height:24px}
@@ -659,3 +659,15 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .srch-x{width:28px;height:28px;border-radius:14px;border:0;background:rgba(255,255,255,.1);color:#fff;font:400 18px/26px Inter;text-align:center;padding:0}
 .row.bank[hidden],.bq-empty[hidden]{display:none}
 .bq-empty{margin:0;font:400 15px/22px Inter;color:var(--grey);text-align:center}
+
+.sheet.ev .evfoot{position:absolute;left:24px;right:24px;bottom:20px;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.sheet.ev .evfoot .btn,.sheet.ev .evfoot .link{position:relative;left:0;width:100%;bottom:auto}
+.sheet.ev .evfoot .btn{height:48px;line-height:48px;font-size:16px}
+.sheet.ev .evfoot .link{height:30px;line-height:30px;font-size:15px}
+.sheet.ev.act .evbody{bottom:176px}
+.sheet.ev .evask{margin:10px 0 4px;padding:12px 14px;border-radius:16px;background:rgba(246,199,107,.1);border:1px solid rgba(246,199,107,.3);display:flex;flex-direction:column;gap:2px}
+.sheet.ev .evask b{font:600 15px/20px Inter;color:#f6c76b}
+.sheet.ev .evask span{font:400 13.5px/18px Inter;color:#d6cdb8}
+.row.warnrow.done .s.warn{color:var(--grey)}
+.row.warnrow.done .chev{color:var(--mint);font-size:16px;top:24px;left:298px}
+.sheet.ev .evcard .evdates{color:#cfd8d4;margin-top:4px}
