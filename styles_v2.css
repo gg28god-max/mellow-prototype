@@ -438,3 +438,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bl-back2{display:flex;align-items:center;gap:2px;padding:0 12px 0 6px;font:500 16px/44px Inter}
 .bl-back2 svg{display:block}
 .harness.swap{animation:none}
+/* sheet without the Service dropdown: pull everything up */
+.bsheet{height:440px}
+.bsheet [for=u]{top:80px}
+.bsheet #u{top:100px}.bsheet #p{top:164px}
+.bsheet .bb{top:244px}.bsheet .bl2{top:316px}.bsheet .bfoot{top:372px}

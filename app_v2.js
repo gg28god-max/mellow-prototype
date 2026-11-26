@@ -413,8 +413,6 @@
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="bsheet" style="--ba:${th.acc}" role="dialog" aria-modal="true" aria-labelledby="sh-t">
       <button class="x" data-close aria-label="Fermer">${BL_ICO.x}</button><h2 id="sh-t">Se connecter</h2><span class="lk" aria-hidden="true">${BL_ICO.lock}</span>
       <form id="signin" novalidate>
-        <label class="fl" for="svc">Service</label>
-        <div class="sel" id="svc">${esc(th.svc)}<span aria-hidden="true">${BL_ICO.down}</span></div>
         <label class="fl" for="u">${esc(th.user)}</label>
         <input id="u" class="bf" value="demo.mellow" autocomplete="off" autocapitalize="off">
         <label class="sr" for="p">Mot de passe</label>
