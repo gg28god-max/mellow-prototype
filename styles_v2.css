@@ -536,3 +536,18 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.warnrow .p small{font:400 12px/1 Inter;color:var(--grey);margin-left:2px}
 .row.warnrow .chev{left:298px;top:18px}
 .row.warnrow .t{font-size:14px;max-width:122px;letter-spacing:-.01em}
+
+/* Rounded-square rows with more breathing room (token --row-r) */
+:root{--row-r:22px}
+.row.warnrow,.row.mini{border-radius:var(--row-r)}
+.row.warnrow{height:76px}
+.row.warnrow .logo{left:16px;top:18px;width:40px;height:40px;border-radius:12px}
+.row.warnrow .t{left:70px;top:17px;font-size:14.5px;max-width:124px}
+.row.warnrow .s.warn{left:70px;top:40px}
+.row.warnrow .p{left:180px;width:108px;top:26px}
+.row.warnrow .chev{left:306px;top:23px}
+.row.mini{height:68px}
+.row.mini .logo{left:16px;top:14px;width:40px;height:40px;border-radius:12px}
+.row.mini .t{left:70px;top:23px;font-size:15px;max-width:116px}
+.row.mini .p{left:176px;width:112px;top:23px}
+.row.mini .ok{left:302px;top:22px}
