@@ -178,9 +178,10 @@
       ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
 
     scanning: () => ({ strong: "calm", html: `
-      <h1 class="hd pt a" data-t style="top:156px;left:24px">On analyse 12 mois…</h1>
-      <div class="pbar a" data-t style="top:236px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
-      <div class="cnt a" data-t style="top:258px"><span id="sc-n" aria-live="polite">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
+      <div class="scanbank a" data-t style="top:60px;left:151px" aria-hidden="true"><i></i><i></i><span class="logo l88">${S.bank.logo}</span><b class="sweep"></b></div>
+      <h1 class="hd pt a center w342" data-t style="top:184px;left:24px">On analyse 12 mois…</h1>
+      <div class="pbar a" data-t style="top:252px" role="progressbar" aria-label="Progression de l’analyse" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pb"></i></div>
+      <div class="cnt a" data-t style="top:274px"><span id="sc-n" aria-live="polite">0 trouvé</span><b id="sc-m">0 $/mois</b></div>
       <ul id="sc-list" class="sclist" aria-label="Abonnements trouvés"></ul>
       ${btn(716, "Voir les résultats pour l’instant", 'data-go="scanned"', "sec")}` }),
 

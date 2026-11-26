@@ -447,7 +447,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 /* ---- Scan: one continuous timeline; rows glide between slots instead of being redrawn ---- */
 #pb{width:100%;transition:none;transform:scaleX(0);transform-origin:left center;will-change:transform}
 .cnt b{font-variant-numeric:tabular-nums}
-.sclist{position:absolute;left:0;top:304px;width:390px;height:312px;overflow:hidden;list-style:none;margin:0;padding:0}
+.sclist{position:absolute;left:0;top:320px;width:390px;height:312px;overflow:hidden;list-style:none;margin:0;padding:0}
 .row.scan{top:0;animation:none;transform:translateY(calc(var(--s,0)*104px));transition:transform .7s var(--ease),opacity .5s ease;will-change:transform,opacity}
 .logo.gic{background:#1d2824;color:var(--mint);width:48px;height:48px}
 .logo.gic svg{width:24px;height:24px}
@@ -551,3 +551,14 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.mini .t{left:70px;top:23px;font-size:15px;max-width:116px}
 .row.mini .p{left:176px;width:112px;top:23px}
 .row.mini .ok{left:302px;top:22px}
+
+/* Scanning: bank tile with pulse rings + a sweep line = "we are reading this account" */
+.scanbank{width:88px;height:88px}
+.scanbank .logo{position:absolute;left:0;top:0}
+.scanbank>i{position:absolute;inset:0;border-radius:26px;border:2px solid var(--mint);opacity:0;animation:scanring 2.8s var(--ease) infinite}
+.scanbank>i:nth-child(2){animation-delay:1.4s}
+.scanbank .sweep{position:absolute;inset:0;border-radius:26px;overflow:hidden;pointer-events:none}
+.scanbank .sweep::after{content:"";position:absolute;left:0;right:0;height:34px;top:-34px;background:linear-gradient(180deg,rgba(127,232,200,0),rgba(127,232,200,.55));border-bottom:2px solid var(--mint);animation:scansweep 2.2s ease-in-out infinite}
+@keyframes scanring{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.75);opacity:0}}
+@keyframes scansweep{0%{transform:translateY(0)}100%{transform:translateY(124px)}}
+@media (prefers-reduced-motion:reduce){.scanbank>i,.scanbank .sweep::after{animation:none!important}.scanbank>i{display:none}}
