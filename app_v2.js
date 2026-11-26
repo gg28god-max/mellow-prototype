@@ -193,17 +193,20 @@
       <p class="body a center" data-t style="top:424px;left:40px;width:310px">On relie ton compte de façon sécurisée. Ça prend environ 30 secondes.</p>
       ${link(740, "Annuler", 'data-go="bank"')}` }),
 
-    connected: () => ({ strong: "calm", html: `
-      <header class="nav"><h2>Compte lié</h2></header>
-      <span class="logo l88" data-t style="top:140px;left:151px" aria-hidden="true">${S.bank.logo}</span>
-      ${(() => { const sel = ACCTS.filter((x) => S.accts.includes(x.id)); const one = sel.length === 1 ? sel[0] : null; return `<h1 class="hd pt a center w342" data-t style="top:256px;left:24px">${one ? esc(one.name) + " ··" + one.mask : sel.length + " comptes liés"}</h1>
-      <p class="body a center w342" data-t style="top:298px;left:24px">${one ? esc(S.bank.name) : esc(S.bank.short) + " · " + [...new Set(sel.map((x) => x.kind.toLowerCase()))].join(", ")}</p>`; })()}
-      <section class="okcard a" data-t style="top:356px" aria-label="Banque connectée">
+    connected: () => { const sel = ACCTS.filter((x) => S.accts.includes(x.id)), n = sel.length, y0 = 262, endY = y0 + n * 72;
+      const AI = { Chèques: GI('<rect x="3" y="6" width="18" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>'), Épargne: GI('<path d="M5 11c0-3.3 3.1-6 7-6s7 2.7 7 6c0 2-1 3.7-2.5 4.8V19h-3v-1.5h-3V19h-3v-3.2C6 14.7 5 13 5 11z"/><path d="M9.5 10.5v.01M19 10.5h2"/>'), "Carte de crédit": GI('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 14.5h3"/>') };
+      const row = (x, i) => `<li class="row acc" ${T(y0 + i * 72)}><span class="logo gic" aria-hidden="true">${AI[x.kind]}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span><span class="ok" aria-hidden="true">✓</span></li>`;
+      return { strong: "calm", html: `
+      <span class="logo l56" data-t style="top:84px;left:167px" aria-hidden="true">${S.bank.logo}</span>
+      <h1 class="hd pt a center w342" data-t style="top:158px;left:24px">${n} compte${n > 1 ? "s" : ""} lié${n > 1 ? "s" : ""}</h1>
+      <p class="body a center w342" data-t style="top:202px;left:24px">${esc(S.bank.name)}</p>
+      <ul aria-label="Comptes liés">${sel.map(row).join("")}</ul>
+      <section class="okcard a" data-t style="top:${endY + 12}px" aria-label="Banque connectée">
         <span class="okck" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
         <h2>Banque connectée</h2>
         <p>Mellow peut lire tes paiements des 12 derniers mois. Il ne peut rien payer ni déplacer.</p>
       </section>
-      ${btn(716, nAcc() > 1 ? "Analyser mes comptes" : "Analyser mon compte", 'data-go="scanning"')}` }),
+      ${btn(716, n > 1 ? "Analyser mes comptes" : "Analyser mon compte", 'data-go="scanning"')}` }; },
 
     scanning: () => ({ strong: "calm", html: `
       <div class="scanbank a" data-t style="top:60px;left:151px" aria-hidden="true"><i></i><i></i><span class="logo l88">${S.bank.logo}</span><b class="sweep"></b></div>
@@ -703,6 +706,7 @@
     const jump = (id) => {
       if (id === "detail") S.detail = S.detail || "adobe";
       if (id === "cancelled") S.adobe = "cancelled";
+      if (id === "connected" && S.accts.length < 2) S.accts = ["chq", "sav", "visa"];
       if (S.screen === "scanning") clearTimeout(0);
       $("harness-layer").innerHTML = ""; $("sheet-layer").innerHTML = ""; $("notif-layer").innerHTML = "";
       nextTrans = "fade"; prev = []; S.screen = id; render();
