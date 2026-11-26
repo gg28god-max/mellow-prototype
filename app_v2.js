@@ -17,6 +17,7 @@
   const MINT = "#7fe8c8", CORAL = "#f2607a";
   const ICO = {
     pay: ico('<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/>', MINT),
+    shield: ico('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>', MINT),
     user: ico('<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>', MINT),
     money: ico('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>' + slash(CORAL), CORAL),
     key: ico('<circle cx="8" cy="15" r="4"/><path d="M11 12L20 3M17 6l3 3M14 9l2 2"/>' + slash(CORAL), CORAL),
@@ -103,8 +104,9 @@
 
     consent: () => ({ html: `${nav("Connecter ta banque", "bank")}${step(1)}
       <h1 class="hd a" data-t style="top:184px;left:24px;line-height:34px;font-size:28px;letter-spacing:-.03em">On lit seulement<br>tes paiements.</h1>
-      <ul>${feat(272, ICO.pay, "mint", "Tes paiements", "Lecture seule. Les 12 derniers mois.")}${feat(380, ICO.user, "mint", "Le nom de ton compte", "Pour que tu le reconnaisses.")}</ul>
-      <p class="body a center" data-t style="top:612px;left:24px;width:342px">Ensuite : ce qu’on ne fera jamais.</p>
+      <ul>${feat(272, ICO.pay, "mint", "Tes paiements", "Lecture seule. Les 12 derniers mois.")}${feat(380, ICO.user, "mint", "Le nom de ton compte", "Pour que tu le reconnaisses.")}${feat(488, ICO.shield, "mint", "Connexion chiffrée", "Tu peux la couper quand tu veux.").replace('class="row feat"', 'class="row feat trust"')}</ul>
+      ${plaid(594)}
+      <p class="body a center" data-t style="top:636px;left:24px;width:342px">Ensuite : ce qu’on ne fera jamais.</p>
       ${btn(716, "Suivant", 'data-go="consent2"')}` }),
 
     consent2: () => ({ html: `${nav("Connecter ta banque", "consent")}${step(1)}
