@@ -692,3 +692,33 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .bl-logo{border-radius:22px}
 .bl-logo img.lg{border-radius:0;transform:none;object-fit:contain;padding:16%}
 .plaid .plaidlogo{height:13px;width:auto;filter:brightness(0) invert(.62);vertical-align:-2px;margin-left:2px}
+
+/* proof sheet v3: calmer hierarchy */
+.sheet.ev .evhead{gap:14px;margin-bottom:10px}
+.sheet.ev .evhead .logo{width:56px;height:56px;border-radius:var(--row-r,22px)}
+.sheet.ev .eyebrow{margin:0 0 3px;font:600 11px/14px Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--mint)}
+.sheet.ev .eyebrow.warn{color:#f6c76b}
+.sheet.ev h2{font:700 24px/28px Inter;letter-spacing:-.02em;word-break:break-word}
+.sheet.ev .evprice{margin:0 0 18px;font:400 15px/22px Inter;color:var(--grey);display:flex;flex-direction:column}
+.sheet.ev .evprice b{font:600 17px/24px Inter;color:#fff}
+.sheet.ev .evprice span{font:400 14px/20px Inter;color:var(--grey)}
+.sheet.ev .evprice .warnp{color:#f6c76b;font-weight:500;margin-top:2px}
+.sheet.ev .evgroup{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:22px}
+.sheet.ev .evrow{display:flex;gap:14px;align-items:center;padding:14px 16px}
+.sheet.ev .evrow+.evrow{border-top:1px solid var(--line)}
+.sheet.ev .evic{flex:none;width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:var(--mint)}
+.sheet.ev .evrow div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.sheet.ev .evrow b{font:600 15.5px/21px Inter}
+.sheet.ev .evrow span{font:400 13px/18px Inter;color:var(--grey)}
+.sheet.ev .evrow .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}
+.sheet.ev h3{margin:22px 0 8px}
+.sheet.ev.act h3{margin:16px 0 8px}
+.sheet.ev .evlist{border-radius:22px}
+.sheet.ev.act .evlist li{padding:10px 16px}
+.sheet.ev.act .evprice{margin-bottom:14px}
+.sheet.ev .evprice em{font-style:normal}
+.sheet.ev.act .evrow{padding:11px 16px}
+.sheet.ev.act .evprice{margin-bottom:12px}
+.sheet.ev.act h3{margin:14px 0 6px}
+.sheet.ev .evhead .eyebrow{margin:0 0 3px;font:600 11px/14px Inter;color:#7be0b0}
+.sheet.ev .evhead .eyebrow.warn{color:#f6c76b}

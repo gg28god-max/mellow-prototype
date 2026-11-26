@@ -542,11 +542,13 @@
     const pays = yearly ? [{ d: `12 janv. 2026`, p: x.price }] : [0, 1, 2, 3].map((i) => ({ d: `${day} ${MONTHS[(10 - i + 12) % 12]} 2026`, p: x.price }));
     $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet ev" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>
       <div class="evbody">
-        <div class="evhead"><span class="logo${rid || /currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${rid ? QMARK : x.logo}</span><div><h2 id="sh-t">${esc(rid ? x.raw : x.name)}</h2><p>${money(x.price)} /${yearly ? "an" : "mois"}${rid ? "" : " · " + esc(x.cat)}</p>${rid ? `<p class="warnp">${x.guess ? "On pense que c’est " + esc(x.guess) + " ?" : "On ne reconnaît pas ce nom"}</p>` : ""}</div></div>
-        <h3>Dans ton relevé bancaire</h3>
-        <div class="evcard"><b class="mono">${esc(DESC[x.name] || x.name.toUpperCase())}</b><span>${esc(acc.name)} · ····${acc.mask}</span></div>
-        <h3>Le motif</h3>
-        <div class="evcard"><b>${yearly ? "Chaque année · le 12 janv." : "Chaque mois · vers le " + day}</b><span>${yearly ? "1 paiement" : "12 paiements identiques"} · sur 12 mois</span></div>
+        <div class="evhead"><span class="logo${rid || /currentColor|class="fit"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${rid ? QMARK : x.logo}</span>
+          <div><p class="eyebrow${rid ? " warn" : ""}">${rid ? "À vérifier" : "Reconnu"}</p><h2 id="sh-t">${esc(rid ? x.raw : x.name)}</h2></div></div>
+        <p class="evprice"><em><b>${money(x.price)}</b> /${yearly ? "an" : "mois"}</em>${rid ? `<span class="warnp">${x.guess ? "On pense que c’est " + esc(x.guess) + " ?" : "On ne reconnaît pas ce nom"}</span>` : `<span>${esc(x.cat)}</span>`}</p>
+        <div class="evgroup">
+          <div class="evrow"><span class="evic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span><div><b>${esc(acc.name)} · ····${acc.mask}</b><span class="mono">${esc(DESC[x.name] || x.name.toUpperCase())}</span></div></div>
+          <div class="evrow"><span class="evic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3M4 11V9a3 3 0 013-3h13M7 21l-3-3 3-3M20 13v2a3 3 0 01-3 3H4"/></svg></span><div><b>${yearly ? "Chaque année, le 12 janv." : "Chaque mois, vers le " + day}</b><span>${yearly ? "1 paiement" : "12 paiements identiques"} sur 12 mois</span></div></div>
+        </div>
         <h3>${yearly ? "Dernier paiement" : "Derniers paiements"}</h3>
         <ul class="evlist">${pays.map((q) => `<li><span>${q.d}</span><b>${money(q.p)}</b></li>`).join("")}</ul>
         ${yearly ? "" : '<p class="evmore">+ 8 paiements plus anciens, même montant</p>'}
