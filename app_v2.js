@@ -21,6 +21,7 @@
     power: ico('<path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/>', MINT),
     shield: ico('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>', MINT),
     user: ico('<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>', MINT),
+    userx: ico('<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>' + slash(CORAL), CORAL),
     money: ico('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>' + slash(CORAL), CORAL),
     key: ico('<circle cx="8" cy="15" r="4"/><path d="M11 12L20 3M17 6l3 3M14 9l2 2"/>' + slash(CORAL), CORAL),
     data: ico('<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>' + slash(CORAL), CORAL),
@@ -174,12 +175,11 @@
     access: () => ({ strong: "calm", html: `${navLogo("accounts")}
       <p class="secdom a" data-t style="top:120px"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Zone sécurisée · ${DOMAIN[S.bank.id]}</p>
       <h2 class="hd a" data-t style="top:156px;left:24px">Ce que Mellow lit</h2>
-      <p class="body a" data-t style="top:200px;left:24px;width:342px;font-size:15px;line-height:22px">Nom du compte, solde, transactions, dates des relevés et détails des paiements.</p>
-      <h2 class="sect a" data-t style="top:290px;left:28px">Partager plus <span class="opt">(facultatif)</span></h2>
-      <div class="set tall" ${T(334)}><span id="l-holder">Nom et rôle du titulaire<small>Vérifie la propriété du compte. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-holder" aria-checked="${S.toggles.holder}" data-toggle="holder"></button></div>
-      <div class="set tall" ${T(434)}><span id="l-routing">Numéro de compte<small>Permet de déplacer de l’argent. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-routing" aria-checked="${S.toggles.routing}" data-toggle="routing"></button></div>
-      <p class="fine legal" data-t style="top:548px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
-      <p class="fine legal" data-t style="top:634px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
+      <p class="body a" data-t style="top:200px;left:24px;width:342px;font-size:15px;line-height:22px">Solde, transactions, dates des relevés et détails des paiements.</p>
+      <h2 class="sect a" data-t style="top:290px;left:28px">Ce que Mellow ne lit pas</h2>
+      <ul>${feat(334, ICO.userx, "coral", "Ton nom et n° de compte", "Mellow n’en a pas besoin.")}${feat(422, ICO.money, "coral", "Aucun pouvoir sur ton argent", "On ne peut rien payer ni déplacer.")}</ul>
+      <p class="fine legal" data-t style="top:526px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
+      <p class="fine legal" data-t style="top:612px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
       ${btn(716, authLabel(), 'data-go="connecting"', "authz")}` }),
 
     connecting: () => ({ html: `${nav("Connexion", "access")}
