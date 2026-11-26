@@ -508,3 +508,20 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .feat .txt{left:70px;right:14px;gap:2px}
 .row.feat .t{font:500 16px/21px Inter}
 .row.feat .s{font:400 14px/19px Inter}
+
+/* ---- Pill rows (Opal reference): full-round slim pills, one-line, for "À vérifier" and "Reconnus" ---- */
+:root{--pill-bg:#151515;--pill-line:rgba(255,255,255,.09)}
+.row.warnrow,.row.mini{border-radius:999px;border-color:var(--pill-line);background:var(--pill-bg)}
+.row.warnrow{height:72px;background:linear-gradient(0deg,rgba(246,199,107,.06),rgba(246,199,107,.06)),var(--pill-bg);border-color:rgba(246,199,107,.32)}
+.row.warnrow .logo{left:14px;top:16px;width:40px;height:40px;border-radius:12px}
+.row.warnrow .t{left:68px;top:15px;font:500 15px/20px Inter;max-width:140px}
+.row.warnrow .s.warn{left:68px;top:37px;font:400 12px/16px Inter}
+.row.warnrow .p{left:176px;width:104px;top:15px;font:500 16px/20px Inter}
+.row.warnrow .pp{left:176px;width:104px;top:37px;font:400 12px/16px Inter}
+.row.warnrow .chev{left:298px;top:22px}
+.row.mini{height:58px}
+.row.mini .logo{left:12px;top:9px;width:40px;height:40px;border-radius:12px}
+.row.mini .t{left:64px;top:18px;font:500 16px/22px Inter;max-width:170px}
+.row.mini .p{left:166px;width:114px;top:18px;font:500 16px/22px Inter}
+.row.mini .ok{left:298px;top:17px}
+.row.mini .t{font-size:15px;max-width:150px}
