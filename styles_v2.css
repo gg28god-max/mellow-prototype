@@ -252,3 +252,15 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.trust{border-color:var(--trust-line)}
 /* whole row is the tap target: text/icons never swallow taps */
 .row>*:not(button){pointer-events:none}
+/* harness: no scrollbar, tighter type on small phones, button stays in reach */
+.harness{scrollbar-width:none;-ms-overflow-style:none;gap:10px;padding:max(30px,env(safe-area-inset-top)) 22px 0;font-size:clamp(14px,4vw,16px);line-height:1.4}
+.harness::-webkit-scrollbar,.screen::-webkit-scrollbar{display:none;width:0;height:0}
+.harness h1{font-size:clamp(21px,6.4vw,26px);line-height:1.15}
+.harness .kicker{font-size:11px;line-height:1.3;letter-spacing:.1em}
+.harness .task-text{font-size:clamp(17px,5vw,20px);padding:18px}
+.harness .hbtn{position:sticky;bottom:0;margin-top:auto;box-shadow:0 -14px 14px #f4f1ea;flex:none}
+.harness::after{content:"";flex:none;height:22px}
+/* in the framed desktop view the test screens scale with the phone like the app does */
+.framed .harness{inset:auto;left:0;top:0;width:390px;height:844px;zoom:var(--s);font-size:16px}
+.framed .harness h1{font-size:26px}
+.framed .harness .task-text{font-size:20px}
