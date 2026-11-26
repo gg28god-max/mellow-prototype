@@ -206,7 +206,7 @@
       const row = (x, i) => `<li class="row acc" data-t style="top:${y0 + i * 72}px;--d:${(0.35 + i * 0.8).toFixed(2)}s"><span class="logo gic" aria-hidden="true">${AI[x.kind]}</span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span><i class="spin" aria-hidden="true"></i><span class="ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></li>`;
       return { strong: "calm", html: `
       <span class="logo l56" data-t style="top:84px;left:167px" aria-hidden="true">${S.bank.logo}</span>
-      <h1 class="hd pt a center w342" id="lk-t" data-t style="top:158px;left:24px">${reduceMotion() ? n + " compte" + (n > 1 ? "s" : "") + " lié" + (n > 1 ? "s" : "") : "Connexion de tes comptes…"}</h1>
+      <h1 class="hd pt a center w342" id="lk-t" data-t style="top:158px;left:24px">${reduceMotion() ? n + " compte" + (n > 1 ? "s" : "") + " lié" + (n > 1 ? "s" : "") : "Connexion…"}</h1>
       <p class="body a center w342" id="lk-s" data-t style="top:202px;left:24px" aria-live="polite">${esc(S.bank.name)}</p>
       <ul aria-label="Comptes liés">${sel.map(row).join("")}</ul>
       <section class="okcard a late" data-t style="top:${endY + 12}px;--od:${(0.35 + n * 0.8).toFixed(2)}s" aria-label="Banque connectée">
