@@ -834,3 +834,6 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .okcard.late .okck::after{animation-delay:calc(var(--od,0s) + .7s)}
 .okcard.late .okck path{animation-delay:calc(var(--od,0s) + .8s)}
 @media (prefers-reduced-motion:reduce){.row.acc,.row.acc .ok,.row.acc .ok path,.okcard.late{animation:none!important}.row.acc .ok path{stroke-dashoffset:0}.row.acc .spin{display:none}}
+/* check badge on the right side of the confirmation card */
+.okcard{padding:18px 64px 20px 20px}
+.okcard .okck{left:auto;right:20px}
