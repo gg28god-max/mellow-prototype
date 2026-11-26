@@ -200,22 +200,21 @@
       ${btn(716 - 68, "Ajouter un abonnement", 'data-go="dash"')}
       ${btn(716, "Connecter un autre compte", 'data-go="bank"', "sec")}` }),
 
-    scanned: () => ({ strong: true, html: `
-      <span class="bigck a" data-t style="top:116px;left:24px" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
-      <h1 class="hd pt a" data-t style="top:176px;left:24px">Analyse terminée</h1>
-      <section class="metric big a" data-t style="top:232px" aria-label="Résultat">
-        <div class="cap">${SCAN_POOL.length} abonnements · 12 mois analysés</div>
-        <div class="val">${SCAN_TOTAL} $/mois</div>
-        <div class="sub2">environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an</div>
-      </section>
-      <section class="attn a" data-t style="top:388px" aria-label="À vérifier">
-        <span class="ai" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01"/></svg></span>
-        <h2>${REVIEW.length} paiements à vérifier</h2>
-        <p>Leur nom n’est pas clair. Compte environ 1 minute.</p>
-      </section>
-      <p class="okline a" data-t style="top:520px"><span class="ck" aria-hidden="true">✓</span>Les ${SCAN_POOL.length - REVIEW.length} autres sont reconnus.</p>
+    scanned: () => { const rowFor = (r, i) => { const x = r.guess ? sub(r.guess === "Adobe Acrobat" ? "adobe" : r.guess === "Spotify" ? "spotify" : "") : null;
+        const logo = x ? x.logo : GI('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>');
+        const name = r.guess || "Inconnu";
+        return `<li class="row" ${T(356 + i * 108)}><button class="row-hit" data-go="review" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(name)}, ${money(r.price)} par mois, ${esc(r.raw)}"></button>
+          <span class="logo${x ? "" : " gic"}" aria-hidden="true">${logo}</span><span class="t" aria-hidden="true">${esc(name)}</span><span class="s" aria-hidden="true">${esc(r.raw)}</span>
+          <span class="p" aria-hidden="true">${money(r.price)}</span><span class="pp" aria-hidden="true">par mois</span><span class="chev" aria-hidden="true">›</span></li>`; };
+      return { strong: true, html: `
+      <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
+      ${metric(132, "On a trouvé " + SCAN_POOL.length + " abonnements", SCAN_TOTAL + " $/mois")}
+      <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${SCAN_POOL.length - REVIEW.length} reconnus · environ ${(SCAN_TOTAL * 12).toLocaleString("fr-CA").replace(/\s/g, " ")} $ par an</p>
+      ${sectionWithCount(308, "À vérifier", REVIEW.length)}
+      <ul>${REVIEW.map(rowFor).join("")}</ul>
       ${btn(716, "Vérifier les " + REVIEW.length + " paiements", 'data-go="review"')}
-      <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }),
+      <p class="fine a" ${B(784, 18)}>Rien n’est annulé sans ton accord.</p>` }; },
 
     review: () => {
       const left = REVIEW.filter((r) => !S.review[r.id]).length;

@@ -471,3 +471,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .okline{left:24px;width:342px;display:flex;align-items:center;gap:10px;font:400 15px/22px Inter;color:#b6c0bc}
 .okline .ck{width:22px;height:22px;border-radius:11px;background:rgba(127,232,200,.16);color:var(--mint);display:grid;place-items:center;font:700 12px/1 Inter}
 @media (prefers-reduced-motion:reduce){.bigck,.bigck::after,.bigck path{animation:none!important}.bigck path{stroke-dashoffset:0}}
+
+/* ---- Scan complete uses the Dashboard layout (title, metric, subline, section + count, rows) ---- */
+.tck{position:absolute;width:28px;height:28px;border-radius:14px;background:var(--mint);color:#06281d;display:grid;place-items:center;animation:okpop .5s var(--ease) .2s both}
+.tck path{stroke-dasharray:22;stroke-dashoffset:22;animation:okdraw .45s var(--ease) .55s forwards}
+@media (prefers-reduced-motion:reduce){.tck,.tck path{animation:none!important}.tck path{stroke-dashoffset:0}}
