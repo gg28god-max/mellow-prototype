@@ -166,10 +166,16 @@
       <p class="body a center" data-t style="top:424px;left:40px;width:310px">On relie ton compte de façon sécurisée. Ça prend environ 30 secondes.</p>
       ${link(740, "Annuler", 'data-go="bank"')}` }),
 
-    connected: () => ({ strong: true, html: `${success(180)}
-      <h1 class="title a center w342" data-t style="top:396px;line-height:48px">Banque connectée</h1>
-      <p class="body a center w342" data-t style="top:452px">${esc(S.bank.name)} · Chèques ··4821</p>
-      <span class="logo l56" data-t style="top:496px;left:167px" aria-hidden="true">${S.bank.logo}</span>
+    connected: () => ({ strong: true, html: `
+      <header class="nav"><h2>Compte lié</h2></header>
+      <span class="logo l88" data-t style="top:140px;left:151px" aria-hidden="true">${S.bank.logo}</span>
+      <h1 class="hd pt a center w342" data-t style="top:256px;left:24px">Compte chèques ··4821</h1>
+      <p class="body a center w342" data-t style="top:298px;left:24px">${esc(S.bank.name)}</p>
+      <section class="okcard a" data-t style="top:356px" aria-label="Banque connectée">
+        <span class="okck" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <h2>Banque connectée</h2>
+        <p>Mellow peut lire tes paiements des 12 derniers mois. Il ne peut rien payer ni déplacer.</p>
+      </section>
       ${btn(716, "Analyser mon compte", 'data-go="scanning"')}` }),
 
     scanning: () => ({ strong: true, html: `

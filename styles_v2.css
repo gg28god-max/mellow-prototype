@@ -403,3 +403,11 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .wi{animation:rise .7s var(--ease) both}
 .wi.w1{animation-delay:.15s}.wi.w2{animation-delay:.3s}.wi.w3{animation-delay:.45s}
 @media (prefers-reduced-motion:reduce){.orbit,.orbit *,.wi{animation:none!important}}
+
+/* ---- Bank connected: identity first (big tile, account, bank), success as a tinted card ---- */
+.logo.l88{width:88px;height:88px;border-radius:26px}
+.nav h2{position:absolute;left:56px;right:56px;top:10px;text-align:center;font:600 18px/28px Inter}
+.okcard{left:24px;width:342px;border-radius:24px;background:rgba(127,232,200,.12);border:1px solid var(--trust-line);padding:18px 20px 20px 56px;text-align:left}
+.okcard .okck{position:absolute;left:20px;top:20px;width:24px;height:24px;border-radius:12px;background:var(--mint);color:#06281d;display:grid;place-items:center}
+.okcard h2{font:600 17px/24px Inter;margin:0 0 4px}
+.okcard p{font:400 15px/22px Inter;color:#cfd8d4;margin:0}
