@@ -250,3 +250,5 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row.trust{border-color:rgba(127,232,200,.35)}
 .hd.pt{font-size:var(--pt-size);line-height:var(--pt-lh);letter-spacing:var(--pt-track);white-space:nowrap}
 .row.trust{border-color:var(--trust-line)}
+/* whole row is the tap target: text/icons never swallow taps */
+.row>*:not(button){pointer-events:none}
