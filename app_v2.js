@@ -229,7 +229,7 @@
       const banner = done.length > 0;
       const y0 = banner ? 288 : 228;
       const names = done.map((r) => esc(S.review[r.id]));
-      return { html: `${nav("Vérification", null)}
+      return { html: `${nav("Vérification", "scanned")}
       <h1 class="hd a" data-t style="top:128px;left:24px">14 trouvés, ${left === 0 ? "tout est vérifié" : left + " à vérifier"}</h1>
       <p class="body a" data-t style="top:172px;left:24px">${11 + done.length} confirmés · 412 $/mois</p>
       ${banner ? `<div class="banner" ${T(212)} role="status">${names.length > 1 ? names.slice(0, -1).join(", ") + " et " + names.slice(-1) : names[0]} confirmé${names.length > 1 ? "s" : ""}.${left ? " " + left + " à vérifier." : ""}</div>` : ""}
