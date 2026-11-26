@@ -66,6 +66,7 @@
     { id: "mc", name: "Carte de crédit Mastercard", kind: "Carte de crédit", mask: "0441" },
   ];
   const DOMAIN = { rbc: "rbcroyalbank.com", scotia: "scotiabank.com", desj: "desjardins.com", td: "td.com", bmo: "bmo.com" };
+  const navLogo = (back) => `<header class="nav navlogo"><button class="back" data-go="${back}" aria-label="Retour">${BACK_ICO}</button><span class="logo" role="img" aria-label="${esc(S.bank.name)}">${S.bank.logo}</span></header>`;
   const nAcc = () => S.accts.length;
   const authLabel = () => nAcc() ? `Autoriser · ${nAcc()} compte${nAcc() > 1 ? "s" : ""}` : "Choisis au moins un compte";
 
@@ -163,21 +164,22 @@
         <button class="btn" type="submit" ${B(716, 56)}>Se connecter</button>
       </form>` }),
 
-    accounts: () => ({ strong: "calm", html: `${nav(S.bank.short, "banklogin")}
+    accounts: () => ({ strong: "calm", html: `${navLogo("banklogin")}
       <h1 class="hd pt a" data-t style="top:128px;left:24px">Quels comptes partager ?</h1>
       <p class="body a" data-t style="top:172px;left:24px;width:342px;font-size:14px;line-height:20px">Lecture seule · Révocable en tout temps · Via Plaid</p>
       <ul class="acctlist" aria-label="Comptes de ${esc(S.bank.short)}">${ACCTS.map((x, i) => `<li><button class="row acct" ${T(228 + i * 88)} role="checkbox" aria-checked="${S.accts.includes(x.id)}" data-acct="${x.id}"><span class="ack" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="t">${esc(x.name)}</span><span class="s">${esc(x.kind)} · ····${x.mask}</span></button></li>`).join("")}</ul>
       <button class="btn authz" id="authz" ${B(716, 56)} data-go="access"${nAcc() ? "" : " disabled"}>${authLabel()}</button>
       ${link(782, "Refuser", 'data-go="bank"')}` }),
 
-    access: () => ({ strong: "calm", html: `${nav(DOMAIN[S.bank.id], "accounts")}
-      <h2 class="hd a" data-t style="top:128px;left:24px">Ce que Mellow lit</h2>
-      <p class="body a" data-t style="top:172px;left:24px;width:342px;font-size:15px;line-height:22px">Nom du compte, solde, transactions, dates des relevés et détails des paiements.</p>
-      <h2 class="sect a" data-t style="top:262px;left:28px">Partager plus <span class="opt">(facultatif)</span></h2>
-      <div class="set tall" ${T(308)}><span id="l-holder">Nom et rôle du titulaire<small>Vérifie la propriété du compte. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-holder" aria-checked="${S.toggles.holder}" data-toggle="holder"></button></div>
-      <div class="set tall" ${T(412)}><span id="l-routing">Numéro de compte<small>Permet de déplacer de l’argent. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-routing" aria-checked="${S.toggles.routing}" data-toggle="routing"></button></div>
-      <p class="fine legal" data-t style="top:536px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
-      <p class="fine legal" data-t style="top:628px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
+    access: () => ({ strong: "calm", html: `${navLogo("accounts")}
+      <p class="secdom a" data-t style="top:120px"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Zone sécurisée · ${DOMAIN[S.bank.id]}</p>
+      <h2 class="hd a" data-t style="top:156px;left:24px">Ce que Mellow lit</h2>
+      <p class="body a" data-t style="top:200px;left:24px;width:342px;font-size:15px;line-height:22px">Nom du compte, solde, transactions, dates des relevés et détails des paiements.</p>
+      <h2 class="sect a" data-t style="top:290px;left:28px">Partager plus <span class="opt">(facultatif)</span></h2>
+      <div class="set tall" ${T(334)}><span id="l-holder">Nom et rôle du titulaire<small>Vérifie la propriété du compte. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-holder" aria-checked="${S.toggles.holder}" data-toggle="holder"></button></div>
+      <div class="set tall" ${T(434)}><span id="l-routing">Numéro de compte<small>Permet de déplacer de l’argent. Mellow n’en a pas besoin.</small></span><button class="switch" role="switch" aria-labelledby="l-routing" aria-checked="${S.toggles.routing}" data-toggle="routing"></button></div>
+      <p class="fine legal" data-t style="top:548px">En touchant Autoriser, je demande à ${esc(S.bank.short)} de partager les informations de mes comptes avec Mellow, via Plaid, jusqu’à l’expiration de l’accès ou jusqu’à ce que je demande l’arrêt.</p>
+      <p class="fine legal" data-t style="top:634px">Révoque en tout temps dans l’app ${esc(S.bank.short)}, sur ${DOMAIN[S.bank.id]} ou dans Mellow, sous Réglages.</p>
       ${btn(716, authLabel(), 'data-go="connecting"', "authz")}` }),
 
     connecting: () => ({ html: `${nav("Connexion", "access")}

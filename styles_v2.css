@@ -577,3 +577,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .set.tall small{display:block;font:400 13px/18px Inter;color:var(--grey);margin-top:3px}
 .set.tall .switch{top:30px}
 .fine.legal{left:24px;width:342px;margin:0;text-align:left;font:400 12px/17px Inter;color:var(--grey)}
+
+/* Bank logo centred in the nav row (account picker + permissions) */
+.navlogo .logo{left:147px;top:0;width:48px;height:48px;border-radius:14px}
+.secdom{left:0;width:390px;margin:0;text-align:center;font:400 13px/18px Inter;color:var(--grey);display:flex;align-items:center;justify-content:center;gap:6px}
