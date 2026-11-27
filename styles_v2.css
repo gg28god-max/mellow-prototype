@@ -1011,3 +1011,21 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .pk-end{height:150px}
 .pin.pkpin{pointer-events:none}
 .pkpin .pkq{position:absolute;left:24px;bottom:44px;pointer-events:auto;background:#1c1d1e}
+
+/* Filtering the Abonnements list */
+.fchip{left:auto;right:24px;height:36px;padding:0 14px 0 12px;border-radius:18px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid var(--line2);color:#fff;font:500 14.5px/20px Inter;cursor:pointer;margin-top:0}
+.fchip:hover{background:rgba(255,255,255,.13)}
+.fchip:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.fchip.on{background:rgba(127,232,200,.16);border-color:rgba(127,232,200,.5);color:var(--mint)}
+.fchip i{font:700 12px/18px Inter;font-style:normal;min-width:18px;height:18px;border-radius:9px;background:var(--mint);color:#06281d;text-align:center}
+.fsum{margin:0;font:400 14px/18px Inter;color:var(--grey)}
+.fsum b{color:#fff;font-weight:600}
+.fnone{left:24px;width:342px;text-align:center;padding:28px 0}
+.fnone p{margin:0 0 14px;font:400 15px/22px Inter;color:var(--grey)}
+.fnone button{border:1px solid var(--line2);background:rgba(255,255,255,.08);color:#fff;border-radius:22px;height:44px;padding:0 20px;font:500 15px/20px Inter;cursor:pointer}
+.sheet.filt{height:550px}
+.sheet .fl-h{position:absolute;left:28px;margin:0;font:600 12.5px/16px Inter;letter-spacing:.1em;text-transform:uppercase;color:#a9b8b2}
+.sheet .chips{position:absolute;left:24px;width:314px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:40px;padding:0 16px;border-radius:20px;border:1px solid var(--line2);background:rgba(255,255,255,.06);color:#fff;font:500 15px/20px Inter;cursor:pointer}
+.chip.on{background:rgba(127,232,200,.16);border-color:rgba(127,232,200,.55);color:var(--mint)}
+.chip:focus-visible{outline:2px solid var(--mint);outline-offset:2px}

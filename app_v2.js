@@ -60,7 +60,7 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [] };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" } };
   const ACCTS = [
     { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
     { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
@@ -306,16 +306,22 @@
       ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
       <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
       ${sectionWithCount(308, "Actifs", (cancelled ? 13 : 14) + S.manual.length)}
+      <button class="fchip a${S.filter.cat || S.filter.cyc ? " on" : ""}" data-t style="top:304px" data-filter aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>${S.filter.cat || S.filter.cyc ? "Filtré" : "Filtrer"}</span>${S.filter.cat || S.filter.cyc ? `<i>${(S.filter.cat ? 1 : 0) + (S.filter.cyc ? 1 : 0)}</i>` : ""}</button>
       ${(() => {
         // Grouped by type, like a store's category list: a small caps header, then that group's rows.
         const GROUPS = [["Streaming", ["Netflix", "Spotify", "YouTube", "Amazon Prime", "HBO Max", "Bell Média"]], ["Logiciel et stockage", ["Adobe Acrobat", "Stockage cloud", "VPN"]], ["Vie de tous les jours", ["Salle de sport", "Boîte repas", "Forfait mobile", "Journal"]], ["Autre", []], ["À vérifier", ["Inconnu"]]];
-        let y = 356, out = "";
+        const F = S.filter, on = !!(F.cat || F.cyc);
+        const pass = (r) => !F.cyc || (F.cyc === "an" ? r.per === "an" : r.per !== "an");
+        let y = on ? 392 : 356, out = "", shown = 0, sum = 0;
         GROUPS.forEach(([label, names]) => {
-          const list = [...names.map((nm) => rows.find((r) => r.orig === nm)).filter(Boolean), ...S.manual.filter((m) => m.cat === label).map((m) => ({ ...m, id: null, short: m.name, manual: true }))]; if (!list.length) return;
+          if (F.cat && F.cat !== label) return;
+          const list = [...names.map((nm) => rows.find((r) => r.orig === nm)).filter(Boolean), ...S.manual.filter((m) => m.cat === label).map((m) => ({ ...m, id: null, short: m.name, manual: true }))].filter(pass); if (!list.length) return;
+          shown += list.length; list.forEach((r) => { sum += r.per === "an" ? r.price / 12 : r.price; });
           out += `<h3 class="grp a" data-t style="top:${y}px;left:28px">${label}<span>${list.length}</span></h3>`; y += 36;
           out += `<ul>${list.map((s) => { const r = subRow(s, y, s.review ? "À vérifier" : s.manual ? (s.trial ? "Essai gratuit" : s.next ? "Renouvelle le " + s.next : "Ajouté par toi") : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") }); y += 108; return r; }).join("")}</ul>`; y += 14;
         });
-        return out;
+        if (!shown) out = `<div class="fnone a" data-t style="top:${y}px" role="status"><p>Aucun abonnement ne correspond à ce filtre.</p><button type="button" data-fclear>Tout afficher</button></div>`;
+        return (on ? `<p class="fsum a" data-t style="top:352px;left:28px"><b>${shown}</b> abonnement${shown > 1 ? "s" : ""} · <b>${sum.toFixed(2).replace(".", ",")} $</b>/mois</p>` : "") + out;
       })()}` };
     },
 
@@ -661,7 +667,7 @@
 
   // ---------- Sheets ----------
   function sheet(html, opts = {}) {
-    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet${opts.red ? " red" : ""}${opts.tall ? " tall" : ""}${opts.cfs ? " cfs" : ""}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>${html}</div></div>`;
+    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet${opts.red ? " red" : ""}${opts.tall ? " tall" : ""}${opts.cfs ? " cfs" : ""}${opts.filt ? " filt" : ""}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>${html}</div></div>`;
     const b = $("sheet-layer").querySelector(".sheet input,.sheet button");
     if (b) b.focus({ preventScroll: true });
   }
@@ -756,6 +762,17 @@
   }
   // Confirmation after a payment is identified: logo tile with a check, the name, the price. Closes itself, or on tap.
   let cfsTimer = 0;
+  function filterSheet() {
+    const F = S.filter, CATS = ["Streaming", "Logiciel et stockage", "Vie de tous les jours", "Autre", "À vérifier"], CY = [["", "Tous"], ["mois", "Mensuels"], ["an", "Annuels"]];
+    const chip = (attr, v, label, cur) => `<button type="button" class="chip${cur === v ? " on" : ""}" aria-pressed="${cur === v}" data-${attr}="${esc(v)}">${esc(label)}</button>`;
+    sheet(`<div class="tx" ${sb(36)}><h2 id="sh-t">Filtrer</h2></div>
+      <p class="fl-h" ${sb(92)}>Type</p>
+      <div class="chips" id="fc-cat" ${sb(120)}>${chip("fcat", "", "Tout", F.cat)}${CATS.map((c) => chip("fcat", c, c, F.cat)).join("")}</div>
+      <p class="fl-h" ${sb(326)}>Paiement</p>
+      <div class="chips" id="fc-cyc" ${sb(354)}>${CY.map(([v, l]) => chip("fcyc", v, l, F.cyc)).join("")}</div>
+      <button class="btn" ${sb(432)} data-close id="fc-go">Voir les abonnements</button>
+      <button class="link" ${sb(498)} data-fclear id="fc-reset">Réinitialiser</button>`, { filt: true });
+  }
   function confirmSheet(name, price, opts = {}) {
     const pop = POPULAR.find(([n]) => n.toLowerCase() === name.toLowerCase()) || (/acrobat/i.test(name) ? POPULAR.find(([n]) => n === "Adobe Acrobat") : null);
     const tile = pop && pop[2] ? `<img src="logos/v2/${pop[2]}-icon.png" alt="">` : `<span>${esc(name.trim()[0] || "?")}</span>`;
@@ -790,6 +807,9 @@
     if ("close" in d) return closeSheet();
     if (d.sheet === "banklogin") return bankSheet();
     if (d.ev) return evSheet(d.ev);
+    if ("filter" in d) return filterSheet();
+    if ("fclear" in d) { S.filter = { cat: "", cyc: "" }; nextTrans = "none"; render(); if ($("sheet-layer").querySelector(".sheet.filt")) filterSheet(); return; }
+    if ("fcat" in d || "fcyc" in d) { if ("fcat" in d) S.filter.cat = d.fcat; else S.filter.cyc = d.fcyc; nextTrans = "none"; const sc = $("screen"); const top = sc ? sc.scrollTop : 0; render(); if (sc) sc.scrollTop = top; const lay = $("sheet-layer"); lay.querySelectorAll(".chip").forEach((b) => { const v = "fcat" in b.dataset ? S.filter.cat === b.dataset.fcat : S.filter.cyc === b.dataset.fcyc; const same = ("fcat" in d) === ("fcat" in b.dataset); if (same) { b.classList.toggle("on", v); b.setAttribute("aria-pressed", String(v)); } }); return; }
     if (d.evq) return evSheet(d.evq, true);
     if (d.go) { closeSheet(); return go(d.go); }
     if (d.tab) return go(d.tab);
