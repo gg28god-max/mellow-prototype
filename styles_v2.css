@@ -882,3 +882,14 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .metric.mvc .fnd b{color:var(--mint);font:600 56px/60px Inter;letter-spacing:-.05em}
 .metric.mvc .cost b{color:#f6c76b;font:600 56px/60px Inter;letter-spacing:-.05em}
 .metric.mvc .cost b small{display:inline;margin:0 0 0 3px;font:600 24px/28px Inter;letter-spacing:0;color:#f6c76b;vertical-align:top;position:relative;top:8px}
+
+/* Name sheet: suggestions of famous subscriptions while typing */
+.sgl{position:absolute;left:24px;top:206px;width:314px;margin:0;padding:6px;list-style:none;z-index:3;border-radius:24px;background:#222324;border:1px solid var(--line2);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.sgl[hidden]{display:none}
+.sgl button{display:flex;align-items:center;gap:12px;width:100%;padding:6px 10px;border:0;border-radius:18px;background:transparent;color:#fff;text-align:left;cursor:pointer;font:inherit}
+.sgl button:hover,.sgl button:focus-visible{background:rgba(255,255,255,.07)}
+.sgl-t{flex:none;width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden;font:700 18px/1 Inter;color:#3a3d3c}
+.sgl-t img{width:26px;height:26px;object-fit:contain}
+.sgl-n{display:flex;flex-direction:column;font:500 16px/20px Inter;line-height:20px;color:#a9b8b2;min-width:0}
+.sgl-n b{color:#fff;font-weight:700}
+.sgl-n small{font:400 13px/16px Inter;color:var(--grey)}

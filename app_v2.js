@@ -594,13 +594,36 @@
       <button class="link" ${sb(304)} style="color:#d1d1d6" data-rv="no" data-id="${r.id}">Non, c’est autre chose</button>
       <button class="link" ${sb(346)} data-rv="later" data-id="${r.id}">Pas sûr, demande-moi plus tard</button>`);
   }
+  // Famous subscriptions offered as suggestions when naming an unknown payment. Real logos only where we have the artwork; others get a neutral letter tile.
+  const POPULAR = [
+    ["Netflix", "Vidéo", "netflix"], ["Spotify", "Musique", "spotify"], ["Amazon Prime", "Livraison et vidéo", "prime"], ["YouTube Premium", "Vidéo et musique", "youtube"],
+    ["Adobe Creative Cloud", "Logiciel", "adobe"], ["Adobe Acrobat", "Logiciel", "acrobat"], ["Bell", "Télécom", "bell"], ["HBO Max", "Vidéo", "hbo"],
+    ["Apple Music", "Musique"], ["Apple TV+", "Vidéo"], ["iCloud+", "Stockage"], ["Disney+", "Vidéo"], ["Crave", "Vidéo"], ["Paramount+", "Vidéo"],
+    ["Audible", "Livres audio"], ["Google One", "Stockage"], ["Dropbox", "Stockage"], ["Microsoft 365", "Logiciel"], ["ChatGPT Plus", "Logiciel"], ["Canva", "Logiciel"],
+    ["Xbox Game Pass", "Jeux"], ["PlayStation Plus", "Jeux"], ["Nintendo Switch Online", "Jeux"], ["Duolingo", "Apprentissage"], ["Uber One", "Livraison"],
+    ["Abonnement au gym", "Sport"], ["Planet Fitness", "Sport"], ["Éconofitness", "Sport"], ["Sirius XM", "Musique"], ["Sportsnet+", "Sport"], ["Slack", "Logiciel"], ["Shopify", "Logiciel"], ["Strava", "Sport"], ["Substack", "Actualités"], ["Le Devoir", "Actualités"], ["La Presse", "Actualités"],
+  ];
   function nameSheet(r) {
     sheet(`<div class="tx" ${sb(40)}><h2 id="sh-t">Nomme ce paiement</h2></div>
       <p class="tx" ${sb(84)} style="font:400 15px/20px Inter;color:var(--grey)">${esc(r.raw)} · ${money(r.price)}/mois</p>
       <form id="nameform"><label class="sr" for="nm">Nom du paiement</label>
-      <input id="nm" class="field" ${sb(136)} placeholder="ex. Abonnement au gym" autocomplete="off">
-      <button class="btn" type="submit" ${sb(232)}>Enregistrer</button></form>
+      <input id="nm" class="field" ${sb(136)} placeholder="ex. Abonnement au gym" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sg" aria-autocomplete="list">
+      <button class="btn" type="submit" ${sb(232)}>Enregistrer</button>
+      <ul id="sg" class="sgl" role="listbox" aria-label="Suggestions" hidden></ul></form>
       <button class="link" ${sb(308)} data-rv="later" data-id="${r.id}">Masquer ce paiement</button>`, { tall: true });
+    const nm = $("nm"), sg = $("sg");
+    const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const mark = (name, q) => { const i = fold(name).indexOf(q); return i < 0 ? esc(name) : esc(name.slice(0, i)) + "<b>" + esc(name.slice(i, i + q.length)) + "</b>" + esc(name.slice(i + q.length)); };
+    const suggest = () => {
+      const q = fold(nm.value.trim());
+      const rank = (n) => { const f = fold(n); return f.startsWith(q) ? 0 : f.split(/[\s+]+/).some((w) => w.startsWith(q)) ? 1 : f.includes(q) ? 2 : 9; };
+      const ranked = q ? POPULAR.map((x) => [rank(x[0]), x]).filter(([r]) => r < 9).sort((a, b) => a[0] - b[0]) : [];
+      const hits = ranked.filter(([r]) => r < 2).length ? ranked.filter(([r]) => r < 2).map((x) => x[1]).slice(0, 4) : ranked.map((x) => x[1]).slice(0, 4);
+      sg.innerHTML = hits.map(([n, c, l]) => `<li role="option"><button type="button" data-sg="${esc(n)}"><span class="sgl-t">${l ? `<img src="logos/v2/${l}-icon.png" alt="">` : esc(n[0])}</span><span class="sgl-n"><span>${mark(n, q)}</span><small>${esc(c)}</small></span></button></li>`).join("");
+      sg.hidden = !hits.length; nm.setAttribute("aria-expanded", String(!!hits.length));
+    };
+    nm.addEventListener("input", suggest);
+    sg.addEventListener("click", (e) => { const b = e.target.closest("[data-sg]"); if (!b) return; e.stopPropagation(); nm.value = b.dataset.sg; sg.hidden = true; nm.setAttribute("aria-expanded", "false"); nm.focus(); });
     $("nameform").addEventListener("submit", (e) => { e.preventDefault(); S.review[r.id] = $("nm").value.trim() || "Paiement nommé"; closeSheet(); render(); });
   }
   function cancelSheet(id) {
