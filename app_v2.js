@@ -779,7 +779,10 @@
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
   const q = new URLSearchParams(location.search);
-  if (q.has("dev") || q.has("demo")) {
+  // Remember the designer panel on this browser so it stays on without the ?dev link (?dev=0 turns it off). Testers never get it.
+  let devOn = false;
+  try { if (q.get("dev") === "0") localStorage.removeItem("mellow-dev"); else if (q.has("dev")) localStorage.setItem("mellow-dev", "1"); devOn = localStorage.getItem("mellow-dev") === "1"; } catch (_) {}
+  if (q.has("dev") && q.get("dev") !== "0" || q.has("demo") || devOn) {
     const dv = document.createElement("aside");
     dv.id = "dev"; dv.setAttribute("aria-label", "Panneau de navigation du designer");
     dv.innerHTML = `<h2>Écrans</h2><div class="dv-nav"><button data-dv="prev" aria-label="Écran précédent">←</button><button data-dv="next" class="dv-next">Suivant →</button></div>
