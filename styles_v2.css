@@ -903,3 +903,20 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .sheet.cfs::before{opacity:1;animation:cfsglow 1.4s ease-out both}
 @keyframes cfsglow{0%{opacity:.4}40%{opacity:1}100%{opacity:.8}}
 @media (prefers-reduced-motion:reduce){.cfs-t,.cfs-ck,.cfs-ck::after,.sheet.cfs::before{animation:none!important}}
+
+/* Reward screen: every payment verified */
+.rwd{left:135px;width:120px;height:120px}
+.rwd-c{position:absolute;inset:0;border-radius:50%;background:var(--mint);color:#06281d;display:grid;place-items:center;box-shadow:0 0 60px rgba(127,232,200,.45);animation:okpop .6s var(--ease) .15s both}
+.rwd-c path{stroke-dasharray:22;stroke-dashoffset:22;animation:okdraw .5s var(--ease) .55s forwards}
+.rwd-r{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mint);opacity:0;animation:okring 1.4s ease-out .6s both}
+.rwd-r.r2{animation-delay:.95s}
+.rwd-b{position:absolute;inset:0}
+.rwd-b i{position:absolute;left:56px;top:56px;width:8px;height:8px;border-radius:4px;background:var(--mint);opacity:0;animation:rwdburst .9s ease-out var(--bd) both}
+.rwd-b i:nth-child(even){background:#f6c76b;width:6px;height:6px;left:57px;top:57px}
+@keyframes rwdburst{0%{opacity:1;transform:rotate(var(--a)) translateY(-40px) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(-118px) scale(.4)}}
+.rwd-l{left:24px;width:342px;padding:6px 20px;border-radius:24px;background:rgba(127,232,200,.08);border:1px solid var(--trust-line)}
+.rwd-l p{display:flex;align-items:center;gap:12px;margin:0;padding:13px 0;font:400 15px/20px Inter;color:#cfd8d4}
+.rwd-l p+p{border-top:1px solid rgba(255,255,255,.07)}
+.rwd-l p i{flex:none;width:24px;height:24px;border-radius:12px;background:var(--mint);color:#06281d;display:grid;place-items:center}
+.rwd-l b{color:#fff;font-weight:600}
+@media (prefers-reduced-motion:reduce){.rwd-c,.rwd-c path,.rwd-r,.rwd-b i{animation:none!important}.rwd-c path{stroke-dashoffset:0}.rwd-r,.rwd-b{display:none}}

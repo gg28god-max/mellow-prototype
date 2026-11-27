@@ -261,10 +261,17 @@
     review: () => {
       const cur = REVIEW.find((r) => !S.review[r.id]), total = REVIEW.length, doneN = REVIEW.filter((r) => S.review[r.id]).length;
       const bars = `<div class="rvbars" data-t style="top:116px" aria-hidden="true">${REVIEW.map((r, i) => `<i class="${S.review[r.id] ? "on" : i === doneN ? "cur" : ""}"></i>`).join("")}</div>`;
-      if (!cur) { const ok = REVIEW.filter((r) => S.review[r.id] !== "later").length;
+      if (!cur) { const ok = REVIEW.filter((r) => S.review[r.id] !== "later").length, later = total - ok, n = SCAN_POOL.length;
+        const burst = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<i style="--a:${i * 45}deg;--bd:${(0.55 + (i % 3) * 0.06).toFixed(2)}s"></i>`).join("");
         return { html: `${nav("Vérification", "scanned")}${bars}
-        <h1 class="hd a" data-t style="top:160px;left:24px">Tout est vérifié</h1>
-        <p class="body a" data-t style="top:208px;left:24px">${ok} paiement${ok > 1 ? "s" : ""} confirmé${ok > 1 ? "s" : ""}${ok < total ? ", " + (total - ok) + " pour plus tard" : ""}.</p>
+        <div class="rwd a" data-t style="top:170px" aria-hidden="true"><span class="rwd-r"></span><span class="rwd-r r2"></span><div class="rwd-b">${burst}</div><div class="rwd-c"><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div>
+        <h1 class="hd pt a center w342" data-t style="top:336px;left:24px">Tout est en ordre</h1>
+        <p class="body a center w342" data-t style="top:384px;left:24px">${ok} paiement${ok > 1 ? "s" : ""} confirmé${ok > 1 ? "s" : ""}${later ? ", " + later + " pour plus tard" : ""}.</p>
+        <section class="rwd-l a late" data-t style="top:456px;--od:.9s" aria-label="Ce qui est en place">
+          <p><i aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span><b>${n} abonnements</b> suivis · <b>${SCAN_TOTAL} $</b>/mois</span></p>
+          <p><i aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Alerte <b>avant chaque paiement</b></span></p>
+          <p><i aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Rien n’est annulé <b>sans ton accord</b></span></p>
+        </section>
         <div class="cta-fade" ${B(716, 128)}></div>${btn(756, "Voir mes abonnements", 'data-go="wallet"')}` }; }
       const k = doneN + 1;
       return { html: `${nav("Vérification", "scanned")}${bars}
