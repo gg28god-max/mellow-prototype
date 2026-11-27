@@ -992,3 +992,22 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .row .logo b.lt{font:700 22px/1 Inter;color:var(--mint)}
 .adname:focus,.adname:focus-visible,.adprice input:focus,.adprice input:focus-visible{outline:none;box-shadow:none}
 .adsg{top:232px}
+
+/* Add by hand, step 1: search or browse well-known subscriptions */
+.pk{left:24px;width:342px}
+.pk ul{list-style:none;margin:0;padding:0}
+.pk button{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:8px 4px;border:0;background:transparent;color:#fff;font:500 17px/22px Inter;text-align:left;cursor:pointer;border-radius:16px}
+.pk button:hover{background:rgba(255,255,255,.05)}
+.pk button:focus-visible{outline:2px solid var(--mint);outline-offset:-2px}
+.pk li+li{border-top:1px solid var(--line)}
+.pk-top{margin-bottom:6px}
+.pk-ic{flex:none;width:44px;height:44px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden;font:700 19px/1 Inter;color:#3a3d3c}
+.pk-ic img{width:30px;height:30px;object-fit:contain}
+.pk-ic.plus{background:rgba(127,232,200,.16);color:var(--mint)}
+.pk-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pk-ch{color:var(--grey);font-weight:600}
+.pk-h{margin:22px 0 4px 4px;font:600 12.5px/16px Inter;letter-spacing:.1em;text-transform:uppercase;color:#a9b8b2}
+.pk-none{margin:14px 4px;font:400 15px/22px Inter;color:var(--grey)}
+.pk-end{height:150px}
+.pin.pkpin{pointer-events:none}
+.pkpin .pkq{position:absolute;left:24px;bottom:44px;pointer-events:auto;background:#1c1d1e}

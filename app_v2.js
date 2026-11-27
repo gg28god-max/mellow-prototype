@@ -302,7 +302,7 @@
       const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (cancelled ? 397 : 412) + extra;
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      <button class="addbtn a" data-t style="top:72px" data-go="add" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
       ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
       <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
       ${sectionWithCount(308, "Actifs", (cancelled ? 13 : 14) + S.manual.length)}
@@ -319,10 +319,16 @@
       })()}` };
     },
 
+    addpick: () => ({ html: `${nav("Ajouter un abonnement", "dash")}
+      <div class="pk a" data-t style="top:112px" id="pk-list" aria-live="polite"></div>`,
+      pin: `<div class="pin pkpin"><div class="cta-fade pinfade" aria-hidden="true"></div><form class="srch pkq" id="pk-form" role="search" novalidate><label class="sr" for="pk-q">Rechercher un abonnement</label>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+        <input id="pk-q" type="search" placeholder="Rechercher un abonnement" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="pk-x" aria-label="Effacer la recherche" hidden>×</button></form></div>` }),
+
     add: () => {
       const accts = myAccts(), CATS = ["Streaming", "Logiciel et stockage", "Vie de tous les jours", "Autre"];
       const sel = (id, opts, cur) => `<select id="${id}" class="fsel">${opts.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
-      return { html: `${nav("Ajouter un abonnement", "dash")}
+      return { html: `${nav("Ajouter un abonnement", "addpick")}
       <form id="addform" novalidate>
       <section class="addtop a" data-t style="top:116px" aria-label="Nom et prix">
         <span class="addlogo" id="ad-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
@@ -482,6 +488,30 @@
     $("bqform").addEventListener("submit", (e) => { e.preventDefault(); const v = rows.filter((li) => !li.hidden); if (v.length === 1) v[0].querySelector("button").click(); else inp.blur(); });
   }
 
+  // Step 1 of adding by hand: search or browse well-known subscriptions, or create a custom one.
+  let addDraft = { name: "" };
+  const PKGROUP = { "Vidéo": "Streaming", "Vidéo et musique": "Streaming", "Livraison et vidéo": "Streaming", "Musique": "Musique", "Livres audio": "Musique", "Télécom": "Télécom", "Stockage": "Logiciel et stockage", "Logiciel": "Logiciel et stockage", "Jeux": "Jeux", "Sport": "Sport", "Actualités": "Actualités", "Apprentissage": "Autres", "Livraison": "Autres" };
+  const FORMCAT = { "Streaming": "Streaming", "Musique": "Streaming", "Logiciel et stockage": "Logiciel et stockage", "Télécom": "Vie de tous les jours", "Sport": "Vie de tous les jours", "Actualités": "Vie de tous les jours", "Jeux": "Autre", "Autres": "Autre" };
+  function wireAddPick() {
+    const box = $("pk-list"), q = $("pk-q"), x = $("pk-x");
+    const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const ORDER = ["Streaming", "Musique", "Logiciel et stockage", "Jeux", "Sport", "Actualités", "Télécom", "Autres"];
+    const plus = `<span class="pk-ic plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>`;
+    const row = ([n, c, l]) => `<li><button type="button" data-pick="${esc(n)}" data-cat="${esc(PKGROUP[c] || "Autres")}"><span class="pk-ic">${l ? `<img src="logos/v2/${l}-icon.png" alt="">` : `<b>${esc(n[0])}</b>`}</span><span class="pk-n">${esc(n)}</span><span class="pk-ch" aria-hidden="true">›</span></button></li>`;
+    const run = () => {
+      const t = q.value.trim(), f = fold(t), hits = f ? POPULAR.filter(([n]) => fold(n).includes(f)) : POPULAR;
+      const exact = f && POPULAR.some(([n]) => fold(n) === f);
+      let h = `<ul class="pk-top"><li><button type="button" data-pick="${esc(exact ? "" : t)}" data-cat="Autres">${plus}<span class="pk-n">${t && !exact ? "Créer « " + esc(t) + " »" : "Abonnement personnalisé"}</span></button></li></ul>`;
+      if (f) { h += hits.length ? `<ul class="pk-g">${hits.map(row).join("")}</ul>` : `<p class="pk-none" role="status">Aucun résultat. Crée-le toi-même ci-dessus.</p>`; }
+      else ORDER.forEach((g) => { const L = hits.filter(([, c]) => (PKGROUP[c] || "Autres") === g); if (L.length) h += `<h3 class="pk-h">${g}</h3><ul class="pk-g">${L.map(row).join("")}</ul>`; });
+      box.innerHTML = h + '<div class="pk-end" aria-hidden="true"></div>'; x.hidden = !q.value; layout();
+    };
+    q.addEventListener("input", run);
+    x.addEventListener("click", (e) => { e.stopPropagation(); q.value = ""; run(); q.focus(); });
+    $("pk-form").addEventListener("submit", (e) => { e.preventDefault(); const b = box.querySelector(".pk-g [data-pick]"); (q.value.trim() && b ? b : box.querySelector(".pk-top [data-pick]")).click(); });
+    box.addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (!b) return; e.stopPropagation(); addDraft = { name: b.dataset.pick, cat: FORMCAT[b.dataset.cat] || "Autre" }; go("add"); });
+    run();
+  }
   function wireAdd() {
     const nm = $("ad-name"), pr = $("ad-price"), sg = $("ad-sg"), logo = $("ad-logo"), save = $("ad-save"), tr = $("ad-trial");
     const today = new Date(); $("ad-date").value = new Date(today.getTime() - today.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
@@ -491,6 +521,10 @@
     const ok = () => { save.disabled = !(nm.value.trim() && price() > 0); };
     const setLogo = () => { const f = find(), v = nm.value.trim(); logo.innerHTML = f && f[2] ? `<img src="logos/v2/${f[2]}-icon.png" alt="">` : v ? `<b>${esc(v[0].toUpperCase())}</b>` : logo.dataset.plus; logo.classList.toggle("has", !!v); };
     logo.dataset.plus = logo.innerHTML;
+    if (addDraft.name) { nm.value = addDraft.name; setLogo(); }
+    if (addDraft.cat) $("ad-cat").value = addDraft.cat;
+    addDraft = { name: "" };
+    setTimeout(() => { (nm.value ? pr : nm).focus({ preventScroll: true }); }, 350);
     const mark = (name, q) => { const i = fold(name).indexOf(q); return i < 0 ? esc(name) : esc(name.slice(0, i)) + "<b>" + esc(name.slice(i, i + q.length)) + "</b>" + esc(name.slice(i + q.length)); };
     const suggest = () => {
       const q = fold(nm.value.trim());
@@ -559,6 +593,7 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
+    if (S.screen === "addpick") wireAddPick();
     if (S.screen === "add") wireAdd();
     if (S.screen === "wallet") wireWallet();
     if (S.screen === "connected") wireConnected();
@@ -903,7 +938,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
