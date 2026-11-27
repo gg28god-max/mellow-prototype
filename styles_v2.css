@@ -893,3 +893,13 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .sgl-n{display:flex;flex-direction:column;font:500 16px/20px Inter;line-height:20px;color:#a9b8b2;min-width:0}
 .sgl-n b{color:#fff;font-weight:700}
 .sgl-n small{font:400 13px/16px Inter;color:var(--grey)}
+
+/* Payment confirmed sheet (after naming or accepting a suggestion) */
+.sheet.cfs{height:380px}
+.cfs-t{position:absolute;left:141px;width:80px;height:80px;border-radius:24px;background:#fff;display:grid;place-items:center;font:700 34px/1 Inter;color:#3a3d3c;animation:accin .5s var(--ease) both}
+.cfs-t img{width:52px;height:52px;object-fit:contain}
+.cfs-ck{position:absolute;right:-10px;bottom:-10px;width:32px;height:32px;border-radius:16px;background:var(--mint);color:#06281d;border:3px solid #1b1c1d;display:grid;place-items:center;animation:okpop .5s var(--ease) .35s both}
+.cfs-ck::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--mint);opacity:0;animation:okring .9s ease-out .6s both}
+.sheet.cfs::before{opacity:1;animation:cfsglow 1.4s ease-out both}
+@keyframes cfsglow{0%{opacity:.4}40%{opacity:1}100%{opacity:.8}}
+@media (prefers-reduced-motion:reduce){.cfs-t,.cfs-ck,.cfs-ck::after,.sheet.cfs::before{animation:none!important}}

@@ -536,7 +536,7 @@
 
   // ---------- Sheets ----------
   function sheet(html, opts = {}) {
-    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet${opts.red ? " red" : ""}${opts.tall ? " tall" : ""}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>${html}</div></div>`;
+    $("sheet-layer").innerHTML = `<div class="ov"><div class="scrim" data-close></div><div class="sheet${opts.red ? " red" : ""}${opts.tall ? " tall" : ""}${opts.cfs ? " cfs" : ""}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div>${html}</div></div>`;
     const b = $("sheet-layer").querySelector(".sheet input,.sheet button");
     if (b) b.focus({ preventScroll: true });
   }
@@ -624,7 +624,17 @@
     };
     nm.addEventListener("input", suggest);
     sg.addEventListener("click", (e) => { const b = e.target.closest("[data-sg]"); if (!b) return; e.stopPropagation(); nm.value = b.dataset.sg; sg.hidden = true; nm.setAttribute("aria-expanded", "false"); nm.focus(); });
-    $("nameform").addEventListener("submit", (e) => { e.preventDefault(); S.review[r.id] = $("nm").value.trim() || "Paiement nommé"; closeSheet(); render(); });
+    $("nameform").addEventListener("submit", (e) => { e.preventDefault(); S.review[r.id] = $("nm").value.trim() || "Paiement nommé"; render(); confirmSheet(S.review[r.id], r.price); });
+  }
+  // Confirmation after a payment is identified: logo tile with a check, the name, the price. Closes itself, or on tap.
+  let cfsTimer = 0;
+  function confirmSheet(name, price) {
+    const pop = POPULAR.find(([n]) => n.toLowerCase() === name.toLowerCase()) || (/acrobat/i.test(name) ? POPULAR.find(([n]) => n === "Adobe Acrobat") : null);
+    const tile = pop && pop[2] ? `<img src="logos/v2/${pop[2]}-icon.png" alt="">` : `<span>${esc(name.trim()[0] || "?")}</span>`;
+    sheet(`<div class="cfs-t" ${sb(64)}>${tile}<i class="cfs-ck" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>
+      <div class="tx" ${sb(170)}><h2 id="sh-t" aria-live="polite">${esc(name)} confirmé</h2><p>${money(price)}/mois · ajouté à tes abonnements</p></div>
+      <button class="btn" ${sb(300)} data-close>Continuer</button>`, { cfs: true });
+    clearTimeout(cfsTimer); cfsTimer = setTimeout(() => { if ($("sheet-layer").querySelector(".sheet.cfs")) closeSheet(); }, reduceMotion() ? 3200 : 2200);
   }
   function cancelSheet(id) {
     const s = sub(id);
@@ -660,7 +670,7 @@
     if (d.review) { const r = REVIEW.find((x) => x.id === d.review); return r.guess ? guessSheet(r) : nameSheet(r); }
     if (d.rv) {
       const r = REVIEW.find((x) => x.id === d.id);
-      if (d.rv === "yes") { S.review[r.id] = r.guess; closeSheet(); return render(); }
+      if (d.rv === "yes") { S.review[r.id] = r.guess; render(); return confirmSheet(r.guess, r.price); }
       if (d.rv === "no") return nameSheet(r);
       if (d.rv === "later") { S.review[r.id] = "later"; closeSheet(); return render(); }
     }
