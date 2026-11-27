@@ -1084,3 +1084,15 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 @media (prefers-reduced-motion:reduce){.fnd-o i{animation:none;opacity:.4}}
 .trust{margin:0;display:flex;gap:10px;align-items:flex-start;font:400 13.5px/19px Inter;color:var(--grey)}
 .trust svg{flex:none;margin-top:2px;color:var(--mint)}
+
+/* Import screens v2: one icon, short steps, one button */
+.imp-i{width:60px;height:60px;border-radius:20px;background:rgba(127,232,200,.12);color:var(--mint);display:grid;place-items:center}
+.imp-i svg{width:28px;height:28px}
+.stp{gap:22px}
+.stp li{gap:16px}
+.stp li>i{width:24px;height:24px;border-radius:12px;background:transparent;border:1px solid var(--line2);color:var(--grey);font:500 12px/22px Inter;margin-top:2px}
+.stp p{font:400 17px/24px Inter;color:#dfe6e3;padding-top:0}
+.terms{padding-top:12px}
+.terms button{height:40px;padding:0 14px;border-radius:14px;font:500 14.5px/20px Inter;background:rgba(255,255,255,.06)}
+.qlink{display:inline-block;margin-top:6px;font:500 15px/22px Inter;color:var(--mint);text-decoration:none}
+.qlink:focus-visible{outline:2px solid var(--mint);outline-offset:3px;border-radius:6px}

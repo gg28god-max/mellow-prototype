@@ -122,6 +122,15 @@
     statement: [{ name: "Netflix", l: "netflix", price: 16.49, next: "4 déc.", cat: "Streaming" }, { name: "Crave", price: 19.99, next: "8 déc.", cat: "Streaming" }, { name: "Éconofitness", price: 24.99, next: "13 déc.", cat: "Vie de tous les jours" }, { name: "ChatGPT Plus", price: 28.0, next: "19 déc.", cat: "Logiciel et stockage" }, { name: "Le Devoir", price: 9.99, next: "21 déc.", cat: "Vie de tous les jours" }],
     icloud: [{ name: "Apple One", price: 24.95, next: "24 déc.", cat: "Streaming" }, { name: "iCloud+ 200 Go", price: 3.99, next: "24 déc.", cat: "Logiciel et stockage" }, { name: "Apple TV+", price: 12.99, next: "5 janv.", cat: "Streaming" }],
   };
+  // One layout for every import method: small icon, title, short steps, ONE primary button at the bottom.
+  const impScreen = ({ icon, title, sub, steps, src, cta, note }) => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><h1 class="sr">${esc(title)}</h1></header>
+      <span class="imp-i a" data-t style="top:132px;left:24px" aria-hidden="true">${icon}</span>
+      <h1 class="hd pt a" data-t style="top:212px;left:24px">${esc(title)}</h1>
+      <p class="body a" data-t style="top:260px;left:24px;width:342px">${esc(sub)}</p>
+      <ol class="stp a" data-t style="top:354px">${steps.map((h, i) => `<li><i aria-hidden="true">${i + 1}</i><div>${h}</div></li>`).join("")}</ol>
+      ${note ? `<p class="trust a" data-t style="top:640px;left:24px;width:342px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${esc(note)}</p>` : ""}
+      <div class="cta-fade" ${B(716, 188)}></div>
+      <button class="btn" ${B(756, 56)} data-import="${src}">${esc(cta)}</button>` });
   const SCREENS = {
     welcome: () => ({ strong: true, html: `
       <div class="orbit a${DODO ? " solo" : ""}" data-t style="top:50px;left:0" aria-hidden="true"><i class="ring" style="left:125px;top:76px;width:140px;height:140px"></i><i class="ring" style="left:81px;top:32px;width:228px;height:228px"></i><i class="sphere-glow"></i>${DODO ? '<img class="wordmark" src="dodo/mellow-wordmark.png" alt="Mellow">' : ""}<i class="orb" style="--a:-90.0;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/netflix-icon.png" alt="" style="height:22px"></i></i><i class="orb" style="--a:-38.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:84px;height:34px;margin:-17px 0 0 -42px;border-radius:17px"><img src="logos/v2/hbo.png" alt="" style="height:12px"></i></i><i class="orb" style="--a:64.3;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:92px;height:34px;margin:-17px 0 0 -46px;border-radius:17px"><img src="logos/v2/youtube.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:115.7;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/prime.png" alt="" style="height:20px"></i></i><i class="orb" style="--a:218.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/adobe.png" alt="" style="height:24px"></i></i><i class="orb" style="--a:167.1;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:90px;height:34px;margin:-17px 0 0 -45px;border-radius:17px"><img src="logos/v2/bell.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:12.9;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:20px"><img src="logos/v2/spotify-icon.png" alt="" style="width:100%;height:100%;padding:6px;object-fit:contain"></i></i><i class="sphere${DODO ? " dodo" : ""}">${DODO ? `<img src="${reduceMotion() ? "dodo/dodo-wave-still.png" : "dodo/dodo-wave.webp"}" alt="">` : "<b>M</b>"}</i></div>
@@ -138,38 +147,18 @@
       </ul>
       ${link(716, "Je le ferai plus tard", 'data-go="dash"')}` }),
 
-    email: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
-      <h1 class="hd pt a" data-t style="top:116px;left:24px">Courriels</h1>
-      <p class="body a" data-t style="top:168px;left:24px;width:342px">Retrouve des abonnements cachés dans tes courriels avec ces mots.</p>
-      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.email}</span></div>
-      <ol class="stp a" data-t style="top:372px">
-        <li><i>1</i><div><p>Copie un mot à chercher</p><div class="terms" role="list">${["Renouvellement", "Confirmation d’abonnement", "Facture", "Reçu", "Essai gratuit", "Prélèvement"].map((t) => `<button type="button" role="listitem" data-copy="${esc(t)}" aria-label="Copier ${esc(t)}">${esc(t)}<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICOP.copy}</svg></button>`).join("")}</div></div></li>
-        <li><i>2</i><div><p>Ouvre ton application de courriels</p></div></li>
-        <li><i>3</i><div><p><b>Colle</b> le mot dans la barre de recherche</p></div></li>
-        <li><i>4</i><div><p>Prends une capture d’écran de tes abonnements</p></div></li>
-        <li><i>5</i><div><p><b>Importe</b>-la ici :</p><button type="button" class="phbtn" data-import="email">${GIP(ICOP.photos)}Importer depuis Photos</button></div></li>
-      </ol>` }),
+    email: () => impScreen({ icon: ICO2.email, title: "Courriels", sub: "Cherche ces mots dans ta boîte courriel pour retrouver des abonnements cachés.", src: "email", cta: "Importer ma capture", steps: [
+      `<p>Copie un mot</p><div class="terms" role="list">${["Renouvellement", "Confirmation d’abonnement", "Facture", "Reçu", "Essai gratuit", "Prélèvement"].map((t) => `<button type="button" role="listitem" data-copy="${esc(t)}" aria-label="Copier ${esc(t)}">${esc(t)}<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICOP.copy}</svg></button>`).join("")}</div>`,
+      "<p>Colle-le dans la recherche de ton application de courriels</p>",
+      "<p>Fais une capture d’écran des résultats</p>"] }),
 
-    statement: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
-      <h1 class="hd pt a" data-t style="top:116px;left:24px">Relevé bancaire</h1>
-      <p class="body a" data-t style="top:168px;left:24px;width:342px">Importe un relevé de ta banque et on y repère les paiements récurrents.</p>
-      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.doc}</span></div>
-      <ol class="stp a" data-t style="top:372px">
-        <li><i>1</i><div><p>Télécharge un relevé depuis ton compte bancaire</p></div></li>
-        <li><i>2</i><div><p>Choisis un fichier <b>PDF</b> ou <b>CSV</b></p></div></li>
-        <li><i>3</i><div><p><b>Importe</b>-le ici :</p><button type="button" class="phbtn" data-import="statement">${GIP(ICOP.doc)}Choisir un fichier</button></div></li>
-      </ol>
-      <p class="trust a" data-t style="top:660px;left:24px;width:342px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Lecture seule. Ton fichier sert à trouver les paiements, puis il est supprimé.</p>` }),
+    statement: () => impScreen({ icon: ICO2.doc, title: "Relevé bancaire", sub: "On repère les paiements récurrents dans ton relevé.", src: "statement", cta: "Choisir un fichier", note: "Lecture seule. Ton fichier sert à trouver les paiements, puis il est supprimé.", steps: [
+      "<p>Télécharge un relevé <b>PDF</b> ou <b>CSV</b> depuis ta banque</p>",
+      "<p>Choisis-le ici</p>"] }),
 
-    icloud: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
-      <h1 class="hd pt a" data-t style="top:116px;left:24px">iCloud</h1>
-      <p class="body a" data-t style="top:168px;left:24px;width:342px">Importe tes abonnements Apple dans Mellow.</p>
-      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.icloud}</span></div>
-      <ol class="stp a" data-t style="top:372px">
-        <li><i>1</i><div><p>Va à tes abonnements iCloud</p><a class="phbtn" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener noreferrer">${GIP(ICOP.ext)}Ouvrir les abonnements iCloud</a></div></li>
-        <li><i>2</i><div><p>Prends une capture d’écran de tous tes abonnements actifs</p></div></li>
-        <li><i>3</i><div><p><b>Importe</b>-la ici :</p><button type="button" class="phbtn" data-import="icloud">${GIP(ICOP.photos)}Importer depuis Photos</button></div></li>
-      </ol>` }),
+    icloud: () => impScreen({ icon: ICO2.icloud, title: "iCloud", sub: "Importe tes abonnements Apple dans Mellow.", src: "icloud", cta: "Importer ma capture", steps: [
+      `<p>Ouvre tes abonnements iCloud</p><a class="qlink" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener noreferrer">Ouvrir sur Apple <span aria-hidden="true">↗</span></a>`,
+      "<p>Fais une capture d’écran de tes abonnements actifs</p>"] }),
 
     finding: () => ({ bare: true, html: `<header class="nav"><button class="back" data-go="back" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Annuler</button></header>
       <div class="fnd-o a" data-t style="top:250px" aria-hidden="true"><i></i><i></i><img src="dodo/dodo-wave-still.png" alt=""></div>
