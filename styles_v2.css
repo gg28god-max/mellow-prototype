@@ -1099,9 +1099,19 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 
 /* Empty Abonnements (after "Je le ferai plus tard") */
 .emp{left:24px;width:342px;text-align:center;display:flex;flex-direction:column;align-items:center}
-.emp img{width:84px;height:auto;margin-bottom:14px}
+.emp img{width:76px;height:auto;margin-bottom:12px}
 .emp h2{margin:0;font:600 22px/28px Inter;letter-spacing:-.02em}
 .emp p{margin:6px 0 18px;font:400 15.5px/22px Inter;color:var(--grey)}
 .emp .btn{position:relative;left:auto;width:100%;bottom:auto}
 .emp p.emp-or{margin:20px 0 10px;font:500 13px/18px Inter;color:#a9b8b2}
 .chips2{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+
+/* Plus button as a rounded square; empty-state ways to add as a tidy 2x2 grid */
+.addbtn{border-radius:16px}
+.chips2{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.tile{display:flex;align-items:center;gap:12px;height:56px;padding:0 14px;border-radius:18px;border:1px solid var(--line2);background:var(--card);color:#fff;font:500 15.5px/20px Inter;text-align:left;cursor:pointer}
+.tile:hover{background:var(--raised)}
+.tile:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+.tile span{flex:none;width:32px;height:32px;border-radius:10px;background:rgba(127,232,200,.12);color:var(--mint);display:grid;place-items:center}
+.tile span svg{width:18px;height:18px}
+.emp p.emp-or{margin:22px 0 12px}

@@ -352,7 +352,7 @@
         <p>Ajoute-les à ta façon, quand tu veux.</p>
         <button class="btn" data-go="addpick">Ajouter un abonnement</button>
         <p class="emp-or">Ou retrouve-les automatiquement</p>
-        <div class="chips2">${[["bank", "Ma banque"], ["statement", "Un relevé"], ["email", "Mes courriels"], ["icloud", "iCloud"]].map(([g, l]) => `<button type="button" class="chip" data-go="${g}">${l}</button>`).join("")}</div>
+        <div class="chips2">${[["bank", "Ma banque", "bank"], ["statement", "Un relevé", "doc"], ["email", "Courriels", "email"], ["icloud", "iCloud", "icloud"]].map(([g, l, ic]) => `<button type="button" class="tile" data-go="${g}"><span aria-hidden="true">${ICO2[ic]}</span>${l}</button>`).join("")}</div>
       </section>` };
       // All 14 finds: the four with a detail page keep it; the others open their proof sheet.
       const idOf = { "Netflix": "netflix", "Adobe Acrobat": "adobe", "Spotify": "spotify", "Amazon Prime": "prime" };
