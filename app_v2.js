@@ -1045,9 +1045,9 @@
 
   // ---------- Designer panel (outside the phone, desktop only; ?dev=1 or ?demo=1) ----------
   const DEV_FLOW = [
-    ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
+    ["welcome", "Bienvenue"], ["start", "Choix de départ"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["start", "Choix de départ"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["statement", "Départ : relevé"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["statement", "Départ : relevé"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
