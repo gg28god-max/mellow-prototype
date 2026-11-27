@@ -131,6 +131,9 @@
       ${note ? `<p class="trust a" data-t style="top:640px;left:24px;width:342px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${esc(note)}</p>` : ""}
       <div class="cta-fade" ${B(716, 188)}></div>
       <button class="btn" ${B(756, 56)} data-import="${src}">${esc(cta)}</button>` });
+  // The "add a subscription" button: same spot (top right, level with the page title) on every tab screen.
+  const ADD_ICO = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>`;
+  const addBtn = () => `<button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement">${ADD_ICO}</button>`;
   const SCREENS = {
     welcome: () => ({ strong: true, html: `
       <div class="orbit a${DODO ? " solo" : ""}" data-t style="top:50px;left:0" aria-hidden="true"><i class="ring" style="left:125px;top:76px;width:140px;height:140px"></i><i class="ring" style="left:81px;top:32px;width:228px;height:228px"></i><i class="sphere-glow"></i>${DODO ? '<img class="wordmark" src="dodo/mellow-wordmark.png" alt="Mellow">' : ""}<i class="orb" style="--a:-90.0;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/netflix-icon.png" alt="" style="height:22px"></i></i><i class="orb" style="--a:-38.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:84px;height:34px;margin:-17px 0 0 -42px;border-radius:17px"><img src="logos/v2/hbo.png" alt="" style="height:12px"></i></i><i class="orb" style="--a:64.3;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:92px;height:34px;margin:-17px 0 0 -46px;border-radius:17px"><img src="logos/v2/youtube.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:115.7;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/prime.png" alt="" style="height:20px"></i></i><i class="orb" style="--a:218.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/adobe.png" alt="" style="height:24px"></i></i><i class="orb" style="--a:167.1;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:90px;height:34px;margin:-17px 0 0 -45px;border-radius:17px"><img src="logos/v2/bell.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:12.9;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:20px"><img src="logos/v2/spotify-icon.png" alt="" style="width:100%;height:100%;padding:6px;object-fit:contain"></i></i><i class="sphere${DODO ? " dodo" : ""}">${DODO ? `<img src="${reduceMotion() ? "dodo/dodo-wave-still.png" : "dodo/dodo-wave.webp"}" alt="">` : "<b>M</b>"}</i></div>
@@ -344,7 +347,7 @@
     dash: () => {
       if (S.fresh && !S.manual.length) return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      <button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      ${addBtn()}
       ${metric(132, "Tu dépenses", "0 $/mois")}
       <section class="emp a" data-t style="top:276px" aria-label="Aucun abonnement">
         <img src="dodo/dodo-front.png" alt="">
@@ -365,7 +368,7 @@
       const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (S.fresh ? 0 : cancelled ? 397 : 412) + extra;
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      <button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      ${addBtn()}
       ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
       ${S.fresh ? "" : `<p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>`}
       ${sectionWithCount(308, "Actifs", (S.fresh ? 0 : cancelled ? 13 : 14) + S.manual.length)}
@@ -392,7 +395,7 @@
       <div class="pk a" data-t style="top:112px" id="pk-list" aria-live="polite"></div>`,
       pin: `<div class="pin pkpin"><div class="cta-fade pinfade" aria-hidden="true"></div><form class="srch pkq" id="pk-form" role="search" novalidate><label class="sr" for="pk-q">Rechercher un abonnement</label>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
-        <input id="pk-q" type="search" placeholder="Rechercher un abonnement" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="pk-x" aria-label="Effacer la recherche" hidden>×</button></form><button type="button" class="pkplus" id="pk-plus" aria-label="Créer un abonnement personnalisé"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>` }),
+        <input id="pk-q" type="search" placeholder="Rechercher un abonnement" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="pk-x" aria-label="Effacer la recherche" hidden>×</button></form><button type="button" class="pkplus" id="pk-plus" aria-label="Créer un abonnement personnalisé">${ADD_ICO}</button></div>` }),
 
     add: () => {
       const accts = myAccts(), CATS = ["Streaming", "Logiciel et stockage", "Vie de tous les jours", "Autre"];
@@ -428,6 +431,7 @@
       const subtitle = (s) => s.id === "adobe" ? (S.adobe === "pending" ? "Annulation en cours" : s.next + " · fin de l’essai") : s.yearly ? s.next + " · une fois par an" : s.next;
       return { tabs: "calendar", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Calendrier</h1>
+      ${addBtn()}
       ${metric(132, "À payer avant le 15 janv.", money(total))}
       ${sectionWithCount(278, "À venir", rows.length)}
       ${rows.length ? "" : `<p class="fnone a" data-t style="top:340px;left:24px;width:342px;padding:0;text-align:center" role="status">Rien à venir pour l’instant. Ajoute un abonnement pour voir tes prochains paiements ici.</p>`}

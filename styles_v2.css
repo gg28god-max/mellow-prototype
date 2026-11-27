@@ -1120,3 +1120,7 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .pkpin .pkq{width:278px}
 .pkplus{position:absolute;left:314px;bottom:44px;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--mint);color:#06281d;border:0;cursor:pointer;pointer-events:auto}
 .pkplus:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* One look for every "add" button: 48px rounded square, same frosted fill; on the search step it sits beside the bar at the same size */
+.addbtn,.pkplus{width:48px;height:48px;border-radius:16px}
+.pkplus{background:rgba(255,255,255,.1);border:1px solid var(--line2);color:#fff;width:52px;height:52px}
+.pkplus:hover{background:rgba(255,255,255,.16)}
