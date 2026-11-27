@@ -246,7 +246,7 @@
       return { strong: "calm", pin: `<div class="pin"><div class="cta-fade pinfade" aria-hidden="true"></div><button class="btn pinbtn" data-go="${left ? "review" : "wallet"}">${left ? "Continuer" : "Voir mes abonnements"}</button><p class="fine pintxt">Rien n’est annulé sans ton accord.</p></div>`, html: `
       <span class="tck a" data-t style="top:84px;left:28px" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <h1 class="title a" data-t style="top:76px;left:68px;line-height:40px">Analyse terminée</h1>
-      <section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><div class="cap">${n} abonnements trouvés</div><div class="val">${metricVal(SCAN_TOTAL + " $/mois")}</div></section>
+      <section class="metric mvc a" ${T(132)} aria-label="Total mensuel"><h2 class="fnd"><b>${n}</b><span>abonnements trouvés</span></h2><div class="cost">${metricVal(SCAN_TOTAL + " $/mois")}</div></section>
       ${left ? `<div class="row todo a" ${T(276)} role="status"><span class="logo gic" aria-hidden="true">${QMARK}</span><span class="t">${left} paiement${left > 1 ? "s" : ""} à confirmer</span><span class="s warn">On n’est pas sûr de leur nom</span></div>` : `<p class="a hintline" data-t style="top:300px;left:28px">Tout est vérifié.</p>`}
       <div class="pinspace" data-t style="top:420px;height:150px" aria-hidden="true"></div>` }; },
 
