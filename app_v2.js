@@ -60,7 +60,7 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" } };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" }, importSrc: "email" };
   const ACCTS = [
     { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
     { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
@@ -113,15 +113,65 @@
   const sectionWithCount = (y, label, n) => `<div class="a" data-t style="top:${y}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">${label}</h2><span class="count" aria-label="${n} au total">${n}</span></div>`;
 
   // ---------- Screens ----------
+  const ICOP = {"bank": "<path d=\"M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18\"/>", "mail": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"/><path d=\"M4 7l8 6 8-6\"/>", "cloud": "<path d=\"M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z\"/>", "photos": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><circle cx=\"9\" cy=\"10.5\" r=\"1.6\"/><path d=\"M4 17l5-4.5 3.5 3L16 12l4 4\"/>", "copy": "<rect x=\"8\" y=\"8\" width=\"11\" height=\"12\" rx=\"2.5\"/><path d=\"M5 15V6.5A2.5 2.5 0 0 1 7.5 4H14\"/>", "ext": "<path d=\"M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4\"/>"};
+  const GIP = (d) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ICO2 = { bank: GIP(ICOP.bank), email: GIP(ICOP.mail), icloud: GIP(ICOP.cloud) };
+  // Demo results of an import (placeholders): what the "scan" of a screenshot would find.
+  const FOUND = {
+    email: [{ name: "Spotify", l: "spotify", price: 11.99, next: "28 nov.", cat: "Streaming" }, { name: "Disney+", price: 13.99, next: "2 déc.", cat: "Streaming" }, { name: "Audible", price: 14.95, next: "9 déc.", cat: "Streaming" }, { name: "Dropbox", price: 12.0, next: "17 déc.", cat: "Logiciel et stockage" }],
+    icloud: [{ name: "Apple One", price: 24.95, next: "24 déc.", cat: "Streaming" }, { name: "iCloud+ 200 Go", price: 3.99, next: "24 déc.", cat: "Logiciel et stockage" }, { name: "Apple TV+", price: 12.99, next: "5 janv.", cat: "Streaming" }],
+  };
   const SCREENS = {
     welcome: () => ({ strong: true, html: `
       <div class="orbit a${DODO ? " solo" : ""}" data-t style="top:50px;left:0" aria-hidden="true"><i class="ring" style="left:125px;top:76px;width:140px;height:140px"></i><i class="ring" style="left:81px;top:32px;width:228px;height:228px"></i><i class="sphere-glow"></i>${DODO ? '<img class="wordmark" src="dodo/mellow-wordmark.png" alt="Mellow">' : ""}<i class="orb" style="--a:-90.0;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/netflix-icon.png" alt="" style="height:22px"></i></i><i class="orb" style="--a:-38.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:84px;height:34px;margin:-17px 0 0 -42px;border-radius:17px"><img src="logos/v2/hbo.png" alt="" style="height:12px"></i></i><i class="orb" style="--a:64.3;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:92px;height:34px;margin:-17px 0 0 -46px;border-radius:17px"><img src="logos/v2/youtube.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:115.7;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/prime.png" alt="" style="height:20px"></i></i><i class="orb" style="--a:218.6;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:22px"><img src="logos/v2/adobe.png" alt="" style="height:24px"></i></i><i class="orb" style="--a:167.1;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:90px;height:34px;margin:-17px 0 0 -45px;border-radius:17px"><img src="logos/v2/bell.png" alt="" style="height:14px"></i></i><i class="orb" style="--a:12.9;--r:114px;--dir:1;--sp:var(--orbit-t)"><i class="chip" style="width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:20px"><img src="logos/v2/spotify-icon.png" alt="" style="width:100%;height:100%;padding:6px;object-fit:contain"></i></i><i class="sphere${DODO ? " dodo" : ""}">${DODO ? `<img src="${reduceMotion() ? "dodo/dodo-wave-still.png" : "dodo/dodo-wave.webp"}" alt="">` : "<b>M</b>"}</i></div>
       <h1 class="hd pt a wi w1" data-t style="top:492px;left:24px">Annule tes abonnements.</h1>
       <p class="body a wi w2" data-t style="top:544px;left:24px;width:342px">Connecte ta banque. Mellow trouve les paiements qui reviennent et t’aide à les annuler.</p>
-      ${btn(660, "Commencer", 'data-go="bank"')}
+      ${btn(660, "Commencer", 'data-go="start"')}
       ${link(740, "J’ai déjà un compte", 'data-go="bank"')}` }),
 
-    bank: () => ({ html: `${nav("Choisis ta banque", "welcome")}
+    start: () => ({ html: `${nav("Commencer", "welcome")}
+      <h1 class="hd pt a" data-t style="top:116px;left:24px">Par où commencer ?</h1>
+      <p class="body a" data-t style="top:196px;left:24px;width:342px">Choisis la façon la plus simple de retrouver tes abonnements.</p>
+      <ul class="stl">
+        ${[["bank", "Connecter ma banque", "Le plus rapide et complet", "bank", "Recommandé"], ["email", "Chercher dans mes courriels", "Repère les confirmations et reçus", "email", ""], ["icloud", "Importer depuis iCloud", "Tes abonnements Apple", "icloud", ""]].map(([go, t, sub, ic, tag], i) => `<li class="opt a" ${T(260 + i * 112)}><button data-go="${go}" aria-label="${esc(t)}. ${esc(sub)}"></button><span class="opt-i" aria-hidden="true">${ICO2[ic]}</span><span class="opt-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span>${tag ? `<em>${esc(tag)}</em>` : ""}<span class="chev" aria-hidden="true">›</span></li>`).join("")}
+      </ul>
+      ${link(716, "Je le ferai plus tard", 'data-go="dash"')}` }),
+
+    email: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
+      <h1 class="hd pt a" data-t style="top:116px;left:24px">Courriels</h1>
+      <p class="body a" data-t style="top:168px;left:24px;width:342px">Retrouve des abonnements cachés dans tes courriels avec ces mots.</p>
+      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.email}</span></div>
+      <ol class="stp a" data-t style="top:372px">
+        <li><i>1</i><div><p>Copie un mot à chercher</p><div class="terms" role="list">${["Renouvellement", "Confirmation d’abonnement", "Facture", "Reçu", "Essai gratuit", "Prélèvement"].map((t) => `<button type="button" role="listitem" data-copy="${esc(t)}" aria-label="Copier ${esc(t)}">${esc(t)}<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICOP.copy}</svg></button>`).join("")}</div></div></li>
+        <li><i>2</i><div><p>Ouvre ton application de courriels</p></div></li>
+        <li><i>3</i><div><p><b>Colle</b> le mot dans la barre de recherche</p></div></li>
+        <li><i>4</i><div><p>Prends une capture d’écran de tes abonnements</p></div></li>
+        <li><i>5</i><div><p><b>Importe</b>-la ici :</p><button type="button" class="phbtn" data-import="email">${GIP(ICOP.photos)}Importer depuis Photos</button></div></li>
+      </ol>` }),
+
+    icloud: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
+      <h1 class="hd pt a" data-t style="top:116px;left:24px">iCloud</h1>
+      <p class="body a" data-t style="top:168px;left:24px;width:342px">Importe tes abonnements Apple dans Mellow.</p>
+      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.icloud}</span></div>
+      <ol class="stp a" data-t style="top:372px">
+        <li><i>1</i><div><p>Va à tes abonnements iCloud</p><a class="phbtn" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noopener noreferrer">${GIP(ICOP.ext)}Ouvrir les abonnements iCloud</a></div></li>
+        <li><i>2</i><div><p>Prends une capture d’écran de tous tes abonnements actifs</p></div></li>
+        <li><i>3</i><div><p><b>Importe</b>-la ici :</p><button type="button" class="phbtn" data-import="icloud">${GIP(ICOP.photos)}Importer depuis Photos</button></div></li>
+      </ol>` }),
+
+    finding: () => ({ bare: true, html: `<header class="nav"><button class="back" data-go="back" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Annuler</button></header>
+      <div class="fnd-o a" data-t style="top:250px" aria-hidden="true"><i></i><i></i><img src="dodo/dodo-wave-still.png" alt=""></div>
+      <h1 class="hd pt a center w342" data-t style="top:470px;left:24px" aria-live="polite">Recherche en cours…</h1>
+      <p class="body a center w342" data-t style="top:518px;left:24px">Ça prend quelques secondes.</p>` }),
+
+    found: () => { const L = FOUND[S.importSrc || "email"]; return { html: `<header class="nav"><button class="back" data-go="${S.importSrc === "icloud" ? "icloud" : "email"}" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Annuler</button></header>
+      <h1 class="hd pt a" data-t style="top:116px;left:24px">${L.length} abonnements trouvés</h1>
+      <p class="body a" data-t style="top:168px;left:24px;width:342px">Garde ceux qui sont à toi. Tu pourras modifier les détails ensuite.</p>
+      <ul class="fl">${L.map((x, i) => `<li class="fli a" ${T(236 + i * 96)}><button type="button" class="fck" role="checkbox" aria-checked="true" aria-label="${esc(x.name)}" data-fnd="${i}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><div class="fcard"><span class="logo${x.l ? "" : " gic"}" aria-hidden="true">${x.l ? LG(x.l) : `<b class="lt">${esc(x.name[0])}</b>`}</span><span class="t">${esc(x.name)}</span><span class="s">Renouvelle le ${x.next}</span><span class="p">${money(x.price)}</span></div></li>`).join("")}</ul>
+      <div class="cta-fade" ${B(716, 188)}></div>
+      <button class="btn" id="fnd-go" ${B(756, 56)}>Ajouter (${L.length})</button>` }; },
+
+    bank: () => ({ html: `${nav("Choisis ta banque", "start")}
       <form class="srch a" data-t style="top:128px" role="search" id="bqform" novalidate><label class="sr" for="bq">Rechercher une banque</label>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
         <input id="bq" type="search" placeholder="Rechercher une banque" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="bq-x" aria-label="Effacer la recherche" hidden>×</button></form>
@@ -498,6 +548,30 @@
   let addDraft = { name: "" };
   const PKGROUP = { "Vidéo": "Streaming", "Vidéo et musique": "Streaming", "Livraison et vidéo": "Streaming", "Musique": "Musique", "Livres audio": "Musique", "Télécom": "Télécom", "Stockage": "Logiciel et stockage", "Logiciel": "Logiciel et stockage", "Jeux": "Jeux", "Sport": "Sport", "Actualités": "Actualités", "Apprentissage": "Autres", "Livraison": "Autres" };
   const FORMCAT = { "Streaming": "Streaming", "Musique": "Streaming", "Logiciel et stockage": "Logiciel et stockage", "Télécom": "Vie de tous les jours", "Sport": "Vie de tous les jours", "Actualités": "Vie de tous les jours", "Jeux": "Autre", "Autres": "Autre" };
+  function toast(msg) {
+    let t = document.getElementById("toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.querySelector(".device").appendChild(t); }
+    t.textContent = msg; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1800);
+  }
+  function wireImport() {
+    const sc = $("screen");
+    sc.addEventListener("click", (e) => {
+      const c = e.target.closest("[data-copy]");
+      if (c) { e.stopPropagation(); try { navigator.clipboard && navigator.clipboard.writeText(c.dataset.copy).catch(() => {}); } catch (_) {} toast("Copié : " + c.dataset.copy); return; }
+      const i = e.target.closest("[data-import]");
+      if (i) { e.stopPropagation(); S.importSrc = i.dataset.import; go("finding"); }
+    });
+  }
+  function wireFinding() { setTimeout(() => { if (S.screen === "finding") go("found"); }, reduceMotion() ? 1400 : 2800); }
+  function wireFound() {
+    const L = FOUND[S.importSrc || "email"], go2 = $("fnd-go"), boxes = [...document.querySelectorAll(".fck")];
+    const upd = () => { const n = boxes.filter((b) => b.getAttribute("aria-checked") === "true").length; go2.textContent = n ? `Ajouter (${n})` : "Choisis au moins un abonnement"; go2.disabled = !n; };
+    boxes.forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); b.setAttribute("aria-checked", String(b.getAttribute("aria-checked") !== "true")); upd(); }));
+    go2.addEventListener("click", (e) => {
+      e.stopPropagation();
+      boxes.forEach((b) => { if (b.getAttribute("aria-checked") !== "true") return; const x = L[+b.dataset.fnd]; if (S.manual.some((m) => m.name === x.name)) return; S.manual.push({ name: x.name, price: x.price, per: "mois", cat: x.cat, acct: myAccts()[0].id, trial: false, next: x.next, logo: x.l ? LG(x.l) : `<b class="lt" aria-hidden="true">${esc(x.name[0])}</b>` }); });
+      const n = boxes.filter((b) => b.getAttribute("aria-checked") === "true").length; go("dash"); toast(n + " abonnement" + (n > 1 ? "s" : "") + " ajouté" + (n > 1 ? "s" : ""));
+    });
+  }
   function wireAddPick() {
     const box = $("pk-list"), q = $("pk-q"), x = $("pk-x");
     const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -599,6 +673,9 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
+    if (S.screen === "email" || S.screen === "icloud") wireImport();
+    if (S.screen === "finding") wireFinding();
+    if (S.screen === "found") wireFound();
     if (S.screen === "addpick") wireAddPick();
     if (S.screen === "add") wireAdd();
     if (S.screen === "wallet") wireWallet();
@@ -958,7 +1035,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["start", "Choix de départ"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
