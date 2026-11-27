@@ -60,7 +60,7 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" }, importSrc: "email" };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" }, importSrc: "email", fresh: false };
   const ACCTS = [
     { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
     { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
@@ -145,7 +145,7 @@
       <ul class="stl">
         ${[["bank", "Connecter ma banque", "Le plus rapide et complet", "bank", "Recommandé"], ["statement", "Importer un relevé", "Un fichier PDF ou CSV de ta banque", "doc", ""], ["email", "Chercher dans mes courriels", "Repère les confirmations et reçus", "email", ""], ["icloud", "Importer depuis iCloud", "Tes abonnements Apple", "icloud", ""]].map(([go, t, sub, ic, tag], i) => `<li class="opt a" ${T(260 + i * 112)}><button data-go="${go}" aria-label="${esc(t)}. ${esc(sub)}"></button><span class="opt-i" aria-hidden="true">${ICO2[ic]}</span><span class="opt-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span>${tag ? `<em>${esc(tag)}</em>` : ""}<span class="chev" aria-hidden="true">›</span></li>`).join("")}
       </ul>
-      ${link(716, "Je le ferai plus tard", 'data-go="dash"')}` }),
+      ${link(716, "Je le ferai plus tard", 'data-skip')}` }),
 
     email: () => impScreen({ icon: ICO2.email, title: "Courriels", sub: "Cherche ces mots dans ta boîte courriel pour retrouver des abonnements cachés.", src: "email", cta: "Importer ma capture", steps: [
       `<p>Copie un mot</p><div class="terms" role="list">${["Renouvellement", "Confirmation d’abonnement", "Facture", "Reçu", "Essai gratuit", "Prélèvement"].map((t) => `<button type="button" role="listitem" data-copy="${esc(t)}" aria-label="Copier ${esc(t)}">${esc(t)}<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICOP.copy}</svg></button>`).join("")}</div>`,
@@ -342,21 +342,33 @@
     },
 
     dash: () => {
+      if (S.fresh && !S.manual.length) return { tabs: "dash", html: `
+      <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
+      <button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      ${metric(132, "Tu dépenses", "0 $/mois")}
+      <section class="emp a" data-t style="top:276px" aria-label="Aucun abonnement">
+        <img src="dodo/dodo-front.png" alt="">
+        <h2>Aucun abonnement pour l’instant</h2>
+        <p>Ajoute-les à ta façon, quand tu veux.</p>
+        <button class="btn" data-go="addpick">Ajouter un abonnement</button>
+        <p class="emp-or">Ou retrouve-les automatiquement</p>
+        <div class="chips2">${[["bank", "Ma banque"], ["statement", "Un relevé"], ["email", "Mes courriels"], ["icloud", "iCloud"]].map(([g, l]) => `<button type="button" class="chip" data-go="${g}">${l}</button>`).join("")}</div>
+      </section>` };
       // All 14 finds: the four with a detail page keep it; the others open their proof sheet.
       const idOf = { "Netflix": "netflix", "Adobe Acrobat": "adobe", "Spotify": "spotify", "Amazon Prime": "prime" };
       const nextOf = (x) => { const h = [...x.name].reduce((n, c) => n + c.charCodeAt(0), 0); return x.per === "an" ? "12 janv." : (3 + (h % 22)) + " déc."; };
-      const rows = SCAN_POOL.filter((x) => !(x.name === "Adobe Acrobat" && S.adobe === "cancelled")).map((x) => {
+      const rows = (S.fresh ? [] : SCAN_POOL).filter((x) => !(x.name === "Adobe Acrobat" && S.adobe === "cancelled")).map((x) => {
         const id = idOf[x.name], base = id ? sub(id) : null, raw = x.unknown && S.review.r2 && S.review.r2 !== "later" ? S.review.r2 : null;
         return { orig: x.name, ...(base || { name: raw || (x.unknown ? "À nommer" : x.name), short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: nextOf(x) }), review: x.unknown && !raw };
       });
       const cancelled = S.adobe === "cancelled";
-      const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (cancelled ? 397 : 412) + extra;
+      const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (S.fresh ? 0 : cancelled ? 397 : 412) + extra;
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
       <button class="addbtn a" data-t style="top:72px" data-go="addpick" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
       ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
-      <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
-      ${sectionWithCount(308, "Actifs", (cancelled ? 13 : 14) + S.manual.length)}
+      ${S.fresh ? "" : `<p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>`}
+      ${sectionWithCount(308, "Actifs", (S.fresh ? 0 : cancelled ? 13 : 14) + S.manual.length)}
       <button class="fchip a${S.filter.cat || S.filter.cyc ? " on" : ""}" data-t style="top:304px" data-filter aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>${S.filter.cat || S.filter.cyc ? "Filtré" : "Filtrer"}</span>${S.filter.cat || S.filter.cyc ? `<i>${(S.filter.cat ? 1 : 0) + (S.filter.cyc ? 1 : 0)}</i>` : ""}</button>
       ${(() => {
         // Grouped by type, like a store's category list: a small caps header, then that group's rows.
@@ -411,13 +423,14 @@
     },
 
     calendar: () => {
-      const rows = ["netflix", "adobe", "prime"].filter((id) => !(id === "adobe" && S.adobe === "cancelled")).map(sub);
+      const rows = (S.fresh ? [] : ["netflix", "adobe", "prime"]).filter((id) => !(id === "adobe" && S.adobe === "cancelled")).map(sub);
       const total = rows.reduce((a, s) => a + s.price, 0);
       const subtitle = (s) => s.id === "adobe" ? (S.adobe === "pending" ? "Annulation en cours" : s.next + " · fin de l’essai") : s.yearly ? s.next + " · une fois par an" : s.next;
       return { tabs: "calendar", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Calendrier</h1>
       ${metric(132, "À payer avant le 15 janv.", money(total))}
       ${sectionWithCount(278, "À venir", rows.length)}
+      ${rows.length ? "" : `<p class="fnone a" data-t style="top:340px;left:24px;width:342px;padding:0;text-align:center" role="status">Rien à venir pour l’instant. Ajoute un abonnement pour voir tes prochains paiements ici.</p>`}
       <ul>${rows.map((s, i) => subRow(s, 324 + i * 108, subtitle(s), { warn: s.id === "adobe" && S.adobe === "pending" })).join("")}</ul>` };
     },
 
@@ -681,7 +694,7 @@
     if (S.screen === "add") wireAdd();
     if (S.screen === "wallet") wireWallet();
     if (S.screen === "connected") wireConnected();
-    if (S.screen === "scanning") runScan();
+    if (S.screen === "scanning") { S.fresh = false; runScan(); }
     if (S.screen === "connecting") setTimeout(() => { if (S.screen === "connecting") go("accounts"); }, 2200);
   }
 
@@ -885,6 +898,7 @@
     if ("close" in d) return closeSheet();
     if (d.sheet === "banklogin") return bankSheet();
     if (d.ev) return evSheet(d.ev);
+    if ("skip" in d) { S.fresh = true; S.manual = []; return go("dash"); }
     if ("filter" in d) return filterSheet();
     if ("fclear" in d) { S.filter = { cat: "", cyc: "" }; nextTrans = "none"; render(); if ($("sheet-layer").querySelector(".sheet.filt")) filterSheet(); return; }
     if ("fcat" in d || "fcyc" in d) { if ("fcat" in d) S.filter.cat = d.fcat; else S.filter.cyc = d.fcyc; nextTrans = "none"; const sc = $("screen"); const top = sc ? sc.scrollTop : 0; render(); if (sc) sc.scrollTop = top; const lay = $("sheet-layer"); lay.querySelectorAll(".chip").forEach((b) => { const v = "fcat" in b.dataset ? S.filter.cat === b.dataset.fcat : S.filter.cyc === b.dataset.fcyc; const same = ("fcat" in d) === ("fcat" in b.dataset); if (same) { b.classList.toggle("on", v); b.setAttribute("aria-pressed", String(v)); } }); return; }
@@ -1036,7 +1050,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["start", "Choix de départ"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["statement", "Départ : relevé"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["dashempty", "Abonnements (vide)"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["statement", "Départ : relevé"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
@@ -1056,6 +1070,7 @@
     tg.addEventListener("click", () => { const o = dv.classList.toggle("open"); tg.setAttribute("aria-expanded", o); });
     document.body.appendChild(tg);
     const jump = (id) => {
+      if (id === "dashempty") { S.fresh = true; S.manual = []; id = "dash"; } else if (id === "dash") { S.fresh = false; }
       if (id === "detail") S.detail = S.detail || "adobe";
       if (id === "cancelled") S.adobe = "cancelled";
       if ((id === "connected" || id === "wallet" || id === "scanned") && S.accts.length < 2) S.accts = ["chq", "sav", "visa"];
