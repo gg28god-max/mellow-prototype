@@ -296,7 +296,7 @@
       const nextOf = (x) => { const h = [...x.name].reduce((n, c) => n + c.charCodeAt(0), 0); return x.per === "an" ? "12 janv." : (3 + (h % 22)) + " déc."; };
       const rows = SCAN_POOL.filter((x) => !(x.name === "Adobe Acrobat" && S.adobe === "cancelled")).map((x) => {
         const id = idOf[x.name], base = id ? sub(id) : null, raw = x.unknown && S.review.r2 && S.review.r2 !== "later" ? S.review.r2 : null;
-        return { ...(base || { name: raw || (x.unknown ? "À nommer" : x.name), short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: nextOf(x) }), review: x.unknown && !raw };
+        return { orig: x.name, ...(base || { name: raw || (x.unknown ? "À nommer" : x.name), short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: nextOf(x) }), review: x.unknown && !raw };
       });
       const cancelled = S.adobe === "cancelled";
       return { tabs: "dash", html: `
@@ -304,7 +304,17 @@
       ${metric(132, "Tu dépenses", cancelled ? "397 $/mois" : "412 $/mois")}
       <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
       ${sectionWithCount(308, "Actifs", cancelled ? 13 : 14)}
-      <ul>${rows.map((s, i) => subRow(s, 356 + i * 108, s.review ? "À vérifier" : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") })).join("")}</ul>` };
+      ${(() => {
+        // Grouped by type, like a store's category list: a small caps header, then that group's rows.
+        const GROUPS = [["Streaming", ["Netflix", "Spotify", "YouTube", "Amazon Prime", "HBO Max", "Bell Média"]], ["Logiciel et stockage", ["Adobe Acrobat", "Stockage cloud", "VPN"]], ["Vie de tous les jours", ["Salle de sport", "Boîte repas", "Forfait mobile", "Journal"]], ["À vérifier", ["Inconnu"]]];
+        let y = 356, out = "";
+        GROUPS.forEach(([label, names]) => {
+          const list = names.map((nm) => rows.find((r) => r.orig === nm)).filter(Boolean); if (!list.length) return;
+          out += `<h3 class="grp a" data-t style="top:${y}px;left:28px">${label}<span>${list.length}</span></h3>`; y += 36;
+          out += `<ul>${list.map((s) => { const r = subRow(s, y, s.review ? "À vérifier" : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") }); y += 108; return r; }).join("")}</ul>`; y += 14;
+        });
+        return out;
+      })()}` };
     },
 
     calendar: () => {
