@@ -109,7 +109,7 @@
       <span class="logo${/currentColor|class="lt"/.test(s.logo) ? " gic" : ""}" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
       <span class="p" aria-hidden="true">${money(s.price)}</span><span class="pp" aria-hidden="true">par ${s.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
   }
-  const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${5 + i * 94}px" ${cur === id ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>`;
+  const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${3 + i * 86}px" ${cur === id ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>${cur !== "settings" ? `<button class="tabadd" data-go="addpick" aria-label="Ajouter un abonnement">${ADD_ICO}</button>` : ""}`;
   const sectionWithCount = (y, label, n) => `<div class="a" data-t style="top:${y}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">${label}</h2><span class="count" aria-label="${n} au total">${n}</span></div>`;
 
   // ---------- Screens ----------
@@ -347,7 +347,6 @@
     dash: () => {
       if (S.fresh && !S.manual.length) return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      ${addBtn()}
       ${metric(132, "Tu dépenses", "0 $/mois")}
       <section class="emp a" data-t style="top:276px" aria-label="Aucun abonnement">
         <img src="dodo/dodo-front.png" alt="">
@@ -368,7 +367,6 @@
       const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (S.fresh ? 0 : cancelled ? 397 : 412) + extra;
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      ${addBtn()}
       ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
       ${S.fresh ? "" : `<p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>`}
       ${sectionWithCount(308, "Actifs", (S.fresh ? 0 : cancelled ? 13 : 14) + S.manual.length)}
@@ -431,7 +429,6 @@
       const subtitle = (s) => s.id === "adobe" ? (S.adobe === "pending" ? "Annulation en cours" : s.next + " · fin de l’essai") : s.yearly ? s.next + " · une fois par an" : s.next;
       return { tabs: "calendar", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Calendrier</h1>
-      ${addBtn()}
       ${metric(132, "À payer avant le 15 janv.", money(total))}
       ${sectionWithCount(278, "À venir", rows.length)}
       ${rows.length ? "" : `<p class="fnone a" data-t style="top:340px;left:24px;width:342px;padding:0;text-align:center" role="status">Rien à venir pour l’instant. Ajoute un abonnement pour voir tes prochains paiements ici.</p>`}

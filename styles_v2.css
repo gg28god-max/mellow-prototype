@@ -1124,3 +1124,10 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .addbtn,.pkplus{width:48px;height:48px;border-radius:16px}
 .pkplus{background:rgba(255,255,255,.1);border:1px solid var(--line2);color:#fff;width:52px;height:52px}
 .pkplus:hover{background:rgba(255,255,255,.16)}
+
+/* Add = an action, not a tab: detached rounded square right of the tab pill, same bottom line, on Abonnements and Calendrier only */
+.tabbar{left:22px;width:264px}
+.tabbar button{width:84px;font-size:12px;letter-spacing:-.03em}
+.tabadd{position:absolute;left:296px;bottom:28px;width:72px;height:72px;border-radius:26px;display:grid;place-items:center;background:var(--raised);border:1px solid var(--line2);color:#fff;cursor:pointer}
+.tabadd:active{transform:scale(.93)}
+.tabadd:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
