@@ -842,3 +842,16 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .plaidtop span{margin-top:2px}
 .btn:disabled{opacity:.32;cursor:not-allowed;box-shadow:none}
 #lk-b{transition:opacity .4s var(--ease)}
+
+/* Banque connectée: animated glowing edge (appears once every account is linked) */
+@property --ga{syntax:"<angle>";inherits:false;initial-value:0deg}
+.okcard.late{position:absolute;isolation:isolate}
+.okcard.late::before,.okcard.late::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:conic-gradient(from var(--ga),rgba(127,232,200,0),#7fe8c8 12%,#fff 22%,#9fd8ff 34%,rgba(127,232,200,0) 50%,rgba(127,232,200,0) 62%,#7fe8c8 80%,rgba(127,232,200,0));
+  padding:2px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;animation:gsweep 6s linear calc(var(--od,0s) + .4s) infinite,gfade .9s var(--ease) calc(var(--od,0s) + .4s) forwards}
+.okcard.late::after{filter:blur(10px);padding:6px;inset:-6px;animation:gsweep 6s linear calc(var(--od,0s) + .4s) infinite,gfade2 .9s var(--ease) calc(var(--od,0s) + .4s) forwards}
+@keyframes gsweep{to{--ga:360deg}}
+@keyframes gfade{to{opacity:1}}
+@keyframes gfade2{to{opacity:.7}}
+@media (prefers-reduced-motion:reduce){.okcard.late::before,.okcard.late::after{animation:none!important;opacity:.8}}
