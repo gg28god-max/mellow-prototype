@@ -946,3 +946,13 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .rvst-r.dim span:first-child{color:#4f5553}
 .rvst-r.hit{background:rgba(246,199,107,.13);box-shadow:inset 3px 0 0 #f6c76b;color:#fff}
 .rvst-r.hit span:first-child{color:#f6c76b}
+
+/* Detail sheet: the account card shows which account (and type) the payment is charged to */
+.sheet.ev .wcard.evcardacc{width:auto;height:112px;margin:8px 8px 0;border-radius:18px;scroll-snap-align:none;box-shadow:none}
+.sheet.ev .wcard.evcardacc .logo{left:14px;top:14px;width:38px;height:38px;border-radius:12px}
+.sheet.ev .wcard.evcardacc .wk{right:16px;top:20px}
+.sheet.ev .wcard.evcardacc .wb{left:16px;right:16px;bottom:12px;gap:2px}
+.sheet.ev .wcard.evcardacc .wb b{font:600 17px/22px Inter}
+.sheet.ev .wcard.evcardacc .wm{font:500 14px/18px ui-monospace,SFMono-Regular,Menlo,monospace;color:rgba(255,255,255,.75)}
+.sheet.ev .evrow b.mono{font:500 13.5px/18px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;color:#fff}
+.sheet.ev .evgroup .evrow:first-of-type{margin-top:0}
