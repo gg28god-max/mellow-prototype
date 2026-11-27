@@ -920,3 +920,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .rwd-l p i{flex:none;width:24px;height:24px;border-radius:12px;background:var(--mint);color:#06281d;display:grid;place-items:center}
 .rwd-l b{color:#fff;font-weight:600}
 @media (prefers-reduced-motion:reduce){.rwd-c,.rwd-c path,.rwd-r,.rwd-b i{animation:none!important}.rwd-c path{stroke-dashoffset:0}.rwd-r,.rwd-b{display:none}}
+
+/* Verification: the account card shows where the payment comes from; details sit below without a heavy box */
+.wcard.rvacct{position:absolute;left:24px;width:342px;height:164px;scroll-snap-align:none;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.rvcard{background:transparent;border:0;padding:0 4px}
+.rvproof{margin-top:12px;padding-top:12px}
