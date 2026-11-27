@@ -960,3 +960,35 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 /* Abonnements list grouped by type */
 .grp{margin:0;display:flex;align-items:center;gap:10px;font:600 12.5px/16px Inter;letter-spacing:.1em;text-transform:uppercase;color:#a9b8b2}
 .grp span{font:500 12px/16px Inter;letter-spacing:0;color:var(--grey);background:rgba(255,255,255,.07);border-radius:10px;padding:2px 8px}
+
+/* Add a subscription by hand */
+.addbtn{left:auto;right:24px;width:48px;height:48px;border-radius:24px;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid var(--line2);color:#fff;cursor:pointer;backdrop-filter:blur(8px)}
+.addbtn:hover{background:rgba(255,255,255,.16)}
+.addbtn:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.addtop{left:24px;width:342px;height:104px;border-radius:30px;background:var(--card);border:1px solid var(--line)}
+.addlogo{position:absolute;left:20px;top:20px;width:64px;height:64px;border-radius:22px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#fff;overflow:hidden}
+.addlogo.has{background:#fff;color:#3a3d3c}
+.addlogo img{width:42px;height:42px;object-fit:contain}
+.addlogo b{font:700 28px/1 Inter}
+.adname{position:absolute;left:100px;right:20px;top:20px;height:28px;border:0;background:transparent;color:#fff;font:600 20px/28px Inter;outline:none;padding:0}
+.adname::placeholder{color:var(--grey);font-weight:500}
+.adprice{position:absolute;left:100px;top:56px;height:30px;display:flex;align-items:center;gap:8px}
+.adprice i{font:600 16px/1 Inter;font-style:normal;color:#cfd8d4;background:rgba(255,255,255,.08);border-radius:9px;padding:6px 10px}
+.adprice input{width:140px;border:0;background:transparent;color:#fff;font:500 20px/28px Inter;outline:none;padding:0}
+.adprice input::placeholder{color:var(--grey)}
+.addtop:focus-within{border-color:var(--mint)}
+.adsg{top:228px;z-index:5;left:24px;width:342px}
+.frm{left:24px;width:342px;border-radius:26px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+.frow{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px;padding:0 20px;font:500 16px/22px Inter;color:#fff}
+.frow+.frow{border-top:1px solid var(--line)}
+.frow>span{flex:none}
+.frow .switch{position:relative;right:auto;top:auto;flex:none}
+.fsel,.fdate{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#a9b8b2;font:500 16px/22px Inter;text-align:right;direction:rtl;max-width:230px;padding:0 20px 0 0;outline:none;cursor:pointer;color-scheme:dark;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center}
+.fdate{direction:ltr;background-image:none;padding:0;font-variant-numeric:tabular-nums}
+.fsel:focus-visible,.fdate:focus-visible{outline:2px solid var(--mint);outline-offset:4px;border-radius:6px}
+.fsel option{direction:ltr;color:#111}
+#ad-save:disabled{opacity:.32}
+.row .logo b.lt{font:700 22px/1 Inter;color:var(--mint)}
+.adname:focus,.adname:focus-visible,.adprice input:focus,.adprice input:focus-visible{outline:none;box-shadow:none}
+.adsg{top:232px}

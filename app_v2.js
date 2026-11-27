@@ -60,7 +60,7 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"] };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [] };
   const ACCTS = [
     { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
     { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
@@ -106,7 +106,7 @@
 
   function subRow(s, y, subtitle, opts = {}) {
     return `<li class="row" ${T(y)}><button class="row-hit" ${s.id ? `data-open="${s.id}"` : `data-ev="${esc(s.name)}"`} style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(s.name)}, ${money(s.price)} par ${s.per}, ${esc(subtitle)}"></button>
-      <span class="logo${/currentColor/.test(s.logo) ? " gic" : ""}" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
+      <span class="logo${/currentColor|class="lt"/.test(s.logo) ? " gic" : ""}" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
       <span class="p" aria-hidden="true">${money(s.price)}</span><span class="pp" aria-hidden="true">par ${s.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
   }
   const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${5 + i * 94}px" ${cur === id ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>`;
@@ -299,22 +299,52 @@
         return { orig: x.name, ...(base || { name: raw || (x.unknown ? "À nommer" : x.name), short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: nextOf(x) }), review: x.unknown && !raw };
       });
       const cancelled = S.adobe === "cancelled";
+      const extra = S.manual.reduce((a, m) => a + (m.per === "an" ? m.price / 12 : m.price), 0), tot = (cancelled ? 397 : 412) + extra;
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
-      ${metric(132, "Tu dépenses", cancelled ? "397 $/mois" : "412 $/mois")}
+      <button class="addbtn a" data-t style="top:72px" data-go="add" aria-label="Ajouter un abonnement"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      ${metric(132, "Tu dépenses", (extra ? tot.toFixed(2).replace(".", ",") : tot) + " $/mois")}
       <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
-      ${sectionWithCount(308, "Actifs", cancelled ? 13 : 14)}
+      ${sectionWithCount(308, "Actifs", (cancelled ? 13 : 14) + S.manual.length)}
       ${(() => {
         // Grouped by type, like a store's category list: a small caps header, then that group's rows.
-        const GROUPS = [["Streaming", ["Netflix", "Spotify", "YouTube", "Amazon Prime", "HBO Max", "Bell Média"]], ["Logiciel et stockage", ["Adobe Acrobat", "Stockage cloud", "VPN"]], ["Vie de tous les jours", ["Salle de sport", "Boîte repas", "Forfait mobile", "Journal"]], ["À vérifier", ["Inconnu"]]];
+        const GROUPS = [["Streaming", ["Netflix", "Spotify", "YouTube", "Amazon Prime", "HBO Max", "Bell Média"]], ["Logiciel et stockage", ["Adobe Acrobat", "Stockage cloud", "VPN"]], ["Vie de tous les jours", ["Salle de sport", "Boîte repas", "Forfait mobile", "Journal"]], ["Autre", []], ["À vérifier", ["Inconnu"]]];
         let y = 356, out = "";
         GROUPS.forEach(([label, names]) => {
-          const list = names.map((nm) => rows.find((r) => r.orig === nm)).filter(Boolean); if (!list.length) return;
+          const list = [...names.map((nm) => rows.find((r) => r.orig === nm)).filter(Boolean), ...S.manual.filter((m) => m.cat === label).map((m) => ({ ...m, id: null, short: m.name, manual: true }))]; if (!list.length) return;
           out += `<h3 class="grp a" data-t style="top:${y}px;left:28px">${label}<span>${list.length}</span></h3>`; y += 36;
-          out += `<ul>${list.map((s) => { const r = subRow(s, y, s.review ? "À vérifier" : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") }); y += 108; return r; }).join("")}</ul>`; y += 14;
+          out += `<ul>${list.map((s) => { const r = subRow(s, y, s.review ? "À vérifier" : s.manual ? (s.trial ? "Essai gratuit" : s.next ? "Renouvelle le " + s.next : "Ajouté par toi") : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") }); y += 108; return r; }).join("")}</ul>`; y += 14;
         });
         return out;
       })()}` };
+    },
+
+    add: () => {
+      const accts = myAccts(), CATS = ["Streaming", "Logiciel et stockage", "Vie de tous les jours", "Autre"];
+      const sel = (id, opts, cur) => `<select id="${id}" class="fsel">${opts.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+      return { html: `${nav("Ajouter un abonnement", "dash")}
+      <form id="addform" novalidate>
+      <section class="addtop a" data-t style="top:116px" aria-label="Nom et prix">
+        <span class="addlogo" id="ad-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+        <label class="sr" for="ad-name">Nom de l’abonnement</label><input id="ad-name" class="adname" placeholder="Nom" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="ad-sg" aria-autocomplete="list">
+        <label class="sr" for="ad-price">Prix en dollars</label><span class="adprice"><i aria-hidden="true">$</i><input id="ad-price" inputmode="decimal" placeholder="0,00" autocomplete="off"></span>
+      </section>
+      <ul id="ad-sg" class="sgl adsg" role="listbox" aria-label="Suggestions" hidden></ul>
+      <section class="frm a" data-t style="top:244px" aria-label="Paiement">
+        <label class="frow" for="ad-date"><span>Prochain paiement</span><input id="ad-date" type="date" class="fdate"></label>
+        <label class="frow" for="ad-cyc"><span>Fréquence</span>${sel("ad-cyc", [["mois", "Chaque mois"], ["an", "Chaque année"]], "mois")}</label>
+        <div class="frow"><span id="l-trial">Essai gratuit</span><button type="button" class="switch" role="switch" aria-labelledby="l-trial" aria-checked="false" id="ad-trial"></button></div>
+      </section>
+      <section class="frm a" data-t style="top:446px" aria-label="Classement">
+        <label class="frow" for="ad-cat"><span>Catégorie</span>${sel("ad-cat", CATS.map((c) => [c, c]), "Autre")}</label>
+        <label class="frow" for="ad-acct"><span>Payé avec</span>${sel("ad-acct", accts.map((c) => [c.id, (c.kind === "Carte de crédit" ? c.name.replace("Carte de crédit ", "") : c.kind) + " ···· " + c.mask]), accts[0].id)}</label>
+      </section>
+      <section class="frm a" data-t style="top:594px" aria-label="Rappel">
+        <label class="frow" for="ad-rem"><span>Rappel</span>${sel("ad-rem", [["1", "1 jour avant"], ["3", "3 jours avant"], ["7", "1 semaine avant"], ["0", "Aucun"]], "1")}</label>
+      </section>
+      <div class="cta-fade" ${B(716, 188)}></div>
+      <button class="btn" type="submit" id="ad-save" ${B(756, 56)} disabled>Enregistrer</button>
+      </form>` };
     },
 
     calendar: () => {
@@ -452,6 +482,36 @@
     $("bqform").addEventListener("submit", (e) => { e.preventDefault(); const v = rows.filter((li) => !li.hidden); if (v.length === 1) v[0].querySelector("button").click(); else inp.blur(); });
   }
 
+  function wireAdd() {
+    const nm = $("ad-name"), pr = $("ad-price"), sg = $("ad-sg"), logo = $("ad-logo"), save = $("ad-save"), tr = $("ad-trial");
+    const today = new Date(); $("ad-date").value = new Date(today.getTime() - today.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+    const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const price = () => parseFloat(pr.value.replace(/\s/g, "").replace(",", "."));
+    const find = () => POPULAR.find(([n]) => fold(n) === fold(nm.value.trim()));
+    const ok = () => { save.disabled = !(nm.value.trim() && price() > 0); };
+    const setLogo = () => { const f = find(), v = nm.value.trim(); logo.innerHTML = f && f[2] ? `<img src="logos/v2/${f[2]}-icon.png" alt="">` : v ? `<b>${esc(v[0].toUpperCase())}</b>` : logo.dataset.plus; logo.classList.toggle("has", !!v); };
+    logo.dataset.plus = logo.innerHTML;
+    const mark = (name, q) => { const i = fold(name).indexOf(q); return i < 0 ? esc(name) : esc(name.slice(0, i)) + "<b>" + esc(name.slice(i, i + q.length)) + "</b>" + esc(name.slice(i + q.length)); };
+    const suggest = () => {
+      const q = fold(nm.value.trim());
+      const rank = (n) => { const f = fold(n); return f.startsWith(q) ? 0 : f.split(/[\s+]+/).some((w) => w.startsWith(q)) ? 1 : f.includes(q) ? 2 : 9; };
+      const ranked = q ? POPULAR.map((x) => [rank(x[0]), x]).filter(([r, x]) => r < 9 && fold(x[0]) !== q).sort((a, b) => a[0] - b[0]) : [];
+      const hits = (ranked.filter(([r]) => r < 2).length ? ranked.filter(([r]) => r < 2) : ranked).map((x) => x[1]).slice(0, 4);
+      sg.innerHTML = hits.map(([n, c, l]) => `<li role="option"><button type="button" data-sg="${esc(n)}"><span class="sgl-t">${l ? `<img src="logos/v2/${l}-icon.png" alt="">` : esc(n[0])}</span><span class="sgl-n"><span>${mark(n, q)}</span><small>${esc(c)}</small></span></button></li>`).join("");
+      sg.hidden = !hits.length; nm.setAttribute("aria-expanded", String(!!hits.length));
+    };
+    nm.addEventListener("input", () => { suggest(); setLogo(); ok(); });
+    pr.addEventListener("input", ok);
+    sg.addEventListener("click", (e) => { const b = e.target.closest("[data-sg]"); if (!b) return; e.stopPropagation(); nm.value = b.dataset.sg; sg.hidden = true; nm.setAttribute("aria-expanded", "false"); setLogo(); ok(); pr.focus(); });
+    tr.addEventListener("click", (e) => { e.stopPropagation(); tr.setAttribute("aria-checked", String(tr.getAttribute("aria-checked") !== "true")); });
+    $("addform").addEventListener("submit", (e) => {
+      e.preventDefault(); if (save.disabled) return;
+      const f = find(), d = new Date($("ad-date").value + "T12:00:00"), name = nm.value.trim();
+      S.manual.push({ name, price: price(), per: $("ad-cyc").value, cat: $("ad-cat").value, acct: $("ad-acct").value, trial: tr.getAttribute("aria-checked") === "true", next: isNaN(d) ? "" : d.getDate() + " " + MONTHS[d.getMonth()], logo: f && f[2] ? LG(f[2]) : `<b class="lt" aria-hidden="true">${esc(name[0].toUpperCase())}</b>` });
+      go("dash"); confirmSheet(name, price(), { manual: true });
+    });
+  }
+
   // ---------- Render ----------
   let prev = [];
   let nextTrans = "fade";
@@ -499,6 +559,7 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
+    if (S.screen === "add") wireAdd();
     if (S.screen === "wallet") wireWallet();
     if (S.screen === "connected") wireConnected();
     if (S.screen === "scanning") runScan();
@@ -660,14 +721,14 @@
   }
   // Confirmation after a payment is identified: logo tile with a check, the name, the price. Closes itself, or on tap.
   let cfsTimer = 0;
-  function confirmSheet(name, price) {
+  function confirmSheet(name, price, opts = {}) {
     const pop = POPULAR.find(([n]) => n.toLowerCase() === name.toLowerCase()) || (/acrobat/i.test(name) ? POPULAR.find(([n]) => n === "Adobe Acrobat") : null);
     const tile = pop && pop[2] ? `<img src="logos/v2/${pop[2]}-icon.png" alt="">` : `<span>${esc(name.trim()[0] || "?")}</span>`;
     // Last payment: keep the sheet until the person taps Continuer, then show "Tout est en ordre". Otherwise show the next card behind the sheet.
-    const last = REVIEW.every((x) => S.review[x.id]);
-    if (last) afterClose = render; else { afterClose = null; render(); }
+    const last = !opts.manual && REVIEW.every((x) => S.review[x.id]);
+    if (opts.manual) afterClose = null; else if (last) afterClose = render; else { afterClose = null; render(); }
     sheet(`<div class="cfs-t" ${sb(64)}>${tile}<i class="cfs-ck" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>
-      <div class="tx" ${sb(170)}><h2 id="sh-t" aria-live="polite">${esc(name)} confirmé</h2><p>${money(price)}/mois · ajouté à tes abonnements</p></div>
+      <div class="tx" ${sb(170)}><h2 id="sh-t" aria-live="polite">${esc(name)} ${opts.manual ? "ajouté" : "confirmé"}</h2><p>${money(price)}${opts.manual ? " · dans ta liste" : "/mois · ajouté à tes abonnements"}</p></div>
       <button class="btn" ${sb(300)} data-close>Continuer</button>`, { cfs: true });
     clearTimeout(cfsTimer); if (!last) cfsTimer = setTimeout(() => { if ($("sheet-layer").querySelector(".sheet.cfs")) closeSheet(); }, reduceMotion() ? 3200 : 2200);
   }
