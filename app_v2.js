@@ -105,8 +105,8 @@
   const glowStatus = (strong) => `<div class="glow${strong === "calm" ? " calm" : strong ? " strong" : ""}"></div><div class="sb" aria-hidden="true"><span class="time">9:41</span><span class="icons"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="bat"><i></i></span></span></div>`;
 
   function subRow(s, y, subtitle, opts = {}) {
-    return `<li class="row" ${T(y)}><button class="row-hit" data-open="${s.id}" style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(s.name)}, ${money(s.price)} par ${s.per}, ${esc(subtitle)}"></button>
-      <span class="logo" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
+    return `<li class="row" ${T(y)}><button class="row-hit" ${s.id ? `data-open="${s.id}"` : `data-ev="${esc(s.name)}"`} style="position:absolute;inset:0;border-radius:30px" aria-label="${esc(s.name)}, ${money(s.price)} par ${s.per}, ${esc(subtitle)}"></button>
+      <span class="logo${/currentColor/.test(s.logo) ? " gic" : ""}" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
       <span class="p" aria-hidden="true">${money(s.price)}</span><span class="pp" aria-hidden="true">par ${s.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
   }
   const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${5 + i * 94}px" ${cur === id ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>`;
@@ -291,14 +291,20 @@
     },
 
     dash: () => {
-      const rows = ["netflix", "adobe", "spotify"].filter((id) => !(id === "adobe" && S.adobe === "cancelled")).map(sub);
+      // All 14 finds: the four with a detail page keep it; the others open their proof sheet.
+      const idOf = { "Netflix": "netflix", "Adobe Acrobat": "adobe", "Spotify": "spotify", "Amazon Prime": "prime" };
+      const nextOf = (x) => { const h = [...x.name].reduce((n, c) => n + c.charCodeAt(0), 0); return x.per === "an" ? "12 janv." : (3 + (h % 22)) + " déc."; };
+      const rows = SCAN_POOL.filter((x) => !(x.name === "Adobe Acrobat" && S.adobe === "cancelled")).map((x) => {
+        const id = idOf[x.name], base = id ? sub(id) : null, raw = x.unknown && S.review.r2 && S.review.r2 !== "later" ? S.review.r2 : null;
+        return { ...(base || { name: raw || (x.unknown ? "À nommer" : x.name), short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: nextOf(x) }), review: x.unknown && !raw };
+      });
       const cancelled = S.adobe === "cancelled";
       return { tabs: "dash", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Abonnements</h1>
       ${metric(132, "Tu dépenses", cancelled ? "397 $/mois" : "412 $/mois")}
       <p class="a" data-t style="top:264px;left:28px;font:400 14px/18px Inter;color:var(--grey)">${cancelled ? "2 que tu n’utilises peut-être pas · 26 $/mois" : "3 que tu n’utilises peut-être pas · 41 $/mois"}</p>
       ${sectionWithCount(308, "Actifs", cancelled ? 13 : 14)}
-      <ul>${rows.map((s, i) => subRow(s, 356 + i * 108, s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.id === "adobe" && S.adobe === "pending" })).join("")}</ul>` };
+      <ul>${rows.map((s, i) => subRow(s, 356 + i * 108, s.review ? "À vérifier" : s.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : "Renouvelle le " + s.next, { warn: s.review || (s.id === "adobe" && S.adobe === "pending") })).join("")}</ul>` };
     },
 
     calendar: () => {
