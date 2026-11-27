@@ -392,7 +392,7 @@
       <div class="pk a" data-t style="top:112px" id="pk-list" aria-live="polite"></div>`,
       pin: `<div class="pin pkpin"><div class="cta-fade pinfade" aria-hidden="true"></div><form class="srch pkq" id="pk-form" role="search" novalidate><label class="sr" for="pk-q">Rechercher un abonnement</label>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
-        <input id="pk-q" type="search" placeholder="Rechercher un abonnement" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="pk-x" aria-label="Effacer la recherche" hidden>×</button></form></div>` }),
+        <input id="pk-q" type="search" placeholder="Rechercher un abonnement" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button type="button" class="srch-x" id="pk-x" aria-label="Effacer la recherche" hidden>×</button></form><button type="button" class="pkplus" id="pk-plus" aria-label="Créer un abonnement personnalisé"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>` }),
 
     add: () => {
       const accts = myAccts(), CATS = ["Streaming", "Logiciel et stockage", "Vie de tous les jours", "Autre"];
@@ -595,7 +595,7 @@
     const run = () => {
       const t = q.value.trim(), f = fold(t), hits = f ? POPULAR.filter(([n]) => fold(n).includes(f)) : POPULAR;
       const exact = f && POPULAR.some(([n]) => fold(n) === f);
-      let h = `<ul class="pk-top"><li><button type="button" data-pick="${esc(exact ? "" : t)}" data-cat="Autres">${plus}<span class="pk-n">${t && !exact ? "Créer « " + esc(t) + " »" : "Abonnement personnalisé"}</span></button></li></ul>`;
+      let h = t && !exact ? `<ul class="pk-top"><li><button type="button" data-pick="${esc(t)}" data-cat="Autres">${plus}<span class="pk-n">Créer « ${esc(t)} »</span></button></li></ul>` : "";
       if (f) { h += hits.length ? `<ul class="pk-g">${hits.map(row).join("")}</ul>` : `<p class="pk-none" role="status">Aucun résultat. Crée-le toi-même ci-dessus.</p>`; }
       else ORDER.forEach((g) => { const L = hits.filter(([, c]) => (PKGROUP[c] || "Autres") === g); if (L.length) h += `<h3 class="pk-h">${g}</h3><ul class="pk-g">${L.map(row).join("")}</ul>`; });
       box.innerHTML = h + '<div class="pk-end" aria-hidden="true"></div>'; x.hidden = !q.value; layout();
@@ -604,6 +604,7 @@
     x.addEventListener("click", (e) => { e.stopPropagation(); q.value = ""; run(); q.focus(); });
     $("pk-form").addEventListener("submit", (e) => { e.preventDefault(); const b = box.querySelector(".pk-g [data-pick]"); (q.value.trim() && b ? b : box.querySelector(".pk-top [data-pick]")).click(); });
     box.addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (!b) return; e.stopPropagation(); addDraft = { name: b.dataset.pick, cat: FORMCAT[b.dataset.cat] || "Autre" }; go("add"); });
+    $("pk-plus").addEventListener("click", (e) => { e.stopPropagation(); addDraft = { name: q.value.trim(), cat: "Autre" }; go("add"); });
     run();
   }
   function wireAdd() {
