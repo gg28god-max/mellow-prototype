@@ -938,3 +938,11 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .rvst-r.hit span:first-child{color:#6a5320;font-weight:600}
 .rvst-r.hit span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rvcard{padding:0 4px}
+
+/* Statement lines v2: dark, so the highlighted payment is the only thing that stands out */
+.rvst{background:#141515;color:#e9ecea;border:1px solid var(--line);box-shadow:none}
+.rvst-r span:first-child{color:#7f8784}
+.rvst-r.dim{color:#5d6361}
+.rvst-r.dim span:first-child{color:#4f5553}
+.rvst-r.hit{background:rgba(246,199,107,.13);box-shadow:inset 3px 0 0 #f6c76b;color:#fff}
+.rvst-r.hit span:first-child{color:#f6c76b}
