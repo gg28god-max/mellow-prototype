@@ -273,11 +273,16 @@
           <p><i aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Rien n’est annulé <b>sans ton accord</b></span></p>
         </section>
         <div class="cta-fade" ${B(716, 128)}></div>${btn(756, "Voir mes abonnements", 'data-go="wallet"')}` }; }
-      const k = doneN + 1, ac = accOf(SCAN_POOL.find((x) => x.raw === cur.raw));
+      const k = doneN + 1, pool = SCAN_POOL.find((x) => x.raw === cur.raw), ac = accOf(pool), stDay = 5 + ([...pool.name].reduce((n, c) => n + c.charCodeAt(0), 0) % 18);
       return { html: `${nav("Vérification", "scanned")}${bars}
       <p class="eyebrow-s a" data-t style="top:144px;left:28px">${k} sur ${total} · prélevé sur ce compte</p>
       <article class="wcard rvacct a c-${ac.id}" ${T(172)} aria-label="Prélevé sur ${esc(ac.name)} ····${ac.mask}"><span class="logo" aria-hidden="true">${S.bank.logo}</span><span class="wk">${esc(ac.kind)}</span><div class="wb"><b>${esc(ac.name.replace("Carte de crédit ", ""))}</b><span class="wm">···· ${ac.mask}</span></div></article>
-      <section class="rvcard a" ${T(358)} aria-label="Paiement à confirmer"><h1 class="rvt">${esc(cur.raw)}</h1><p class="rvp"><b>${money(cur.price)}</b> /mois</p>
+      <section class="rvst a" ${T(322)} aria-label="Ligne de ton relevé bancaire">
+        <p class="rvst-r dim" aria-hidden="true"><span>${stDay - 2} nov.</span><span>PHARMAPRIX #482</span><span>−18,25</span></p>
+        <h1 class="rvst-r hit"><span>${stDay} nov.</span><span>${esc(cur.raw)}</span><span>−${money(cur.price).replace(/\s?\$/, "")}</span></h1>
+        <p class="rvst-r dim" aria-hidden="true"><span>${stDay + 1} nov.</span><span>STM OPUS RECHARGE</span><span>−97,00</span></p>
+      </section>
+      <section class="rvcard a" ${T(472)} aria-label="Paiement à confirmer">
         ${cur.guess ? `<p class="rvg">On pense que c’est <b>${esc(cur.guess)}</b> ?</p>` : `<p class="rvg">On ne reconnaît pas ce nom</p>`}
         <button class="rvproof" data-evq="${esc(SCAN_POOL.find((x) => x.raw === cur.raw).name)}">Voir la preuve dans ta banque <span aria-hidden="true">›</span></button></section>
       <div class="cta-fade" ${B(716, 188)}></div>

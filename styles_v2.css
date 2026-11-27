@@ -925,3 +925,16 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .wcard.rvacct{position:absolute;left:24px;width:342px;height:164px;scroll-snap-align:none;box-shadow:0 14px 30px rgba(0,0,0,.35)}
 .rvcard{background:transparent;border:0;padding:0 4px}
 .rvproof{margin-top:12px;padding-top:12px}
+
+/* Verification: the payment shown as a line of the bank statement, between two neighbouring lines */
+.wcard.rvacct{height:140px}
+.rvst{left:24px;width:342px;border-radius:18px;background:#f2efe8;color:#17191a;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.rvst-r{display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:10px;margin:0;padding:0 16px;height:44px;font:500 12.5px/16px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}
+.rvst-r span:first-child{color:#6a6f6c}
+.rvst-r span:last-child{font-variant-numeric:tabular-nums}
+.rvst-r.dim{color:#9a9d9a;font-weight:400}
+.rvst-r.dim span:first-child{color:#b3b5b2}
+.rvst-r.hit{height:52px;background:#fff3cf;box-shadow:inset 4px 0 0 #f0b43a;font-weight:700;font-size:13.5px;color:#17191a;text-transform:none}
+.rvst-r.hit span:first-child{color:#6a5320;font-weight:600}
+.rvst-r.hit span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rvcard{padding:0 4px}
