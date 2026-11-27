@@ -873,3 +873,12 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .metric.mvc .cost b{display:block;font-weight:600}
 .metric.mvc .cost small{display:block;margin-top:6px;font:500 15px/20px Inter;letter-spacing:0;color:#a9b8b2}
 .metric.mvc .vdiv{position:absolute;left:166px;top:22px;bottom:22px;width:1px;background:rgba(127,232,200,.22)}
+
+/* Results summary v3: each stat has its own label above and its own colour (mint = subscriptions, amber = money) */
+.metric.mvc .fnd,.metric.mvc .cost{display:block;top:16px}
+.metric.mvc .fnd span,.metric.mvc .cost span{display:flex;align-items:center;gap:7px;margin:0 0 4px;font:600 12px/16px Inter;letter-spacing:.09em;text-transform:uppercase;color:#a9b8b2}
+.metric.mvc .fnd span::before,.metric.mvc .cost span::before{content:"";width:8px;height:8px;border-radius:4px;background:var(--mint)}
+.metric.mvc .cost span::before{background:#f6c76b}
+.metric.mvc .fnd b{color:var(--mint);font:600 56px/60px Inter;letter-spacing:-.05em}
+.metric.mvc .cost b{color:#f6c76b;font:600 56px/60px Inter;letter-spacing:-.05em}
+.metric.mvc .cost b small{display:inline;margin:0 0 0 3px;font:600 24px/28px Inter;letter-spacing:0;color:#f6c76b;vertical-align:top;position:relative;top:8px}
