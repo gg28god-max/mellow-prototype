@@ -1131,3 +1131,8 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .tabadd{position:absolute;left:296px;bottom:28px;width:72px;height:72px;border-radius:26px;display:grid;place-items:center;background:var(--raised);border:1px solid var(--line2);color:#fff;cursor:pointer}
 .tabadd:active{transform:scale(.93)}
 .tabadd:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+
+/* Import pages: icon is a bare mint glyph inline with the title (no box), so it never looks like a 2nd button under the back button */
+.imp-h{display:flex;align-items:center;gap:12px}
+.imp-i{width:auto;height:auto;border-radius:0;background:none;display:inline-grid}
+.imp-i svg{width:28px;height:28px}

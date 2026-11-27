@@ -124,10 +124,9 @@
   };
   // One layout for every import method: small icon, title, short steps, ONE primary button at the bottom.
   const impScreen = ({ icon, title, sub, steps, src, cta, note }) => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><h1 class="sr">${esc(title)}</h1></header>
-      <span class="imp-i a" data-t style="top:132px;left:24px" aria-hidden="true">${icon}</span>
-      <h1 class="hd pt a" data-t style="top:212px;left:24px">${esc(title)}</h1>
-      <p class="body a" data-t style="top:260px;left:24px;width:342px">${esc(sub)}</p>
-      <ol class="stp a" data-t style="top:354px">${steps.map((h, i) => `<li><i aria-hidden="true">${i + 1}</i><div>${h}</div></li>`).join("")}</ol>
+      <h1 class="hd pt a imp-h" data-t style="top:132px;left:24px"><span class="imp-i" aria-hidden="true">${icon}</span>${esc(title)}</h1>
+      <p class="body a" data-t style="top:184px;left:24px;width:342px">${esc(sub)}</p>
+      <ol class="stp a" data-t style="top:280px">${steps.map((h, i) => `<li><i aria-hidden="true">${i + 1}</i><div>${h}</div></li>`).join("")}</ol>
       ${note ? `<p class="trust a" data-t style="top:640px;left:24px;width:342px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${esc(note)}</p>` : ""}
       <div class="cta-fade" ${B(716, 188)}></div>
       <button class="btn" ${B(756, 56)} data-import="${src}">${esc(cta)}</button>` });
