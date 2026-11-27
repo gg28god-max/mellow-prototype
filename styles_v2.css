@@ -1082,3 +1082,5 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 #toast{position:absolute;left:50%;bottom:112px;transform:translate(-50%,16px);z-index:60;padding:12px 20px;border-radius:22px;background:#2a2b2c;border:1px solid var(--line2);color:#fff;font:500 15px/20px Inter;opacity:0;pointer-events:none;transition:opacity .25s var(--ease),transform .25s var(--ease);white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){.fnd-o i{animation:none;opacity:.4}}
+.trust{margin:0;display:flex;gap:10px;align-items:flex-start;font:400 13.5px/19px Inter;color:var(--grey)}
+.trust svg{flex:none;margin-top:2px;color:var(--mint)}

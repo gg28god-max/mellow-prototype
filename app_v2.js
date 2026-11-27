@@ -113,12 +113,13 @@
   const sectionWithCount = (y, label, n) => `<div class="a" data-t style="top:${y}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">${label}</h2><span class="count" aria-label="${n} au total">${n}</span></div>`;
 
   // ---------- Screens ----------
-  const ICOP = {"bank": "<path d=\"M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18\"/>", "mail": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"/><path d=\"M4 7l8 6 8-6\"/>", "cloud": "<path d=\"M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z\"/>", "photos": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><circle cx=\"9\" cy=\"10.5\" r=\"1.6\"/><path d=\"M4 17l5-4.5 3.5 3L16 12l4 4\"/>", "copy": "<rect x=\"8\" y=\"8\" width=\"11\" height=\"12\" rx=\"2.5\"/><path d=\"M5 15V6.5A2.5 2.5 0 0 1 7.5 4H14\"/>", "ext": "<path d=\"M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4\"/>"};
+  const ICOP = {"bank": "<path d=\"M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18\"/>", "mail": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"/><path d=\"M4 7l8 6 8-6\"/>", "cloud": "<path d=\"M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 4 4 0 0 1 17.5 18z\"/>", "photos": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><circle cx=\"9\" cy=\"10.5\" r=\"1.6\"/><path d=\"M4 17l5-4.5 3.5 3L16 12l4 4\"/>", "doc": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "copy": "<rect x=\"8\" y=\"8\" width=\"11\" height=\"12\" rx=\"2.5\"/><path d=\"M5 15V6.5A2.5 2.5 0 0 1 7.5 4H14\"/>", "ext": "<path d=\"M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4\"/>"};
   const GIP = (d) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const ICO2 = { bank: GIP(ICOP.bank), email: GIP(ICOP.mail), icloud: GIP(ICOP.cloud) };
+  const ICO2 = { bank: GIP(ICOP.bank), email: GIP(ICOP.mail), icloud: GIP(ICOP.cloud), doc: GIP(ICOP.doc) };
   // Demo results of an import (placeholders): what the "scan" of a screenshot would find.
   const FOUND = {
     email: [{ name: "Spotify", l: "spotify", price: 11.99, next: "28 nov.", cat: "Streaming" }, { name: "Disney+", price: 13.99, next: "2 déc.", cat: "Streaming" }, { name: "Audible", price: 14.95, next: "9 déc.", cat: "Streaming" }, { name: "Dropbox", price: 12.0, next: "17 déc.", cat: "Logiciel et stockage" }],
+    statement: [{ name: "Netflix", l: "netflix", price: 16.49, next: "4 déc.", cat: "Streaming" }, { name: "Crave", price: 19.99, next: "8 déc.", cat: "Streaming" }, { name: "Éconofitness", price: 24.99, next: "13 déc.", cat: "Vie de tous les jours" }, { name: "ChatGPT Plus", price: 28.0, next: "19 déc.", cat: "Logiciel et stockage" }, { name: "Le Devoir", price: 9.99, next: "21 déc.", cat: "Vie de tous les jours" }],
     icloud: [{ name: "Apple One", price: 24.95, next: "24 déc.", cat: "Streaming" }, { name: "iCloud+ 200 Go", price: 3.99, next: "24 déc.", cat: "Logiciel et stockage" }, { name: "Apple TV+", price: 12.99, next: "5 janv.", cat: "Streaming" }],
   };
   const SCREENS = {
@@ -133,7 +134,7 @@
       <h1 class="hd pt a" data-t style="top:116px;left:24px">Par où commencer ?</h1>
       <p class="body a" data-t style="top:196px;left:24px;width:342px">Choisis la façon la plus simple de retrouver tes abonnements.</p>
       <ul class="stl">
-        ${[["bank", "Connecter ma banque", "Le plus rapide et complet", "bank", "Recommandé"], ["email", "Chercher dans mes courriels", "Repère les confirmations et reçus", "email", ""], ["icloud", "Importer depuis iCloud", "Tes abonnements Apple", "icloud", ""]].map(([go, t, sub, ic, tag], i) => `<li class="opt a" ${T(260 + i * 112)}><button data-go="${go}" aria-label="${esc(t)}. ${esc(sub)}"></button><span class="opt-i" aria-hidden="true">${ICO2[ic]}</span><span class="opt-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span>${tag ? `<em>${esc(tag)}</em>` : ""}<span class="chev" aria-hidden="true">›</span></li>`).join("")}
+        ${[["bank", "Connecter ma banque", "Le plus rapide et complet", "bank", "Recommandé"], ["statement", "Importer un relevé", "Un fichier PDF ou CSV de ta banque", "doc", ""], ["email", "Chercher dans mes courriels", "Repère les confirmations et reçus", "email", ""], ["icloud", "Importer depuis iCloud", "Tes abonnements Apple", "icloud", ""]].map(([go, t, sub, ic, tag], i) => `<li class="opt a" ${T(260 + i * 112)}><button data-go="${go}" aria-label="${esc(t)}. ${esc(sub)}"></button><span class="opt-i" aria-hidden="true">${ICO2[ic]}</span><span class="opt-t"><b>${esc(t)}</b><small>${esc(sub)}</small></span>${tag ? `<em>${esc(tag)}</em>` : ""}<span class="chev" aria-hidden="true">›</span></li>`).join("")}
       </ul>
       ${link(716, "Je le ferai plus tard", 'data-go="dash"')}` }),
 
@@ -148,6 +149,17 @@
         <li><i>4</i><div><p>Prends une capture d’écran de tes abonnements</p></div></li>
         <li><i>5</i><div><p><b>Importe</b>-la ici :</p><button type="button" class="phbtn" data-import="email">${GIP(ICOP.photos)}Importer depuis Photos</button></div></li>
       </ol>` }),
+
+    statement: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
+      <h1 class="hd pt a" data-t style="top:116px;left:24px">Relevé bancaire</h1>
+      <p class="body a" data-t style="top:168px;left:24px;width:342px">Importe un relevé de ta banque et on y repère les paiements récurrents.</p>
+      <div class="ban a" data-t style="top:244px" aria-hidden="true"><span>${ICO2.doc}</span></div>
+      <ol class="stp a" data-t style="top:372px">
+        <li><i>1</i><div><p>Télécharge un relevé depuis ton compte bancaire</p></div></li>
+        <li><i>2</i><div><p>Choisis un fichier <b>PDF</b> ou <b>CSV</b></p></div></li>
+        <li><i>3</i><div><p><b>Importe</b>-le ici :</p><button type="button" class="phbtn" data-import="statement">${GIP(ICOP.doc)}Choisir un fichier</button></div></li>
+      </ol>
+      <p class="trust a" data-t style="top:660px;left:24px;width:342px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Lecture seule. Ton fichier sert à trouver les paiements, puis il est supprimé.</p>` }),
 
     icloud: () => ({ html: `<header class="nav"><button class="back" data-go="start" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Terminé</button></header>
       <h1 class="hd pt a" data-t style="top:116px;left:24px">iCloud</h1>
@@ -164,7 +176,7 @@
       <h1 class="hd pt a center w342" data-t style="top:470px;left:24px" aria-live="polite">Recherche en cours…</h1>
       <p class="body a center w342" data-t style="top:518px;left:24px">Ça prend quelques secondes.</p>` }),
 
-    found: () => { const L = FOUND[S.importSrc || "email"]; return { html: `<header class="nav"><button class="back" data-go="${S.importSrc === "icloud" ? "icloud" : "email"}" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Annuler</button></header>
+    found: () => { const L = FOUND[S.importSrc || "email"]; return { html: `<header class="nav"><button class="back" data-go="${S.importSrc || "email"}" aria-label="Retour">${BACK_ICO}</button><button class="navr" data-go="dash">Annuler</button></header>
       <h1 class="hd pt a" data-t style="top:116px;left:24px">${L.length} abonnements trouvés</h1>
       <p class="body a" data-t style="top:168px;left:24px;width:342px">Garde ceux qui sont à toi. Tu pourras modifier les détails ensuite.</p>
       <ul class="fl">${L.map((x, i) => `<li class="fli a" ${T(236 + i * 96)}><button type="button" class="fck" role="checkbox" aria-checked="true" aria-label="${esc(x.name)}" data-fnd="${i}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><div class="fcard"><span class="logo${x.l ? "" : " gic"}" aria-hidden="true">${x.l ? LG(x.l) : `<b class="lt">${esc(x.name[0])}</b>`}</span><span class="t">${esc(x.name)}</span><span class="s">Renouvelle le ${x.next}</span><span class="p">${money(x.price)}</span></div></li>`).join("")}</ul>
@@ -673,7 +685,7 @@
     if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     if (S.screen === "signin") $("signin").addEventListener("submit", (e) => { e.preventDefault(); go("connecting"); });
     if (S.screen === "bank") wireBankSearch();
-    if (S.screen === "email" || S.screen === "icloud") wireImport();
+    if (S.screen === "email" || S.screen === "icloud" || S.screen === "statement") wireImport();
     if (S.screen === "finding") wireFinding();
     if (S.screen === "found") wireFound();
     if (S.screen === "addpick") wireAddPick();
@@ -1035,7 +1047,7 @@
   const DEV_FLOW = [
     ["welcome", "Bienvenue"], ["bank", "Choisir la banque"], ["consent", "Tu gardes le contrôle"], ["banklogin", "Page de la banque"],
     ["connecting", "Connexion en cours"], ["accounts", "Choix des comptes"], ["access", "Permissions"], ["connected", "Compte lié"],
-    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["start", "Choix de départ"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
+    ["scanning", "Analyse"], ["scanned", "Résultats"], ["review", "Vérification"], ["wallet", "Par compte (cartes)"], ["dash", "Abonnements"], ["start", "Choix de départ"], ["email", "Départ : courriels"], ["icloud", "Départ : iCloud"], ["statement", "Départ : relevé"], ["finding", "Import : recherche"], ["found", "Import : résultats"], ["addpick", "Ajouter : recherche"], ["add", "Ajouter : formulaire"],
     ["calendar", "Calendrier"], ["settings", "Réglages"], ["detail", "Détail (Adobe)"], ["cancelled", "Annulation confirmée"],
     ["slow", "Analyse lente"], ["empty", "Aucun paiement"],
   ];
