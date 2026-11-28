@@ -1141,3 +1141,26 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .tabbar button{width:82px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:14px;letter-spacing:-.01em}
 .tabbar button::before{display:none}
 .tabbar button svg{display:block;width:24px;height:24px}
+
+/* Calendrier: month grid, logos sit on their renewal day */
+.calhd{left:28px;right:24px;display:flex;align-items:center;justify-content:space-between;height:44px}
+.calhd .sect{text-transform:capitalize}
+.calnav{display:flex;gap:8px}
+.calnav button{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid var(--line2);color:#fff;cursor:pointer}
+.calnav button:active{transform:scale(.93)}
+.caltot{font:400 14px/18px Inter;color:var(--grey)}
+.caltot b{color:#fff;font-weight:600}
+.calgrid{left:22px;width:346px}
+.cw{display:grid;grid-template-columns:repeat(7,46px);gap:4px;height:24px;font:600 11px/24px Inter;letter-spacing:.08em;color:var(--grey);text-align:center}
+.cdays{display:grid;grid-template-columns:repeat(7,46px);grid-auto-rows:54px;gap:4px}
+.cd{border-radius:14px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:6px;color:#fff;border:1px solid transparent;font-family:Inter}
+.cd.empty{background:none}
+.cd b{font:500 13px/16px Inter;color:#9aa3a0}
+.cd.has{background:var(--raised);border-color:var(--line2);cursor:pointer}
+.cd.has b{color:#fff}
+.cd.on{border-color:var(--mint);background:rgba(127,232,200,.12)}
+.cd.has:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+.cls{display:flex;gap:2px;justify-content:center}
+.logo.cl{position:relative;left:auto;top:auto;width:20px;height:20px;border-radius:6px}
+.logo.cl.gic svg{width:12px;height:12px}
+.cl.more{width:20px;height:20px;border-radius:6px;background:#2a2a2c;font:600 10px/20px Inter;color:#fff;text-align:center}

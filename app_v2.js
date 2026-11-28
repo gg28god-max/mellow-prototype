@@ -60,7 +60,7 @@
   ];
 
   // ---------- State ----------
-  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" }, importSrc: "email", fresh: false };
+  const S = { screen: "welcome", bank: BANKS[0], detail: null, review: {}, adobe: "active", toggles: { push: true, alerts: true, holder: false, routing: false }, accts: ["chq"], manual: [], filter: { cat: "", cyc: "" }, cal: { y: 2026, m: 11, sel: 0 }, importSrc: "email", fresh: false };
   const ACCTS = [
     { id: "chq", name: "Compte chèques", kind: "Chèques", mask: "4821" },
     { id: "sav", name: "Compte épargne", kind: "Épargne", mask: "3365" },
@@ -428,15 +428,38 @@
     },
 
     calendar: () => {
-      const rows = (S.fresh ? [] : ["netflix", "adobe", "prime"]).filter((id) => !(id === "adobe" && S.adobe === "cancelled")).map(sub);
-      const total = rows.reduce((a, s) => a + s.price, 0);
-      const subtitle = (s) => s.id === "adobe" ? (S.adobe === "pending" ? "Annulation en cours" : s.next + " · fin de l’essai") : s.yearly ? s.next + " · une fois par an" : s.next;
+      // Every active subscription lands on its renewal day: monthly ones every month, yearly ones only in their month.
+      const idOf = { "Netflix": "netflix", "Adobe Acrobat": "adobe", "Spotify": "spotify", "Amazon Prime": "prime" };
+      const h = (x) => [...x.name].reduce((n, c) => n + c.charCodeAt(0), 0);
+      const items = [
+        ...(S.fresh ? [] : SCAN_POOL).filter((x) => !x.unknown && !(x.name === "Adobe Acrobat" && S.adobe === "cancelled")).map((x) => { const id = idOf[x.name], base = id ? sub(id) : null; return base ? { ...base } : { name: x.name, short: x.name, price: x.price, per: x.per, logo: x.logo, id: null, next: x.per === "an" ? "12 janv." : (3 + (h(x) % 22)) + " déc." }; }),
+        ...S.manual.filter((m) => m.next).map((m) => ({ ...m, id: null, short: m.name, manual: true }))
+      ];
+      const { y, m } = S.cal, MN = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+      const dim = new Date(y, m + 1, 0).getDate(), first = (new Date(y, m, 1).getDay() + 6) % 7;
+      const byDay = {};
+      items.forEach((it) => { const q = /^(\d+)\s+(\S+)/.exec(it.next || ""); if (!q) return; const mo = MONTHS.indexOf(q[2]); if (mo < 0 || (it.per === "an" && mo !== m)) return; const d = Math.min(+q[1], dim); (byDay[d] = byDay[d] || []).push(it); });
+      const days = Object.keys(byDay).map(Number).sort((a, b) => a - b);
+      const sel = byDay[S.cal.sel] ? S.cal.sel : 0;
+      const list = sel ? byDay[sel] : days.flatMap((d) => byDay[d].map((it) => ({ ...it, _d: d })));
+      const total = days.reduce((a, d) => a + byDay[d].reduce((t, it) => t + it.price, 0), 0), count = days.reduce((a, d) => a + byDay[d].length, 0);
+      const f = (n) => n.toFixed(2).replace(".", ",");
+      let cells = "";
+      for (let i = 0; i < first; i++) cells += `<span class="cd empty" aria-hidden="true"></span>`;
+      for (let d = 1; d <= dim; d++) {
+        const it = byDay[d] || [], lg = it.slice(0, it.length > 2 ? 1 : 2).map((x) => `<span class="logo cl${/currentColor|class="lt"/.test(x.logo) ? " gic" : ""}" aria-hidden="true">${x.logo}</span>`).join("") + (it.length > 2 ? `<span class="cl more" aria-hidden="true">+${it.length - 1}</span>` : "");
+        cells += it.length ? `<button type="button" class="cd has${sel === d ? " on" : ""}" data-cald="${d}" aria-pressed="${sel === d}" aria-label="${d} ${MN[m]} : ${it.map((x) => x.name).join(", ")}"><b>${d}</b><span class="cls">${lg}</span></button>` : `<span class="cd" aria-label="${d} ${MN[m]}"><b>${d}</b></span>`;
+      }
+      const sub2 = (it) => it.id === "adobe" && S.adobe === "pending" ? "Annulation en cours" : it.trial ? "Essai gratuit" : it.per === "an" ? "Une fois par an" : "Chaque mois";
+      const hd = sel ? sel + " " + MN[m] : "À venir";
       return { tabs: "calendar", html: `
       <h1 class="title a" data-t style="top:76px;left:28px;line-height:40px">Calendrier</h1>
-      ${metric(132, "À payer avant le 15 janv.", money(total))}
-      ${sectionWithCount(278, "À venir", rows.length)}
-      ${rows.length ? "" : `<p class="fnone a" data-t style="top:340px;left:24px;width:342px;padding:0;text-align:center" role="status">Rien à venir pour l’instant. Ajoute un abonnement pour voir tes prochains paiements ici.</p>`}
-      <ul>${rows.map((s, i) => subRow(s, 324 + i * 108, subtitle(s), { warn: s.id === "adobe" && S.adobe === "pending" })).join("")}</ul>` };
+      <div class="calhd a" data-t style="top:132px"><h2 class="sect">${MN[m]} ${y}</h2><span class="calnav"><button type="button" data-calm="-1" aria-label="Mois précédent"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" data-calm="1" aria-label="Mois suivant"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></span></div>
+      <p class="caltot a" data-t style="top:184px;left:28px"><b>${f(total)} $</b> à payer · <b>${count}</b> paiement${count > 1 ? "s" : ""}</p>
+      <div class="calgrid a" data-t style="top:222px" role="group" aria-label="Calendrier de ${MN[m]} ${y}"><div class="cw" aria-hidden="true">${["L", "M", "M", "J", "V", "S", "D"].map((x) => `<span>${x}</span>`).join("")}</div><div class="cdays">${cells}</div></div>
+      ${(() => { const rows = Math.ceil((first + dim) / 7), gy = 222 + 24 + rows * 58 + 24; return `${sectionWithCount(gy, hd, list.length)}
+      ${list.length ? "" : `<p class="fnone a" data-t style="top:${gy + 48}px;left:24px;width:342px;padding:0;text-align:center" role="status">Rien à payer ce mois-ci. Ajoute un abonnement pour voir tes prochains paiements ici.</p>`}
+      <ul>${list.map((it, i) => subRow(it, gy + 46 + i * 108, (sel ? "" : (it._d || "") + " " + MONTHS[m] + " · ") + sub2(it), { warn: it.id === "adobe" && S.adobe === "pending" })).join("")}</ul>`; })() }` };
     },
 
     settings: () => ({ tabs: "settings", html: `${nav("Réglages", "dash")}
@@ -905,6 +928,8 @@
     if (d.sheet === "banklogin") return bankSheet();
     if (d.ev) return evSheet(d.ev);
     if ("skip" in d) { S.fresh = true; S.manual = []; return go("dash"); }
+    if ("calm" in d) { const n = S.cal.m + (+d.calm); S.cal = { y: S.cal.y + (n < 0 ? -1 : n > 11 ? 1 : 0), m: (n + 12) % 12, sel: 0 }; nextTrans = "none"; return render(); }
+    if ("cald" in d) { S.cal.sel = S.cal.sel === +d.cald ? 0 : +d.cald; nextTrans = "none"; return render(); }
     if ("filter" in d) return filterSheet();
     if ("fclear" in d) { S.filter = { cat: "", cyc: "" }; nextTrans = "none"; render(); if ($("sheet-layer").querySelector(".sheet.filt")) filterSheet(); return; }
     if ("fcat" in d || "fcyc" in d) { if ("fcat" in d) S.filter.cat = d.fcat; else S.filter.cyc = d.fcyc; nextTrans = "none"; const sc = $("screen"); const top = sc ? sc.scrollTop : 0; render(); if (sc) sc.scrollTop = top; const lay = $("sheet-layer"); lay.querySelectorAll(".chip").forEach((b) => { const v = "fcat" in b.dataset ? S.filter.cat === b.dataset.fcat : S.filter.cyc === b.dataset.fcyc; const same = ("fcat" in d) === ("fcat" in b.dataset); if (same) { b.classList.toggle("on", v); b.setAttribute("aria-pressed", String(v)); } }); return; }
