@@ -623,7 +623,8 @@
     const run = () => {
       const t = q.value.trim(), f = fold(t), hits = f ? POPULAR.filter(([n]) => fold(n).includes(f)) : POPULAR;
       const exact = f && POPULAR.some(([n]) => fold(n) === f);
-      let h = t && !exact ? `<ul class="pk-top"><li><button type="button" data-pick="${esc(t)}" data-cat="Autres">${plus}<span class="pk-n">Créer « ${esc(t)} »</span></button></li></ul>` : "";
+      let h = !t ? `<ul class="pk-top pk-cust"><li><button type="button" data-pick="" data-cat="Autres">${plus}<span class="pk-n">Abonnement personnalisé</span></button></li></ul>` : "";
+      h += t && !exact ? `<ul class="pk-top"><li><button type="button" data-pick="${esc(t)}" data-cat="Autres">${plus}<span class="pk-n">Créer « ${esc(t)} »</span></button></li></ul>` : "";
       if (f) { h += hits.length ? `<ul class="pk-g">${hits.map(row).join("")}</ul>` : `<p class="pk-none" role="status">Aucun résultat. Crée-le toi-même ci-dessus.</p>`; }
       else ORDER.forEach((g) => { const L = hits.filter(([, c]) => (PKGROUP[c] || "Autres") === g); if (L.length) h += `<h3 class="pk-h">${g}</h3><ul class="pk-g">${L.map(row).join("")}</ul>`; });
       box.innerHTML = h + '<div class="pk-end" aria-hidden="true"></div>'; x.hidden = !q.value; layout();

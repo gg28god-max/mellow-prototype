@@ -1164,3 +1164,9 @@ textarea.out{width:100%;min-height:130px;border-radius:12px;border:1px solid #dd
 .logo.cl{position:relative;left:auto;top:auto;width:20px;height:20px;border-radius:6px}
 .logo.cl.gic svg{width:12px;height:12px}
 .cl.more{width:20px;height:20px;border-radius:6px;background:#2a2a2c;font:600 10px/20px Inter;color:#fff;text-align:center}
+
+/* Custom subscription: first row of the add list, mint-tinted card so it reads as the "none of these" action */
+.pk-cust button{background:rgba(127,232,200,.1);border:1px solid rgba(127,232,200,.35);border-radius:20px;margin-bottom:8px}
+.pk-cust .pk-ic.plus{background:var(--mint);color:#06281d}
+.pk-cust{margin-top:14px}
+.pk .pk-top.pk-cust{margin-top:16px;margin-bottom:10px}
