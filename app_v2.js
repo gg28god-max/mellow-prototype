@@ -109,7 +109,12 @@
       <span class="logo${/currentColor|class="lt"/.test(s.logo) ? " gic" : ""}" aria-hidden="true">${s.logo}</span><span class="t" aria-hidden="true">${esc(s.name)}</span><span class="s${opts.warn ? " warn" : ""}" aria-hidden="true">${esc(subtitle)}</span>
       <span class="p" aria-hidden="true">${money(s.price)}</span><span class="pp" aria-hidden="true">par ${s.per}</span><span class="chev" aria-hidden="true">›</span></li>`;
   }
-  const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${3 + i * 86}px" ${cur === id ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>${cur !== "settings" ? `<button class="tabadd" data-go="addpick" aria-label="Ajouter un abonnement">${ADD_ICO}</button>` : ""}`;
+  const TABICO = {
+    dash: '<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
+    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>'
+  };
+  const tabbar = (cur) => `<nav class="tabbar" aria-label="Navigation principale">${[["dash", "Abonnements"], ["calendar", "Calendrier"], ["settings", "Réglages"]].map(([id, l], i) => `<button data-tab="${id}" style="left:${6 + i * 85}px" ${cur === id ? 'aria-current="page"' : ""}><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TABICO[id]}</svg><span>${l}</span></button>`).join("")}</nav>${cur !== "settings" ? `<button class="tabadd" data-go="addpick" aria-label="Ajouter un abonnement">${ADD_ICO}</button>` : ""}`;
   const sectionWithCount = (y, label, n) => `<div class="a" data-t style="top:${y}px;left:28px;display:flex;align-items:center;gap:12px"><h2 class="sect">${label}</h2><span class="count" aria-label="${n} au total">${n}</span></div>`;
 
   // ---------- Screens ----------
